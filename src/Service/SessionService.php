@@ -52,7 +52,8 @@ class SessionService extends BaseService
         $this->entityManager->flush();
     }
 
-    protected function createRakebackAlgorithm($classname) {
+    protected function createRakebackAlgorithm($classname)
+    {
         // checkear si existe la clase
         return new $classname();
     }
@@ -75,9 +76,9 @@ class SessionService extends BaseService
 
             $user->setPoints($user->getPoints()+$sessionPoints);
 
-            $this->entityManager->persist($userSession);   
+            $this->entityManager->persist($userSession);
         }
 
-        $this->entityManager->flush(); 
-    }    
+        $this->entityManager->flush();
+    }
 }

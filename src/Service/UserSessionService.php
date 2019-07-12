@@ -50,7 +50,7 @@ class UserSessionService extends BaseService
         $userSession = parent::fetch($data['id']);
         $userSession->setAccumulatedPoints($data['points']);
         $userSession->setCashout($data['cashout']);
-        $userSession->setStart(new \DateTime ($data['start']));
+        $userSession->setStart(new \DateTime($data['start']));
         $userSession->setEnd($data['end']);
         $userSession->setIsApproved($data['isApproved']);
         $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);

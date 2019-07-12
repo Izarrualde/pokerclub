@@ -412,7 +412,7 @@ class SessionEntity
         foreach ($this->sessionUsers as $userSession) {
             $userSession->setAccumulatedPoints($this->rakebackAlgorithm->calculate($userSession));
         }
-    }   
+    }
 */
 
     public function getAveragePlayersInPerdiod(\DateTime $from, \DateTime $to)
@@ -423,9 +423,9 @@ class SessionEntity
         foreach ($usersSession as $userSession) {
                $players += $userSession->getPercentagePlayed($from, $to);
                $numberUsers++;
-           } 
+        }
 
-        return $players/100; 
+        return $players/100;
     }
 
     public function toArray()

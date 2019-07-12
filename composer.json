@@ -1,5 +1,5 @@
 {
-    "name": "solcre/pokerclub",
+    "name": "izarrualde/pokerclub",
     "description": "Library to manage players, games, rake, tips, and expenses of a poker club.",
     "type": "library",
     "license": "mit",

@@ -254,9 +254,9 @@ class UserSessionEntity
     }
 
     public function inMinutes(\DateTime $time1, \DateTime $time2)
-        {
+    {
         $minutes = (int)date_diff($time1, $time2)->format('%i');
-        $hours   = (int)date_diff($time1, $time2)->format('%h'); 
+        $hours   = (int)date_diff($time1, $time2)->format('%h');
         $days    = (int)date_diff($time1, $time2)->format('%d');
 
         if ($days > 0) {
@@ -279,25 +279,22 @@ class UserSessionEntity
         // case 0% - before or after
         if ((($from < $start) && ($to < $start)) || ($from > $end)) {
             return 0;
-        }
+        } elseif (($from >= $start) && ($to <= $end)) {
         //case 100% - enclosing & enclosing %% touching
-        elseif (($from >= $start) && ($to <= $end)) {
             return 100;
-        }
+        } else {
         // other cases
-        else {
-
             $sample = $this->inMinutes($from, $to);
             // $sample represent 100%
 
             if (($from <= $start) && ($to <= $end)) {
             // start is inside & start is inside && end touching
                 $fraction = $this->inMinutes($to, $start);
-            }
+            } 
             elseif (($from >= $start) && ($to > $end)) {
             // end is inside & end is inside && start touching
                 $fraction = $this->inMinutes($from, $end); //from end
-            }
+            } 
             elseif (($from < $start) && ($to > $end)) {
             // Inside start and end
                 $fraction = $this->inMinutes($end, $start);

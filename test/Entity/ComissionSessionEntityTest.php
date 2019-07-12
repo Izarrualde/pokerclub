@@ -23,7 +23,7 @@ class ComisisonSessionEntityTest extends TestCase
       $session
     );
 
-    $this->assertEquals(8888, $comission->getId());
+    $this->assertEquals(1, $comission->getId());
     $this->assertEquals($hour, $comission->getHour());
     $this->assertEquals($amount, $comission->getComission());
     $this->assertSame($session, $comission->getSession());

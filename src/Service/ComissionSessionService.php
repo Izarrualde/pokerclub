@@ -44,7 +44,7 @@ class ComissionSessionService extends BaseService
 
 
     public function update($data, $strategies = null)
-    {   
+    {
         if (!is_numeric($data['comission'])) {
             throw new ComissionInvalidException();
         }
@@ -52,8 +52,8 @@ class ComissionSessionService extends BaseService
         $data['hour'] = new \DateTime($data['hour']);
 
         $comission    = parent::fetch($data['id']);
-
-        $comission->setHour($data['hour']);
+        $comission->setHour($data['hour'])
+        ;
         $comission->setComission($data['comission']);
 
         $this->entityManager->persist($comission);
