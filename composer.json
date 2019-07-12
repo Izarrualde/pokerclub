@@ -9,7 +9,7 @@
             "email": "diego.r.izarrualde@gmail.com"
         }
     ],
-    "minimum-stability": "beta",
+    "minimum-stability": "dev",
     "require": {
         "doctrine/doctrine-module": "^2.1",
         "doctrine/orm": "^2.6"
