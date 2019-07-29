@@ -72,6 +72,7 @@ class BuyinSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
+        
         $buyin = $this->entityManager->getReference('Solcre\lmsuy\Entity\BuyinSessionEntity', $id);
 
         $this->entityManager->remove($buyin);
