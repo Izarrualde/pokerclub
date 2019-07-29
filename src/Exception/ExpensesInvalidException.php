@@ -1,6 +1,9 @@
 <?php
 namespace Solcre\lmsuy\Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ExpensesInvalidException extends \Exception
 {
 

@@ -48,6 +48,8 @@ class BuyinSessionService extends BaseService
         
         $this->entityManager->persist($buyin);
         $this->entityManager->flush();
+
+        return $buyin;
     }
 
     public function update($data, $strategies = null)
@@ -63,8 +65,9 @@ class BuyinSessionService extends BaseService
         $buyin->setAmountCash($data['amountCash']);
         $buyin->setAmountCredit($data['amountCredit']);
 
-        $this->entityManager->persist($buyin);
         $this->entityManager->flush($buyin);
+
+        return $buyin;
     }
 
     public function delete($id, $entityObj = null)
@@ -74,4 +77,6 @@ class BuyinSessionService extends BaseService
         $this->entityManager->remove($buyin);
         $this->entityManager->flush();
     }
+
+    return true;
 }

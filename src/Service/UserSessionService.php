@@ -43,6 +43,8 @@ class UserSessionService extends BaseService
 
         $this->entityManager->persist($userSession);
         $this->entityManager->flush($userSession);
+
+        return $userSession;
     }
 
     public function update($data, $strategies = null)
@@ -57,8 +59,9 @@ class UserSessionService extends BaseService
         $userSession->setSession($session);
         $userSession->setIdUser($data['idUser']);
 
-        $this->entityManager->persist($userSession);
         $this->entityManager->flush($userSession);
+
+        return $userSession;
     }
 
     public function delete($id, $entityObj = null)
@@ -67,6 +70,8 @@ class UserSessionService extends BaseService
 
         $this->entityManager->remove($userSession);
         $this->entityManager->flush();
+
+        return true;
     }
 
 

@@ -32,6 +32,8 @@ class UserService extends BaseService
 
         $this->entityManager->persist($user);
         $this->entityManager->flush($user);
+
+        return $user;
     }
 
     public function update($data, $strategies = null)
@@ -42,8 +44,9 @@ class UserService extends BaseService
         $user->setEmail($data['email']);
         $user->setUsername($data['username']);
 
-        $this->entityManager->persist($user);
         $this->entityManager->flush($user);
+
+        return $user;
     }
 
     public function delete($id, $entityObj = null)
@@ -57,5 +60,7 @@ class UserService extends BaseService
         } catch (ForeignKeyConstraintViolationException $e) {
              throw new UserHadActionException();
         }
+
+        return true;
     }
 }

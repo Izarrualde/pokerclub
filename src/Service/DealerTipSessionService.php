@@ -28,6 +28,8 @@ class DealerTipSessionService extends BaseService
 
         $this->entityManager->persist($dealerTip);
         $this->entityManager->flush($dealerTip);
+
+        return $dealerTip;
     }
 
     public function update($data, $strategies = null)
@@ -37,8 +39,9 @@ class DealerTipSessionService extends BaseService
         $dealerTip->setHour(new \DateTime($data['hour']));
         $dealerTip->setDealerTip($data['dealerTip']);
 
-        $this->entityManager->persist($dealerTip);
         $this->entityManager->flush($dealerTip);
+
+        return $dealerTip;
     }
 
     public function delete($id, $entityObj = null)
@@ -47,5 +50,7 @@ class DealerTipSessionService extends BaseService
 
         $this->entityManager->remove($dealerTip);
         $this->entityManager->flush();
+
+        return true;
     }
 }

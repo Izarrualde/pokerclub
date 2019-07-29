@@ -1,6 +1,9 @@
 <?php
 namespace Solcre\lmsuy\Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 class UserSessionAlreadyAddedException extends \Exception
 {
 

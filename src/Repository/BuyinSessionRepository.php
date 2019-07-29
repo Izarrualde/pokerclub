@@ -7,6 +7,9 @@ use Solcre\lmsuy\Entity\BuyinSessionEntity;
 use Solcre\lmsuy\Entity\UserSessionEntity;
 use Solcre\lmsuy\Repository\BaseRepository;
 
+/**
+ * @codeCoverageIgnore
+ */
 class BuyinSessionRepository extends BaseRepository
 {
 

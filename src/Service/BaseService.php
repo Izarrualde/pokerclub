@@ -8,6 +8,9 @@ use Exception;
 use ReflectionClass;
 use BaseRepository;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class BaseService
 {
     protected $entityManager;

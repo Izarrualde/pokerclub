@@ -74,7 +74,6 @@ public function testAdd()
    $mockedEntityManager = $this->createMock(EntityManager::class);
    $mockedEntityManager->method('persist')->willReturn(true);
 
-
     $mockedRepository = $this->createMock(BaseRepository::class);
     $mockedRepository->method('find')->willReturn(
       new SessionEntity(
@@ -141,7 +140,16 @@ public function testAdd()
 
   }
 
-/*
+  public function createRakebackAlgorithm()
+  {
+    $className = 'Solcre\lmsuy\Rakeback\SimpleRakeback';
+
+    $rakebackAlgoritmClass = get_class($sessionService->createRakebackAlgorithm($className));
+
+    $this->assertEquals('Solcre\lmsuy\Rakeback\SimpleRakeback', $rakebackAlgoritmClass);
+  }
+
+
  public function testCalculateRakeback()
  {
     $data = [
@@ -151,7 +159,18 @@ public function testAdd()
    $mockedEntityManager = $this->createMock(EntityManager::class);
    $mockedEntityManager->method('persist')->willReturn(true);
 
-    $mockedRepository = $this->createMock(BaseRepository::class);
+
+   $session = new SessionEntity(
+                    1,
+                    new \DateTime('2019-07-04T15:00'),
+                    'title original',
+                    'description original',
+                    'photo original',
+                    9,
+                    new \DateTime('2019-07-04T18:00'),
+                    new \DateTime('2019-07-04T18:30'),
+                    null
+                  );
 
     $user1 = New UserEntity();
     $user2 = New UserEntity();
@@ -180,30 +199,23 @@ public function testAdd()
       $user2
     );
 
-    new SessionEntity(
-      1,
-      new \DateTime('2019-07-04T15:00'),
-      'title original',
-      'description original',
-      'photo original',
-      9,
-      new \DateTime('2019-07-04T18:00'),
-      new \DateTime('2019-07-04T18:30'),
-      null,
-      'Solcre\lmsuy\Rakeback\SimpleRakeback'
-    );
-
     $sessionUsers = new ArrayCollection();
     $sessionUsers[] = $userSession1;
     $sessionUsers[] = $userSession2;
 
     $session->setSessionUsers($sessionUsers);
 
+    $mockedRepository = $this->createMock(BaseRepository::class);
     $mockedRepository->method('find')->willReturn($session);
 
-    $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+   $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-    $sessionService = new SessionService($mockedEntityManager);
+   $sessionService = new SessionService($mockedEntityManager);
+
+
+
+
+
 
     // check $rakebackAlgoritm es del clase $session->getRakebackClass
 

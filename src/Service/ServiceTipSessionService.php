@@ -28,6 +28,8 @@ class ServiceTipSessionService extends BaseService
 
         $this->entityManager->persist($serviceTip);
         $this->entityManager->flush($serviceTip);
+
+        return $serviceTip;
     }
 
     public function update($data, $strategies = null)
@@ -37,8 +39,9 @@ class ServiceTipSessionService extends BaseService
         $serviceTip->setHour($data['hour']);
         $serviceTip->setServiceTip($data['serviceTip']);
 
-        $this->entityManager->persist($serviceTip);
         $this->entityManager->flush($serviceTip);
+
+        return $serviceTip;
     }
 
     public function delete($id, $entityObj = null)
@@ -47,5 +50,7 @@ class ServiceTipSessionService extends BaseService
 
         $this->entityManager->remove($serviceTip);
         $this->entityManager->flush();
+
+        return true;
     }
 }

@@ -30,6 +30,8 @@ class ComissionSessionService extends BaseService
 
         $this->entityManager->persist($comission);
         $this->entityManager->flush($comission);
+
+        return $buyin;
     }
 
 
@@ -56,8 +58,9 @@ class ComissionSessionService extends BaseService
         ;
         $comission->setComission($data['comission']);
 
-        $this->entityManager->persist($comission);
         $this->entityManager->flush($comission);
+
+        return $buyin;
     }
 
     public function delete($id, $entityObj = null)
@@ -66,5 +69,7 @@ class ComissionSessionService extends BaseService
         
         $this->entityManager->remove($comission);
         $this->entityManager->flush();
+
+        return true;
     }
 }

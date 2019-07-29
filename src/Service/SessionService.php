@@ -26,6 +26,8 @@ class SessionService extends BaseService
 
         $this->entityManager->persist($session);
         $this->entityManager->flush($session);
+
+        return $session;
     }
 
     public function update($data, $strategies = null)
@@ -40,8 +42,9 @@ class SessionService extends BaseService
         $session->setStartTimeReal(new \DateTime($data['startTimeReal']));
         $session->setEndTime(new \DateTime($data['endTime']));
 
-        $this->entityManager->persist($session);
         $this->entityManager->flush($session);
+
+        return $session;
     }
 
     public function delete($id, $entityObj = null)
@@ -50,6 +53,8 @@ class SessionService extends BaseService
 
         $this->entityManager->remove($session);
         $this->entityManager->flush();
+
+        return true;
     }
 
     protected function createRakebackAlgorithm($classname)
@@ -57,6 +62,7 @@ class SessionService extends BaseService
         // checkear si existe la clase
         return new $classname();
     }
+    
     public function calculateRakeback($idSession)
     {
         $session = parent::fetch($idSession);
@@ -76,7 +82,7 @@ class SessionService extends BaseService
 
             $user->setPoints($user->getPoints()+$sessionPoints);
 
-            $this->entityManager->persist($userSession);
+            // $this->entityManager->persist($userSession);
         }
 
         $this->entityManager->flush();

@@ -28,6 +28,8 @@ class ExpensesSessionService extends BaseService
 
         $this->entityManager->persist($expenditure);
         $this->entityManager->flush($expenditure);
+
+        return $expenditure;
     }
 
     public function update($data, $strategies = null)
@@ -37,8 +39,9 @@ class ExpensesSessionService extends BaseService
         $expenditure->setDescription($data['description']);
         $expenditure->setAmount($data['amount']);
 
-        $this->entityManager->persist($expenditure);
         $this->entityManager->flush($expenditure);
+
+        return $expenditure;
     }
 
     public function delete($id, $entityObj = null)
@@ -46,5 +49,7 @@ class ExpensesSessionService extends BaseService
         $expenditure = $this->entityManager->getReference('Solcre\lmsuy\Entity\ExpensesSessionEntity', $id);
         $this->entityManager->remove($expenditure);
         $this->entityManager->flush();
+
+        return true;
     }
 }
