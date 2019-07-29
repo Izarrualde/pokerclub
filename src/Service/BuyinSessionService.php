@@ -76,7 +76,7 @@ class BuyinSessionService extends BaseService
 
         $this->entityManager->remove($buyin);
         $this->entityManager->flush();
-    }
 
-    return true;
+        return true;
+    }
 }
