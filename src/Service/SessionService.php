@@ -32,7 +32,6 @@ class SessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
-
         $session = parent::fetch($data['idSession']);
         $session->setDate(new \DateTime($data['created_at']));
         $session->setTitle($data['title']);
