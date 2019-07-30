@@ -34,13 +34,13 @@ class SessionService extends BaseService
     {
 
         $session = parent::fetch($data['idSession']);
-        $session->setDate(new \DateTime($data['date']));
+        $session->setDate(new \DateTime($data['created_at']));
         $session->setTitle($data['title']);
         $session->setDescription($data['description']);
-        $session->setSeats($data['seats']);
-        $session->setStartTime(new \DateTime($data['startTime']));
-        $session->setStartTimeReal(new \DateTime($data['startTimeReal']));
-        $session->setEndTime(new \DateTime($data['endTime']));
+        $session->setSeats($data['count_of_seats']);
+        $session->setStartTime(new \DateTime($data['start_at']));
+        $session->setStartTimeReal(new \DateTime($data['real_start_at']));
+        $session->setEndTime(new \DateTime($data['end_at']));
 
         $this->entityManager->flush($session);
 
