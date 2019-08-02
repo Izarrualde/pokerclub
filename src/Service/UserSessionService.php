@@ -76,7 +76,6 @@ class UserSessionService extends BaseService
 
     public function close($data)
     {
-
         $userSession = parent::fetch($data['id']);
 
         $data['end'] = new \DateTime($data['end']);
