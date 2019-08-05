@@ -3,6 +3,7 @@ namespace Solcre\pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\pokerclub\Repository\BuyinSessionRepository")
