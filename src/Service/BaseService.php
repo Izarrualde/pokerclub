@@ -28,6 +28,7 @@ abstract class BaseService
         $this->repository = $this->entityManager->getRepository($this->entityName);
     }
 
+
     public function getEntityName()
     {
         $namespaceName = (new ReflectionClass($this))->getNamespaceName();
