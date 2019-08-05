@@ -3,6 +3,7 @@ namespace Solcre\Pokerclub\Service;
 
 use \Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
+use \Solcre\Pokerclub\Exception\SessionNotFoundException;
 
 class SessionService extends BaseService
 {
@@ -55,7 +56,7 @@ class SessionService extends BaseService
             $this->entityManager->flush();
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new SessionNotFoundException();
         } 
     } 
