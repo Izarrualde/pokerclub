@@ -1,5 +1,5 @@
 <?php
-namespace Solcre\Pokerclubmsuy\Service;
+namespace Solcre\Pokerclub\Service;
 
 use \Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
 use Doctrine\ORM\EntityManager;

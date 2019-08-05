@@ -58,9 +58,11 @@ class UserService extends BaseService
                 $this->entityManager->flush();
             } catch (ForeignKeyConstraintViolationException $e) {
                  throw new UserHadActionException();
-            }
+            } 
 
             return true;
+        } catch (\Exception $e) {
+            return $e;
         }
     }
 }
