@@ -4,7 +4,7 @@ namespace Solcre\Pokerclub\Exception;
 /**
  * @codeCoverageIgnore
  */
-class SessionNotFoundExceptionException extends \Exception
+class SessionNotFoundException extends \Exception
 {
 
     public function __construct()

@@ -56,9 +56,13 @@ class SessionService extends BaseService
             $this->entityManager->flush();
 
             return true;
-        } catch (Exception $e) {
-            throw new SessionNotFoundException();
-        } 
+        } catch (\Exception $e) {
+            if ($e->getCode() == 404) { //magic number
+               throw new SessionNotFoundException(); 
+            } 
+            throw $e;
+        }  
+
     } 
 
     protected function createRakebackAlgorithm($classname)
