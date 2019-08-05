@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Solcre\\lmsuy\\": "./src"
+            "Solcre\\Pokerclub\\": "./src"
         }
     },
     "minimum-stability": "dev"

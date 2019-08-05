@@ -1,11 +1,11 @@
 <?php
-namespace Solcre\pokerclub\Entity;
+namespace Solcre\Pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Embeddable
- * @ORM\Entity(repositoryClass="Solcre\pokerclub\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BaseRepository")
  * @ORM\Table(name="session_expenses")
  */
 class ExpensesSessionEntity
@@ -20,7 +20,7 @@ class ExpensesSessionEntity
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Solcre\pokerclub\Entity\SessionEntity", inversedBy="sessionExpenses")
+     * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\SessionEntity", inversedBy="sessionExpenses")
      * @ORM\JoinColumn(name="session_id",                               referencedColumnName="id")
      */
     protected $session;

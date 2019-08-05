@@ -1,13 +1,13 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Entity\DealerTipSessionEntity;
-use \Solcre\lmsuy\Entity\SessionEntity;
-use Solcre\lmsuy\Service\DealerTipSessionService;
+use \Solcre\Pokerclub\Entity\DealerTipSessionEntity;
+use \Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Service\DealerTipSessionService;
 use Doctrine\ORM\EntityManager;
-use \Solcre\lmsuy\Exception\DealerTipInvalidException;
-use Solcre\lmsuy\Repository\BaseRepository;
-
+use \Solcre\Pokerclub\Exception\DealerTipInvalidException;
+use Solcre\Pokerclub\Repository\BaseRepository;
+Pokerclub
 class DealerTipSessionServiceTest extends TestCase
 {
 

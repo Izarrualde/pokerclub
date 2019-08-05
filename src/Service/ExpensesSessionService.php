@@ -1,10 +1,10 @@
 <?php
-namespace Solcre\pokerclub\Service;
+namespace Solcre\Pokerclub\Service;
 
-use \Solcre\pokerclub\Entity\ExpensesSessionEntity;
+use \Solcre\Pokerclub\Entity\ExpensesSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\pokerclub\Exception\ExpensesInvalidException;
-use \Solcre\pokerclub\Exception\ExpenditureNotFoundException;
+use \Solcre\Pokerclub\Exception\ExpensesInvalidException;
+use \Solcre\Pokerclub\Exception\ExpenditureNotFoundException;
 
 class ExpensesSessionService extends BaseService
 {
@@ -21,7 +21,7 @@ class ExpensesSessionService extends BaseService
         }
 
         $expenditure = new ExpensesSessionEntity();
-        $session     = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
+        $session     = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
         $expenditure->setSession($session);
 
         $expenditure->setDescription($data['description']);

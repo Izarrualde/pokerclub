@@ -1,9 +1,9 @@
 <?php
-namespace Solcre\lpokerclubmsuy\Service;
+namespace Solcre\Pokerclubmsuy\Service;
 
-use \Solcre\pokerclub\Entity\ServiceTipSessionEntity;
+use \Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\pokerclubmsuy\Exception\ServiceTipInvalidException;
+use \Solcre\Pokerclubmsuy\Exception\ServiceTipInvalidException;
 
 class ServiceTipSessionService extends BaseService
 {
@@ -22,7 +22,7 @@ class ServiceTipSessionService extends BaseService
         $data['hour'] = new \DateTime($data['hour']);
         $serviceTip   = new  ServiceTipSessionEntity();
         $serviceTip->setHour($data['hour']);
-        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
+        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
         $serviceTip->setSession($session);
         $serviceTip->setServiceTip($data['serviceTip']);
 

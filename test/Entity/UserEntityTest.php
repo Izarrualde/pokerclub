@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 // use ReflectionMethod;
-use Solcre\lmsuy\Entity\UserEntity;
+use Solcre\Pokerclub\Entity\UserEntity;
 
 class UserEntityTest extends TestCase
 {

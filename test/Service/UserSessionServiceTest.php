@@ -1,13 +1,13 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Entity\UserSessionEntity;
-use \Solcre\lmsuy\Entity\UserEntity;
-use \Solcre\lmsuy\Entity\SessionEntity;
-use Solcre\lmsuy\Service\UserSessionService;
+use \Solcre\Pokerclub\Entity\UserSessionEntity;
+use \Solcre\Pokerclub\Entity\UserEntity;
+use \Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Service\UserSessionService;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Exception\UserSessionAlreadyAddedException;
-use Solcre\lmsuy\Repository\BaseRepository;
+use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
+use Solcre\Pokerclub\Repository\BaseRepository;
 
 class UserSessionServiceTest extends TestCase
 {
@@ -25,8 +25,8 @@ public function testAdd()
     ];
 
   $map = [
-    ['Solcre\lmsuy\Entity\UserEntity', $data['idUser'], new UserEntity(1)],
-    ['Solcre\lmsuy\Entity\SessionEntity', $data['idSession'], new SessionEntity(3)]
+    ['Solcre\Pokerclub\Entity\UserEntity', $data['idUser'], new UserEntity(1)],
+    ['Solcre\Pokerclub\Entity\SessionEntity', $data['idSession'], new SessionEntity(3)]
   ];  
 
    $mockedEntityManager = $this->createMock(EntityManager::class);

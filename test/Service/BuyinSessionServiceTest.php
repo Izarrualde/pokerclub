@@ -1,14 +1,14 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Entity\BuyinSessionEntity;
-use \Solcre\lmsuy\Entity\UserSessionEntity;
-use Solcre\lmsuy\Service\BuyinSessionService;
-use Solcre\lmsuy\Service\UserSessionService;
-use Solcre\lmsuy\Service\UserService;
+use \Solcre\Pokerclub\Entity\BuyinSessionEntity;
+use \Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Service\BuyinSessionService;
+use Solcre\Pokerclub\Service\UserSessionService;
+use Solcre\Pokerclub\Service\UserService;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Exception\BuyinInvalidException;
-use Solcre\lmsuy\Repository\BaseRepository;
+use Solcre\Pokerclub\Exception\BuyinInvalidException;
+use Solcre\Pokerclub\Repository\BaseRepository;
 
 class BuyinSessionServiceTest extends TestCase
 {

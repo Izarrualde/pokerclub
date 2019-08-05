@@ -1,13 +1,13 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Solcre\lmsuy\Entity\ComissionSessionEntity;
-use Solcre\lmsuy\Entity\SessionEntity;
-use Solcre\lmsuy\Service\ComissionSessionService;
+use Solcre\Pokerclub\Entity\ComissionSessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Service\ComissionSessionService;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Exception\ComissionInvalidException;
-use Solcre\lmsuy\Service\BaseService;
-use Solcre\lmsuy\Repository\BaseRepository;
+use Solcre\Pokerclub\Exception\ComissionInvalidException;
+use Solcre\Pokerclub\Service\BaseService;
+use Solcre\Pokerclub\Repository\BaseRepository;
 
 class ComissionSessionServiceTest extends TestCase
 {

@@ -1,12 +1,12 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Entity\ExpensesSessionEntity;
-use \Solcre\lmsuy\Entity\SessionEntity;
-use Solcre\lmsuy\Service\ExpensesSessionService;
+use \Solcre\Pokerclub\Entity\ExpensesSessionEntity;
+use \Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Service\ExpensesSessionService;
 use Doctrine\ORM\EntityManager;
-use \Solcre\lmsuy\Exception\ExpensesInvalidException;
-use Solcre\lmsuy\Repository\BaseRepository;
+use \Solcre\Pokerclub\Exception\ExpensesInvalidException;
+use Solcre\Pokerclub\Repository\BaseRepository;
 
 class ExpensesSessionServiceTest extends TestCase
 {

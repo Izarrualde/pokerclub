@@ -1,17 +1,16 @@
 <?php
-namespace Solcre\pokerclub\Entity;
+namespace Solcre\Pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  * @ORM\Embeddable
- * @ORM\Entity(repositoryClass="Solcre\pokerclub\Repository\BuyinSessionRepository")
+ * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BuyinSessionRepository")
  * @ORM\Table(name="session_buyins")
  */
 class BuyinSessionEntity
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -49,7 +48,7 @@ class BuyinSessionEntity
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Solcre\pokerclub\Entity\UserSessionEntity", inversedBy="buyins")
+     * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\UserSessionEntity", inversedBy="buyins")
      * @ORM\JoinColumn(name="session_user_id",                              referencedColumnName="id")
      */
     protected $userSession;

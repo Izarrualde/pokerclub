@@ -1,9 +1,9 @@
 <?php
-namespace Solcre\pokerclub\Service;
+namespace Solcre\Pokerclub\Service;
 
-use \Solcre\pokerclub\Entity\UserEntity;
+use \Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\pokerclub\Exception\UserHadActionException;
+use Solcre\Pokerclub\Exception\UserHadActionException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class UserService extends BaseService

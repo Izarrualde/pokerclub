@@ -1,7 +1,7 @@
 <?php
-namespace Solcre\pokerclub\Service;
+namespace Solcre\Pokerclub\Service;
 
-use \Solcre\pokerclub\Entity\SessionEntity;
+use \Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 
 class SessionService extends BaseService

@@ -1,11 +1,11 @@
 <?php
-namespace Solcre\pokerclub\Repository;
+namespace Solcre\Pokerclub\Repository;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\Expr\Join;
-use Solcre\pokerclub\Entity\BuyinSessionEntity;
-use Solcre\pokerclub\Entity\UserSessionEntity;
-use Solcre\pokerclub\Repository\BaseRepository;
+use Solcre\Pokerclub\Entity\BuyinSessionEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Repository\BaseRepository;
 
 /**
  * @codeCoverageIgnore

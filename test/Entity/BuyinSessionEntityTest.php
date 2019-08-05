@@ -2,9 +2,9 @@
 
 use PHPUnit\Framework\TestCase;
 // use ReflectionMethod;
-use Solcre\lmsuy\Entity\BuyinSessionEntity;
-use Solcre\lmsuy\Entity\userSessionEntity;
-use Solcre\lmsuy\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\BuyinSessionEntity;
+use Solcre\Pokerclub\Entity\userSessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
 
 class BuyinSessionEntityTest extends TestCase
 {

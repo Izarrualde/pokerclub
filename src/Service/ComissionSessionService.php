@@ -1,11 +1,11 @@
 <?php
-namespace Solcre\pokerclub\Service;
+namespace Solcre\Pokerclub\Service;
 
-use Solcre\pokerclub\Entity\ComissionSessionEntity;
-use Solcre\pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\ComissionSessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\pokerclub\Exception\ComissionInvalidException;
-use Solcre\pokerclub\Exception\ComissionNotFoundException;
+use Solcre\Pokerclub\Exception\ComissionInvalidException;
+use Solcre\Pokerclub\Exception\ComissionNotFoundException;
 
 class ComissionSessionService extends BaseService
 {
@@ -24,7 +24,7 @@ class ComissionSessionService extends BaseService
         $comission    = new ComissionSessionEntity();
         $comission->setHour(new \DateTime($data['hour']));
         $comission->setComission($data['comission']);
-        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
+        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
         $comission->setSession($session);
 
         $this->entityManager->persist($comission);
@@ -42,7 +42,6 @@ class ComissionSessionService extends BaseService
             return $comission;
         }
 */
-
 
     public function update($data, $strategies = null)
     {

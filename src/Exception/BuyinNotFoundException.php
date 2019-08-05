@@ -1,5 +1,5 @@
 <?php
-namespace Solcre\pokerclub\Exception;
+namespace Solcre\Pokerclub\Exception;
 
 /**
  * @codeCoverageIgnore

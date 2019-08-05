@@ -1,11 +1,11 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Entity\SessionEntity;
-use Solcre\lmsuy\Service\SessionService;
+use \Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Service\SessionService;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Repository\BaseRepository;
-use Solcre\lmsuy\Rakeback\SimpleRakeback;
+use Solcre\Pokerclub\Repository\BaseRepository;
+use Solcre\Pokerclub\Rakeback\SimpleRakeback;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class SessionServiceTest extends TestCase
@@ -25,7 +25,7 @@ public function testAdd()
       'title'         => 'mesa mixta',
       'description'   => 'lunes',
       'seats'         => 9,
-      'rakebackClass' => 'Solcre\lmsuy\Rakeback\SimpleRakeback'
+      'rakebackClass' => 'Solcre\Pokerclub\Rakeback\SimpleRakeback'
     ];
 
    $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -142,7 +142,7 @@ public function testAdd()
 
   public function createRakebackAlgorithm()
   {
-    $className = 'Solcre\lmsuy\Rakeback\SimpleRakeback';
+    $className = 'Solcre\Pokerclub\Rakeback\SimpleRakeback';
 
     $rakebackAlgoritmClass = get_class($sessionService->createRakebackAlgorithm($className));
 

@@ -1,11 +1,11 @@
 <?php
-namespace Solcre\pokerclub\Service;
+namespace Solcre\Pokerclub\Service;
 
-use \Solcre\pokerclub\Entity\UserSessionEntity;
-use \Solcre\pokerclub\Entity\UserEntity;
+use \Solcre\Pokerclub\Entity\UserSessionEntity;
+use \Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\pokerclub\Exception\UserSessionAlreadyAddedException;
-use Solcre\pokerclub\Exception\TableIsFullException;
+use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
+use Solcre\Pokerclub\Exception\TableIsFullException;
 
 class UserSessionService extends BaseService
 {
@@ -20,8 +20,8 @@ class UserSessionService extends BaseService
 
     public function add($data, $strategies = null)
     {
-        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
-        $user    = $this->entityManager->getReference('Solcre\pokerclub\Entity\UserEntity', $data['idUser']);
+        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
+        $user    = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $data['idUser']);
 
         if (in_array($data['idUser'], $session->getActivePlayers())) {
             throw new UserSessionAlreadyAddedException();
@@ -54,7 +54,7 @@ class UserSessionService extends BaseService
         $userSession->setCashout($data['cashout']);
         $userSession->setStart(new \DateTime($data['start']));
         $userSession->setIsApproved($data['isApproved']);
-        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
+        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
         $userSession->setSession($session);
         $userSession->setIdUser($data['idUser']);
 

@@ -1,12 +1,12 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\lmsuy\Entity\UserEntity;
+use \Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Service\UserService;
-use Solcre\lmsuy\Exception\UserHadActionException;
+use Solcre\Pokerclub\Service\UserService;
+use Solcre\Pokerclub\Exception\UserHadActionException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
-use Solcre\lmsuy\Repository\BaseRepository;
+use Solcre\Pokerclub\Repository\BaseRepository;
 
 class UserServiceTest extends TestCase
 {

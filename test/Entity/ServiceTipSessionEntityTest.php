@@ -2,8 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 // use ReflectionMethod;
-use Solcre\lmsuy\Entity\ServiceTipSessionEntity;
-use Solcre\lmsuy\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
 
 class ServiceTipSessionEntityTest extends TestCase
 {

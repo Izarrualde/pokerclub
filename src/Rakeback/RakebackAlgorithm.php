@@ -1,7 +1,7 @@
 <?php
-namespace Solcre\lmsuy\Rakeback;
+namespace Solcre\Pokerclub\Rakeback;
 
-use Solcre\lmsuy\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
 
 interface RakeBackAlgorithm
 {

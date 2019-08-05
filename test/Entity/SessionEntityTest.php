@@ -2,14 +2,14 @@
 
 use PHPUnit\Framework\TestCase;
 // use ReflectionMethod;
-use Solcre\lmsuy\Entity\SessionEntity;
-use Solcre\lmsuy\Entity\UserSessionEntity;
-use Solcre\lmsuy\Entity\UserEntity;
-use Solcre\lmsuy\Entity\DealerTipSessionEntity;
-use Solcre\lmsuy\Entity\ServiceTipSessionEntity;
-use Solcre\lmsuy\Entity\ExpensesSessionEntity;
-use Solcre\lmsuy\Entity\ComissionSessionEntity;
-use Solcre\lmsuy\Entity\BuyinSessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Entity\UserEntity;
+use Solcre\Pokerclub\Entity\DealerTipSessionEntity;
+use Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
+use Solcre\Pokerclub\Entity\ExpensesSessionEntity;
+use Solcre\Pokerclub\Entity\ComissionSessionEntity;
+use Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class SessionEntityTest extends TestCase

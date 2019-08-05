@@ -1,12 +1,12 @@
 <?php
-namespace Solcre\pokerclub\Entity;
+namespace Solcre\Pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Embeddable
- * @ORM\Entity(repositoryClass="Solcre\pokerclub\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BaseRepository")
  * @ORM\Table(name="sessions_users")
  */
 class UserSessionEntity
@@ -21,7 +21,7 @@ class UserSessionEntity
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Solcre\pokerclub\Entity\SessionEntity", inversedBy="sessionUsers")
+     * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\SessionEntity", inversedBy="sessionUsers")
      * @ORM\JoinColumn(name="session_id",                               referencedColumnName="id")
      */
     protected $session;
@@ -62,7 +62,7 @@ class UserSessionEntity
 
 
        /**
-        * @ORM\ManyToOne(targetEntity="Solcre\pokerclub\Entity\UserEntity", inversedBy="sessionUsers")
+        * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\UserEntity", inversedBy="sessionUsers")
         * @ORM\JoinColumn(name="user_id",                               referencedColumnName="id")
         */
     protected $user;
@@ -71,7 +71,7 @@ class UserSessionEntity
     /**
      * One User Session has many Buyins. This is the inverse side.
      *
-     * @ORM\OneToMany(targetEntity="Solcre\pokerclub\Entity\BuyinSessionEntity", mappedBy="userSession")
+     * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\BuyinSessionEntity", mappedBy="userSession")
      */
     protected $buyins;
 
@@ -307,7 +307,6 @@ class UserSessionEntity
         
     public function toArray()
     {
-        
         $ret =  [
         'id'          => $this->getId(),
         'idSession'   => $this->getSession()->getId(),

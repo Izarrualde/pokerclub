@@ -1,19 +1,19 @@
 <?php
-namespace Solcre\pokerclub\Entity;
+namespace Solcre\Pokerclub\Entity;
 
-use Solcre\pokerclub\Exception\UserAlreadyAddedException;
-use Solcre\pokerclub\Exception\SessionFullException;
-use Solcre\pokerclub\Exception\PlayerNotFoundException;
-use Solcre\pokerclub\Exception\InsufficientBuyinException;
-use Solcre\pokerclub\Exception\ComissionAlreadyAddedException;
-use Solcre\pokerclub\Exception\DealerTipAlreadyAddedException;
-use Solcre\pokerclub\Exception\ServiceTipAlreadyAddedException;
+use Solcre\Pokerclub\Exception\UserAlreadyAddedException;
+use Solcre\Pokerclub\Exception\SessionFullException;
+use Solcre\Pokerclub\Exception\PlayerNotFoundException;
+use Solcre\Pokerclub\Exception\InsufficientBuyinException;
+use Solcre\Pokerclub\Exception\ComissionAlreadyAddedException;
+use Solcre\Pokerclub\Exception\DealerTipAlreadyAddedException;
+use Solcre\Pokerclub\Exception\ServiceTipAlreadyAddedException;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Solcre\pokerclub\Rakeback\RakebackAlgorithm;
+use Solcre\Pokerclub\Rakeback\RakebackAlgorithm;
 
 /**
- * @ORM\Entity(repositoryClass="Solcre\pokerclub\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BaseRepository")
  * @ORM\Table(name="sessions")
  */
 class SessionEntity
@@ -69,28 +69,28 @@ class SessionEntity
     protected $endTime;
 
     /**
-     * @ORM\OneToMany(targetEntity="Solcre\pokerclub\Entity\DealerTipSessionEntity", mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\DealerTipSessionEntity", mappedBy="session")
      */
     protected $sessionDealerTips;
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Solcre\pokerclub\Entity\ServiceTipSessionEntity", mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\ServiceTipSessionEntity", mappedBy="session")
      */
     protected $sessionServiceTips;
 
     /**
-     * @ORM\OneToMany(targetEntity="Solcre\pokerclub\Entity\UserSessionEntity", mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\UserSessionEntity", mappedBy="session")
      */
     protected $sessionUsers;
 
     /**
-     * @ORM\OneToMany(targetEntity="Solcre\pokerclub\Entity\ComissionSessionEntity", mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\ComissionSessionEntity", mappedBy="session")
      */
     protected $sessionComissions;
 
     /**
-     * @ORM\OneToMany(targetEntity="Solcre\pokerclub\Entity\ExpensesSessionEntity", mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\ExpensesSessionEntity", mappedBy="session")
      */
     protected $sessionExpenses;
 

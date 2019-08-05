@@ -1,10 +1,10 @@
 <?php
 namespace Solcre\pokerclub\Service;
 
-use \Solcre\pokerclub\Entity\BuyinSessionEntity;
+use \Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Exception\BuyinInvalidException;
-use Solcre\lmsuy\Exception\BuyinNotFoundException;
+use Solcre\Pokerclub\Exception\BuyinInvalidException;
+use Solcre\Pokerclub\Exception\BuyinNotFoundException;
 
 
 class BuyinSessionService extends BaseService
