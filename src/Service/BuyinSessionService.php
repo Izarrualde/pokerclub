@@ -1,5 +1,5 @@
 <?php
-namespace Solcre\pokerclub\Service;
+namespace Solcre\Pokerclub\Service;
 
 use \Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Doctrine\ORM\EntityManager;
