@@ -4,7 +4,7 @@ namespace Solcre\Pokerclub\Service;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
-// use Exception;
+use Exception;
 use ReflectionClass;
 use BaseRepository;
 
