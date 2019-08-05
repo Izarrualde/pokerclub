@@ -1,11 +1,11 @@
 <?php
-namespace Solcre\lmsuy\Entity;
+namespace Solcre\pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Embeddable
- * @ORM\Entity(repositoryClass="Solcre\lmsuy\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\pokerclub\Repository\BaseRepository")
  * @ORM\Table(name="users")
  */
 class UserEntity

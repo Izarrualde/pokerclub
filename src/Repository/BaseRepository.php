@@ -1,6 +1,6 @@
 <?php
 
-namespace Solcre\lmsuy\Repository;
+namespace Solcre\pokerclub\Repository;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;

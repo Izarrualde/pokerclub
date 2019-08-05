@@ -1,9 +1,9 @@
 <?php
-namespace Solcre\lmsuy\Service;
+namespace Solcre\pokerclub\Service;
 
-use \Solcre\lmsuy\Entity\UserEntity;
+use \Solcre\pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Exception\UserHadActionException;
+use Solcre\pokerclub\Exception\UserHadActionException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class UserService extends BaseService
@@ -52,7 +52,7 @@ class UserService extends BaseService
     public function delete($id, $entityObj = null)
     {
 
-        $user = $this->entityManager->getReference('Solcre\lmsuy\Entity\UserEntity', $id);
+        $user = $this->entityManager->getReference('Solcre\pokerclub\Entity\UserEntity', $id);
 
         try {
             $this->entityManager->remove($user);

@@ -1,12 +1,11 @@
 <?php
-namespace Solcre\lmsuy\Service;
+namespace Solcre\pokerclub\Service;
 
-use Solcre\lmsuy\Entity\ComissionSessionEntity;
-
-use Solcre\lmsuy\Entity\SessionEntity;
-
+use Solcre\pokerclub\Entity\ComissionSessionEntity;
+use Solcre\pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Exception\ComissionInvalidException;
+use Solcre\pokerclub\Exception\ComissionInvalidException;
+use Solcre\pokerclub\Exception\ComissionNotFoundException;
 
 class ComissionSessionService extends BaseService
 {
@@ -25,7 +24,7 @@ class ComissionSessionService extends BaseService
         $comission    = new ComissionSessionEntity();
         $comission->setHour(new \DateTime($data['hour']));
         $comission->setComission($data['comission']);
-        $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
+        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
         $comission->setSession($session);
 
         $this->entityManager->persist($comission);
@@ -65,11 +64,16 @@ class ComissionSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $comission = $this->entityManager->getReference('Solcre\lmsuy\Entity\ComissionSessionEntity', $id);
-        
-        $this->entityManager->remove($comission);
-        $this->entityManager->flush();
+        try {
+            $comission    = parent::fetch($id);
 
-        return true;
+            $this->entityManager->remove($comission);
+            $this->entityManager->flush();
+
+            return true;
+        } catch (\Exception $e) {
+            throw new ComisionNotFoundException();
+        } 
+    } }
     }
 }

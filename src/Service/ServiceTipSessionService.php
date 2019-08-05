@@ -1,9 +1,9 @@
 <?php
-namespace Solcre\lmsuy\Service;
+namespace Solcre\lpokerclubmsuy\Service;
 
-use \Solcre\lmsuy\Entity\ServiceTipSessionEntity;
+use \Solcre\pokerclub\Entity\ServiceTipSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\lmsuy\Exception\ServiceTipInvalidException;
+use \Solcre\pokerclubmsuy\Exception\ServiceTipInvalidException;
 
 class ServiceTipSessionService extends BaseService
 {
@@ -22,7 +22,7 @@ class ServiceTipSessionService extends BaseService
         $data['hour'] = new \DateTime($data['hour']);
         $serviceTip   = new  ServiceTipSessionEntity();
         $serviceTip->setHour($data['hour']);
-        $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
+        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
         $serviceTip->setSession($session);
         $serviceTip->setServiceTip($data['serviceTip']);
 
@@ -46,7 +46,7 @@ class ServiceTipSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $serviceTip = $this->entityManager->getReference('Solcre\lmsuy\Entity\ServiceTipSessionEntity', $id);
+        $serviceTip = $this->entityManager->getReference('Solcre\pokerclub\Entity\ServiceTipSessionEntity', $id);
 
         $this->entityManager->remove($serviceTip);
         $this->entityManager->flush();

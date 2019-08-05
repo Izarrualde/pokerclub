@@ -1,9 +1,9 @@
 <?php
-namespace Solcre\lmsuy\Service;
+namespace Solcre\pokerclub\Service;
 
-use \Solcre\lmsuy\Entity\DealerTipSessionEntity;
+use \Solcre\pokerclub\Entity\DealerTipSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\lmsuy\Exception\DealerTipInvalidException;
+use \Solcre\pokerclub\Exception\DealerTipInvalidException;
 
 class DealerTipSessionService extends BaseService
 {
@@ -22,7 +22,7 @@ class DealerTipSessionService extends BaseService
         $data['hour'] = new \DateTime($data['hour']);
         $dealerTip    = new DealerTipSessionEntity();
         $dealerTip->setHour($data['hour']);
-        $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
+        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
         $dealerTip->setSession($session);
         $dealerTip->setDealerTip($data['dealerTip']);
 
@@ -46,7 +46,7 @@ class DealerTipSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $dealerTip = $this->entityManager->getReference('Solcre\lmsuy\Entity\DealerTipSessionEntity', $id);
+        $dealerTip = $this->entityManager->getReference('Solcre\pokerclub\Entity\DealerTipSessionEntity', $id);
 
         $this->entityManager->remove($dealerTip);
         $this->entityManager->flush();

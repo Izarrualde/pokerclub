@@ -1,11 +1,11 @@
 <?php
-namespace Solcre\lmsuy\Service;
+namespace Solcre\pokerclub\Service;
 
-use \Solcre\lmsuy\Entity\UserSessionEntity;
-use \Solcre\lmsuy\Entity\UserEntity;
+use \Solcre\pokerclub\Entity\UserSessionEntity;
+use \Solcre\pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\lmsuy\Exception\UserSessionAlreadyAddedException;
-use Solcre\lmsuy\Exception\TableIsFullException;
+use Solcre\pokerclub\Exception\UserSessionAlreadyAddedException;
+use Solcre\pokerclub\Exception\TableIsFullException;
 
 class UserSessionService extends BaseService
 {
@@ -20,8 +20,8 @@ class UserSessionService extends BaseService
 
     public function add($data, $strategies = null)
     {
-        $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
-        $user    = $this->entityManager->getReference('Solcre\lmsuy\Entity\UserEntity', $data['idUser']);
+        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
+        $user    = $this->entityManager->getReference('Solcre\pokerclub\Entity\UserEntity', $data['idUser']);
 
         if (in_array($data['idUser'], $session->getActivePlayers())) {
             throw new UserSessionAlreadyAddedException();
@@ -54,7 +54,7 @@ class UserSessionService extends BaseService
         $userSession->setCashout($data['cashout']);
         $userSession->setStart(new \DateTime($data['start']));
         $userSession->setIsApproved($data['isApproved']);
-        $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
+        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
         $userSession->setSession($session);
         $userSession->setIdUser($data['idUser']);
 
@@ -65,7 +65,7 @@ class UserSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $userSession = $this->entityManager->getReference('Solcre\lmsuy\Entity\UserSessionEntity', $id);
+        $userSession = $this->entityManager->getReference('Solcre\pokerclub\Entity\UserSessionEntity', $id);
 
         $this->entityManager->remove($userSession);
         $this->entityManager->flush();

@@ -4,11 +4,11 @@ namespace Solcre\pokerclub\Exception;
 /**
  * @codeCoverageIgnore
  */
-class DealerTipInvalidException extends \Exception
+class ComissionNotFoundException extends \Exception
 {
 
     public function __construct()
     {
-        parent::__construct("El Dealer Tip debe ser numérico.");
+        parent::__construct("La comision debe ser numérica.");
     }
 }

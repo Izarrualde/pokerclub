@@ -1,9 +1,9 @@
 <?php
-namespace Solcre\lmsuy\Service;
+namespace Solcre\pokerclub\Service;
 
-use \Solcre\lmsuy\Entity\ExpensesSessionEntity;
+use \Solcre\pokerclub\Entity\ExpensesSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\lmsuy\Exception\ExpensesInvalidException;
+use \Solcre\pokerclub\Exception\ExpensesInvalidException;
 
 class ExpensesSessionService extends BaseService
 {
@@ -20,7 +20,7 @@ class ExpensesSessionService extends BaseService
         }
 
         $expenditure = new ExpensesSessionEntity();
-        $session     = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $data['idSession']);
+        $session     = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $data['idSession']);
         $expenditure->setSession($session);
 
         $expenditure->setDescription($data['description']);
@@ -46,7 +46,7 @@ class ExpensesSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $expenditure = $this->entityManager->getReference('Solcre\lmsuy\Entity\ExpensesSessionEntity', $id);
+        $expenditure = $this->entityManager->getReference('Solcre\pokerclub\Entity\ExpensesSessionEntity', $id);
         $this->entityManager->remove($expenditure);
         $this->entityManager->flush();
 

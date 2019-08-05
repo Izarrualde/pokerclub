@@ -1,7 +1,7 @@
 <?php
-namespace Solcre\lmsuy\Service;
+namespace Solcre\pokerclub\Service;
 
-use \Solcre\lmsuy\Entity\SessionEntity;
+use \Solcre\pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 
 class SessionService extends BaseService
@@ -49,7 +49,7 @@ class SessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $session = $this->entityManager->getReference('Solcre\lmsuy\Entity\SessionEntity', $id);
+        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $id);
 
         $this->entityManager->remove($session);
         $this->entityManager->flush();
