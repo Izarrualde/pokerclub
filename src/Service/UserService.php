@@ -51,16 +51,16 @@ class UserService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-
-        $user = $this->entityManager->getReference('Solcre\pokerclub\Entity\UserEntity', $id);
-
         try {
-            $this->entityManager->remove($user);
-            $this->entityManager->flush();
-        } catch (ForeignKeyConstraintViolationException $e) {
-             throw new UserHadActionException();
-        }
+            $user = parent::fetch($id);
+            try {
+                $this->entityManager->remove($user);
+                $this->entityManager->flush();
+            } catch (ForeignKeyConstraintViolationException $e) {
+                 throw new UserHadActionException();
+            }
 
-        return true;
+            return true;
+        }
     }
 }

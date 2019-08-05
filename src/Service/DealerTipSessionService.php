@@ -46,11 +46,15 @@ class DealerTipSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $dealerTip = $this->entityManager->getReference('Solcre\pokerclub\Entity\DealerTipSessionEntity', $id);
+        try {
+            $dealerTip = parent::fetch($id);
 
-        $this->entityManager->remove($dealerTip);
-        $this->entityManager->flush();
+            $this->entityManager->remove($dealerTip);
+            $this->entityManager->flush();
 
-        return true;
-    }
+            return true;
+        } catch (\Exception $e) {
+            throw new DealerTipNotFoundException();
+        } 
+    } 
 }

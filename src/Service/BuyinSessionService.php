@@ -4,6 +4,8 @@ namespace Solcre\pokerclub\Service;
 use \Solcre\pokerclub\Entity\BuyinSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\lmsuy\Exception\BuyinInvalidException;
+use Solcre\lmsuy\Exception\BuyinNotFoundException;
+
 
 class BuyinSessionService extends BaseService
 {
@@ -72,12 +74,16 @@ class BuyinSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        
-        $buyin = $this->entityManager->getReference('Solcre\pokerclub\Entity\BuyinSessionEntity', $id);
+        try {
+            $buyin    = parent::fetch($id);
 
-        $this->entityManager->remove($buyin);
-        $this->entityManager->flush();
+            $this->entityManager->remove($buyin);
+            $this->entityManager->flush();
 
-        return true;
-    }
+            return true;
+        } catch (\Exception $e) {
+            throw new BuyinNotFoundException();
+        } 
+    } 
+
 }

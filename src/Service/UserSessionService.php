@@ -65,13 +65,17 @@ class UserSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $userSession = $this->entityManager->getReference('Solcre\pokerclub\Entity\UserSessionEntity', $id);
+        try {
+            $userSession = parent::fetch($id);
 
-        $this->entityManager->remove($userSession);
-        $this->entityManager->flush();
+            $this->entityManager->remove($userSession);
+            $this->entityManager->flush();
 
-        return true;
-    }
+            return true;
+        } catch (\Exception $e) {
+            throw new UserSessionNotFoundException();
+        } 
+    } 
 
 
     public function close($data)

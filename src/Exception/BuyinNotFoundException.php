@@ -4,7 +4,7 @@ namespace Solcre\pokerclub\Exception;
 /**
  * @codeCoverageIgnore
  */
-class ComissionNotFoundException extends \Exception
+class BuyinNotFoundException extends \Exception
 {
 
     public function __construct()

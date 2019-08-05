@@ -4,6 +4,7 @@ namespace Solcre\pokerclub\Service;
 use \Solcre\pokerclub\Entity\ExpensesSessionEntity;
 use Doctrine\ORM\EntityManager;
 use \Solcre\pokerclub\Exception\ExpensesInvalidException;
+use \Solcre\pokerclub\Exception\ExpenditureNotFoundException;
 
 class ExpensesSessionService extends BaseService
 {
@@ -46,10 +47,17 @@ class ExpensesSessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $expenditure = $this->entityManager->getReference('Solcre\pokerclub\Entity\ExpensesSessionEntity', $id);
-        $this->entityManager->remove($expenditure);
-        $this->entityManager->flush();
+        try {
+            $expenditure    = parent::fetch($id);
 
-        return true;
-    }
+            $this->entityManager->remove($expenditure);
+            $this->entityManager->flush();
+
+            return true;
+        } catch (\Exception $e) {
+            throw new ExpenditureNotFoundException();
+        } 
+    } 
+
+
 }

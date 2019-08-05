@@ -72,8 +72,7 @@ class ComissionSessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            throw new ComisionNotFoundException();
+            throw new ComissionNotFoundException();
         } 
-    } }
-    }
+    } 
 }

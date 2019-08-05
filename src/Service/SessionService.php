@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 
 class SessionService extends BaseService
 {
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em);
@@ -49,13 +48,17 @@ class SessionService extends BaseService
 
     public function delete($id, $entityObj = null)
     {
-        $session = $this->entityManager->getReference('Solcre\pokerclub\Entity\SessionEntity', $id);
+        try {
+            $session = parent::fetch($id);
 
-        $this->entityManager->remove($session);
-        $this->entityManager->flush();
+            $this->entityManager->remove($session);
+            $this->entityManager->flush();
 
-        return true;
-    }
+            return true;
+        } catch (\Exception $e) {
+            throw new SessionNotFoundException();
+        } 
+    } 
 
     protected function createRakebackAlgorithm($classname)
     {
