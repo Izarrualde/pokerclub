@@ -4,6 +4,7 @@ namespace Solcre\Pokerclub\Service;
 use \Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use \Solcre\Pokerclub\Exception\SessionNotFoundException;
+use Exception;
 
 class SessionService extends BaseService
 {
@@ -62,7 +63,6 @@ class SessionService extends BaseService
             } 
             throw $e;
         }  
-
     } 
 
     protected function createRakebackAlgorithm($classname)

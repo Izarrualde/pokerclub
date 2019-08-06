@@ -5,7 +5,9 @@ use \Solcre\Pokerclub\Entity\UserSessionEntity;
 use \Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
+use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
+use Exception;
 
 class UserSessionService extends BaseService
 {
@@ -66,15 +68,18 @@ class UserSessionService extends BaseService
     public function delete($id, $entityObj = null)
     {
         try {
-            $userSession = parent::fetch($id);
+            $userSession    = parent::fetch($id);
 
             $this->entityManager->remove($userSession);
             $this->entityManager->flush();
 
             return true;
         } catch (\Exception $e) {
-            throw new UserSessionNotFoundException();
-        } 
+            if ($e->getCode() == 404) { //magic number
+               throw new UserSessionNotFoundException(); 
+            } 
+            throw $e;
+        }  
     } 
 
 

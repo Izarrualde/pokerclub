@@ -5,6 +5,9 @@ use \Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\UserHadActionException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Solcre\Pokerclub\Exception\UserNotFoundException;
+use Exception;
+
 
 class UserService extends BaseService
 {
@@ -52,18 +55,18 @@ class UserService extends BaseService
     public function delete($id, $entityObj = null)
     {
         try {
-            $user = parent::fetch($id);
-            try {
-                $this->entityManager->remove($user);
-                $this->entityManager->flush();
-            } catch (ForeignKeyConstraintViolationException $e) {
-                 throw new UserHadActionException();
-            } 
+            $user    = parent::fetch($id);
+
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
 
             return true;
         } catch (\Exception $e) {
-            return $e;
-        }
-    }
+            if ($e->getCode() == 404) { //magic number
+               throw new UserNotFoundException(); 
+            } 
+            throw $e;
+        }  
+    } 
     
 }

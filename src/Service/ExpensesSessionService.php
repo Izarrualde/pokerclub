@@ -5,6 +5,7 @@ use \Solcre\Pokerclub\Entity\ExpensesSessionEntity;
 use Doctrine\ORM\EntityManager;
 use \Solcre\Pokerclub\Exception\ExpensesInvalidException;
 use \Solcre\Pokerclub\Exception\ExpenditureNotFoundException;
+use Exception;
 
 class ExpensesSessionService extends BaseService
 {
@@ -55,8 +56,11 @@ class ExpensesSessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            throw new ExpenditureNotFoundException();
-        } 
+            if ($e->getCode() == 404) { //magic number
+               throw new ExpenditureNotFoundException(); 
+            } 
+            throw $e;
+        }  
     } 
 
 

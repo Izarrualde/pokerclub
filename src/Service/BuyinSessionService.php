@@ -5,6 +5,7 @@ use \Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\BuyinInvalidException;
 use Solcre\Pokerclub\Exception\BuyinNotFoundException;
+use Exception;
 
 
 class BuyinSessionService extends BaseService
@@ -82,8 +83,12 @@ class BuyinSessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            throw new BuyinNotFoundException();
-        } 
+            if ($e->getCode() == 404) { //magic number
+               throw new BuyinNotFoundException(); 
+            } 
+            throw $e;
+        }  
     } 
+
 
 }

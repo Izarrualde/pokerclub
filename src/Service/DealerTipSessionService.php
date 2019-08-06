@@ -4,6 +4,8 @@ namespace Solcre\Pokerclub\Service;
 use \Solcre\Pokerclub\Entity\DealerTipSessionEntity;
 use Doctrine\ORM\EntityManager;
 use \Solcre\Pokerclub\Exception\DealerTipInvalidException;
+use \Solcre\Pokerclub\Exception\DealerTipNotFoundException;
+use Exception;
 
 class DealerTipSessionService extends BaseService
 {
@@ -47,14 +49,17 @@ class DealerTipSessionService extends BaseService
     public function delete($id, $entityObj = null)
     {
         try {
-            $dealerTip = parent::fetch($id);
+            $dealerTip    = parent::fetch($id);
 
             $this->entityManager->remove($dealerTip);
             $this->entityManager->flush();
 
             return true;
         } catch (\Exception $e) {
-            throw new DealerTipNotFoundException();
-        } 
+            if ($e->getCode() == 404) { //magic number
+               throw new DealerTipNotFoundException(); 
+            } 
+            throw $e;
+        }  
     } 
 }

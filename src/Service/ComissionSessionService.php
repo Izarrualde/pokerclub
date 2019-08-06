@@ -6,6 +6,7 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\ComissionInvalidException;
 use Solcre\Pokerclub\Exception\ComissionNotFoundException;
+use Exception;
 
 class ComissionSessionService extends BaseService
 {
@@ -71,7 +72,11 @@ class ComissionSessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            throw new ComissionNotFoundException();
-        } 
+            if ($e->getCode() == 404) { //magic number
+               throw new ComissionNotFoundException(); 
+            } 
+            throw $e;
+        }  
     } 
+
 }
