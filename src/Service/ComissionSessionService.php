@@ -78,5 +78,4 @@ class ComissionSessionService extends BaseService
             throw $e;
         }  
     } 
-
 }

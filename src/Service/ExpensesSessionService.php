@@ -9,7 +9,6 @@ use Exception;
 
 class ExpensesSessionService extends BaseService
 {
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em);
@@ -62,6 +61,4 @@ class ExpensesSessionService extends BaseService
             throw $e;
         }  
     } 
-
-
 }

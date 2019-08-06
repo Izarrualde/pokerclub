@@ -9,7 +9,6 @@ use Exception;
 
 class ServiceTipSessionService extends BaseService
 {
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em);

@@ -19,7 +19,6 @@ class UserSessionService extends BaseService
         $this->userService = $userService;
     }
 
-
     public function add($data, $strategies = null)
     {
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);

@@ -11,7 +11,6 @@ use Exception;
 
 class UserService extends BaseService
 {
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em);
@@ -67,6 +66,5 @@ class UserService extends BaseService
             } 
             throw $e;
         }  
-    } 
-    
+    }
 }
