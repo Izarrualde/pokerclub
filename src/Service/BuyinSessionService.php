@@ -89,6 +89,4 @@ class BuyinSessionService extends BaseService
             throw $e;
         }  
     } 
-
-
 }
