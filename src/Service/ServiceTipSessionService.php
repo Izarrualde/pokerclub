@@ -3,8 +3,8 @@ namespace Solcre\Pokerclub\Service;
 
 use \Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\Pokerclubmsuy\Exception\ServiceTipInvalidException;
-use \Solcre\Pokerclubmsuy\Exception\ServiceNotFoundException;
+use \Solcre\Pokerclub\Exception\ServiceTipInvalidException;
+use \Solcre\Pokerclub\Exception\ServiceTipNotFoundException;
 use Exception;
 
 class ServiceTipSessionService extends BaseService
