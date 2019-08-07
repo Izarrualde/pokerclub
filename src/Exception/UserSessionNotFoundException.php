@@ -6,7 +6,6 @@ namespace Solcre\Pokerclub\Exception;
  */
 class UserSessionNotFoundException extends \Exception
 {
-
     public function __construct()
     {
         parent::__construct("Resource not found.");
