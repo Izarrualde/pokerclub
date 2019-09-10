@@ -20,9 +20,9 @@ class SessionService extends BaseService
         $session->setTitle($data['title']);
         $session->setDescription($data['description']);
         $session->setSeats($data['seats']);
-        $session->setStartTime(new \DateTime($data['startTime']));
-        $session->setStartTimeReal(new \DateTime($data['startTimeReal']));
-        $session->setEndTime(new \DateTime($data['endTime']));
+        $session->setStartTime(new \DateTime($data['start_at']));
+        $session->setStartTimeReal(new \DateTime($data['real_start_at']));
+        $session->setEndTime(new \DateTime($data['end_at']));
         $session->setRakebackClass($data['rakebackClass']);
 
         $this->entityManager->persist($session);
@@ -33,12 +33,11 @@ class SessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
-        
-        $session = parent::fetch($data['idSession']);
+        $session = parent::fetch($data['id']);
         $session->setDate(new \DateTime($data['created_at']));
         $session->setTitle($data['title']);
         $session->setDescription($data['description']);
-        $session->setSeats($data['count_of_seats']);
+        $session->setSeats($data['seats']);
         $session->setStartTime(new \DateTime($data['start_at']));
         $session->setStartTimeReal(new \DateTime($data['real_start_at']));
         $session->setEndTime(new \DateTime($data['end_at']));

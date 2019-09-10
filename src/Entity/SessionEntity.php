@@ -445,7 +445,8 @@ class SessionEntity
         'comissionTotal'     => $this->getComissionTotal(),
         'expensesTotal'      => $this->getExpensesTotal(),
         'dealerTipTotal'     => $this->getDealerTipTotal(),
-        'serviceTipTotal'    => $this->getServiceTipTotal()
+        'serviceTipTotal'    => $this->getServiceTipTotal(),
+        'rakebackClass'      => $this->getRakebackClass()
         ];
 
        /* foreach ($this->sessionUsers as $userSession) {
