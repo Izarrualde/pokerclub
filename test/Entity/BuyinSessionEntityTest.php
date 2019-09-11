@@ -8,7 +8,6 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 
 class BuyinSessionEntityTest extends TestCase
 {
-
   public function testCreateWithParams()
   {    
     $id = 5;
