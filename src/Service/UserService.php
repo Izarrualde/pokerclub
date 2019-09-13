@@ -20,7 +20,7 @@ class UserService extends BaseService
     {
         $user = new UserEntity();
         $user->setPassword($data['password']);
-        $user->setName($data['firstname']);
+        $user->setName($data['name']);
         $user->setLastname($data['lastname']);
         $user->setEmail($data['email']);
         $user->setUsername($data['username']);
@@ -43,8 +43,16 @@ class UserService extends BaseService
         $user = parent::fetch($data['id']);
         $user->setName($data['name']);
         $user->setLastname($data['lastname']);
-        $user->setEmail($data['email']);
         $user->setUsername($data['username']);
+        $user->setMobile($data['mobile']);
+        $user->setEmail($data['email']);
+        $user->setMultiplier($data['multiplier']);
+        $user->setPassword($data['password']);
+        $user->setIsActive($data['active']);
+        $user->setSessions($data['sessions']);
+        $user->setHours($data['hours']);
+        $user->setResults($data['results']);
+        $user->setCashin($data['cashin']);
 
         $this->entityManager->flush($user);
 

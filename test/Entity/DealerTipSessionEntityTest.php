@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 use Solcre\Pokerclub\Entity\DealerTipSessionEntity;
 use Solcre\Pokerclub\Entity\SessionEntity;
 
-class DealerSessionEntityTest extends TestCase
+class DealerTipSessionEntityTest extends TestCase
 {
 
   public function testCreateWithParams()

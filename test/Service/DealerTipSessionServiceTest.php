@@ -7,7 +7,7 @@ use Solcre\Pokerclub\Service\DealerTipSessionService;
 use Doctrine\ORM\EntityManager;
 use \Solcre\Pokerclub\Exception\DealerTipInvalidException;
 use Solcre\Pokerclub\Repository\BaseRepository;
-Pokerclub
+
 class DealerTipSessionServiceTest extends TestCase
 {
 

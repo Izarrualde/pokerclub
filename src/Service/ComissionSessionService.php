@@ -10,7 +10,6 @@ use Exception;
 
 class ComissionSessionService extends BaseService
 {
-
     public function __construct(EntityManager $em)
     {
         parent::__construct($em);
@@ -53,8 +52,7 @@ class ComissionSessionService extends BaseService
         $data['hour'] = new \DateTime($data['hour']);
 
         $comission    = parent::fetch($data['id']);
-        $comission->setHour($data['hour'])
-        ;
+        $comission->setHour($data['hour']);
         $comission->setComission($data['comission']);
 
         $this->entityManager->flush($comission);
@@ -65,7 +63,7 @@ class ComissionSessionService extends BaseService
     public function delete($id, $entityObj = null)
     {
         try {
-            $comission    = parent::fetch($id);
+            $comission  = parent::fetch($id);
 
             $this->entityManager->remove($comission);
             $this->entityManager->flush();

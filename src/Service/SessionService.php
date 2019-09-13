@@ -93,5 +93,6 @@ class SessionService extends BaseService
         }
 
         $this->entityManager->flush();
+        return true;
     }
 }

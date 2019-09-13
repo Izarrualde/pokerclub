@@ -149,7 +149,7 @@ public function testAdd()
     $this->assertEquals('Solcre\lmsuy\Rakeback\SimpleRakeback', $rakebackAlgoritmClass);
   }
 
-
+/*
  public function testCalculateRakeback()
  {
     $data = [
@@ -220,7 +220,7 @@ public function testAdd()
     // check $rakebackAlgoritm es del clase $session->getRakebackClass
 
     // check que se hace persist para cada userSession,previamente seteado con $sessionPoints
-
+/*
    $mockedEntityManager->expects($this->once())
    ->method('persist')
    ->with(

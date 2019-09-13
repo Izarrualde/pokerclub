@@ -84,14 +84,18 @@ class UserSessionService extends BaseService
 
     public function close($data)
     {
-        $userSession = parent::fetch($data['id']);
+        try {
+            $userSession = parent::fetch($data['id']); 
+        } catch (\Exception $e) {
+            throw $e;   
+        }
 
         $data['end'] = new \DateTime($data['end']);
         $userSession->setEnd($data['end']);
         $userSession->setCashout($data['cashout']);
 
         if ($this->userService instanceof UserService) {
-            $user           = $this->userService->fetch($data['idUser']);
+            $user = $this->userService->fetch($data['idUser']);
             $user->setHours($user->getHours()+$userSession->getDuration());
 
             $this->entityManager->persist($user);
