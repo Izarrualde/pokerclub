@@ -8,9 +8,10 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Solcre\Pokerclub\Exception\UserNotFoundException;
 use Exception;
 
-
 class UserService extends BaseService
 {
+    const STATUS_CODE_404 = 404;
+
     public function __construct(EntityManager $em)
     {
         parent::__construct($em);
@@ -44,7 +45,6 @@ class UserService extends BaseService
         $user->setName($data['name']);
         $user->setLastname($data['lastname']);
         $user->setUsername($data['username']);
-        $user->setMobile($data['mobile']);
         $user->setEmail($data['email']);
         $user->setMultiplier($data['multiplier']);
         $user->setPassword($data['password']);
@@ -69,10 +69,10 @@ class UserService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == 404) { //magic number
-               throw new UserNotFoundException(); 
-            } 
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new UserNotFoundException();
+            }
             throw $e;
-        }  
+        }
     }
 }

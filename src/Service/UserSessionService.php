@@ -11,6 +11,8 @@ use Exception;
 
 class UserSessionService extends BaseService
 {
+    const STATUS_CODE_404 = 404;
+
     protected $userService;
 
     public function __construct(EntityManager $em, $userService = null)
@@ -74,20 +76,19 @@ class UserSessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == 404) { //magic number
-               throw new UserSessionNotFoundException(); 
-            } 
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new UserSessionNotFoundException();
+            }
             throw $e;
-        }  
-    } 
-
+        }
+    }
 
     public function close($data)
     {
         try {
-            $userSession = parent::fetch($data['id']); 
+            $userSession = parent::fetch($data['id']);
         } catch (\Exception $e) {
-            throw $e;   
+            throw $e;
         }
 
         $data['end'] = new \DateTime($data['end']);

@@ -10,105 +10,106 @@ use Solcre\Pokerclub\Repository\BaseRepository;
 
 class DealerTipSessionServiceTest extends TestCase
 {
+    public function testAdd()
+    {
+        $data = [
+            'id'        => 1, 
+            'hour'      => '2019-07-04T19:00', 
+            'dealerTip' => 100,
+            'idSession' => 3
+        ];
 
-public function testAdd()
- {
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('persist')->willReturn(true);
+        $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
 
-    $data = [
-      'id'        => 1, 
-      'hour'      => '2019-07-04T19:00', 
-      'dealerTip' => 100,
-      'idSession' => 3
-    ];
+        $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
-   $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
+        $expectedDealerTip    = new DealerTipSessionEntity();
+        $expectedDealerTip->setHour(new \DateTime($data['hour']));
+        $expectedDealerTip->setDealerTip($data['dealerTip']);
+        $session = new SessionEntity(3);
+        $expectedDealerTip->setSession($session);
 
-    $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('persist')
+        ->with(
+            $this->equalTo($expectedDealerTip)
+        )/*->willReturn('anything')*/;
 
-    $expectedDealerTip    = new DealerTipSessionEntity();
-    $expectedDealerTip->setHour(new \DateTime($data['hour']));
-    $expectedDealerTip->setDealerTip($data['dealerTip']);
-    $session = new SessionEntity(3);
-    $expectedDealerTip->setSession($session);
+        $dealerTipSessionService->add($data);
+        // y que se llame metodo flush con anythig
+    }
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedDealerTip)
-   )/*->willReturn('anything')*/;
+    public function testUpdate()
+    {
 
-   $dealerTipSessionService->add($data);
- // y que se llame metodo flush con anythig
+        $data = [
+            'id'        => 1, 
+            'hour'      => '2019-07-04T19:00', 
+            'dealerTip' => 100,
+            'idSession' => 3
+        ];
 
- }
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
 
-public function testUpdate()
- {
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(new DealerTipSessionEntity(
+        1,
+        new \DateTime('2019-07-04T15:00'),
+        80,
+        new SessionEntity(3)
+        )
+        );
 
-    $data = [
-      'id'        => 1, 
-      'hour'      => '2019-07-04T19:00', 
-      'dealerTip' => 100,
-      'idSession' => 3
-    ];
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager);
 
-    $mockedRepository = $this->createMock(BaseRepository::class);
-    $mockedRepository->method('find')->willReturn(new DealerTipSessionEntity(
-    1,
-    new \DateTime('2019-07-04T15:00'),
-    80,
-    new SessionEntity(3)
-    )
-   );
+        $expectedDealerTip    = new DealerTipSessionEntity();
+        $expectedDealerTip->setId(1);
+        $expectedDealerTip->setHour(new \DateTime($data['hour']));
+        $expectedDealerTip->setDealerTip($data['dealerTip']);
+        $session = new SessionEntity(3);
+        $expectedDealerTip->setSession($session);
 
-    $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $mockedEntityManager->expects($this->once())
+        ->method('flush')
+        ->with(
+            $this->equalTo($expectedDealerTip)
+        );
 
-    $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager);
+        $dealerTipSessionService->update($data);
+        // y que se llame metodo flush con anythig
+    }
 
-    $expectedDealerTip    = new DealerTipSessionEntity();
-    $expectedDealerTip->setId(1);
-    $expectedDealerTip->setHour(new \DateTime($data['hour']));
-    $expectedDealerTip->setDealerTip($data['dealerTip']);
-    $session = new SessionEntity(3);
-    $expectedDealerTip->setSession($session);
+    public function testDelete()
+    {
+        $data = [
+          'id' => 1
+        ];
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedDealerTip)
-   );
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('persist')->willReturn(true);
 
-   $dealerTipSessionService->update($data);
- // y que se llame metodo flush con anythig
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(new DealerTipSessionEntity(1));
 
- }
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-  public function testDelete()
-  {
-    $data = [
-      'id' => 1
-    ];
+        $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('remove')->willReturn(true);
-   $mockedEntityManager->method('getReference')->willReturn(new DealerTipSessionEntity(1));
+        $expectedDealerTip = new DealerTipSessionEntity($data['id']);
 
-   $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('remove')
+        ->with(
+            $this->equalTo($expectedDealerTip)
+        )/*->willReturn('anything')*/;
 
-   $expectedDealerTip = new DealerTipSessionEntity($data['id']);
-
-   $mockedEntityManager->expects($this->once())
-   ->method('remove')
-   ->with(
-       $this->equalTo($expectedDealerTip)
-   )/*->willReturn('anything')*/;
-
-   $dealerTipSessionService->delete($data['id']);
-
-  }
+        $dealerTipSessionService->delete($data['id']);
+    }
 }

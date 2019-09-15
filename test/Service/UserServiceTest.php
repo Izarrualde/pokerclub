@@ -10,150 +10,145 @@ use Solcre\Pokerclub\Repository\BaseRepository;
 
 class UserServiceTest extends TestCase
 {
+    public function testAdd()
+    {
+        $data = [
+            'password'   => '123',
+            'name'       => 'Jhon',
+            'lastname'   => 'Doe',
+            'email'      => 'jhon@lmsuy.com',
+            'username'   => '12345',
+            'multiplier' => 0,
+            'active'     => 1,
+            'hours'      => 0,
+            'points'     => 0,
+            'sessions'   => 0,
+            'results'    => 0,
+            'cashin'     => 0
+        ];
 
-public function testAdd()
- {
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('persist')->willReturn(true);
 
-    $data = [
-      'password'   => '123',
-      'firstname'  => 'Jhon',
-      'lastname'   => 'Doe',
-      'email'      => 'jhon@lmsuy.com',
-      'username'   => '12345',
-      'multiplier' => 0,
-      'active'     => 1,
-      'hours'      => 0,
-      'points'     => 0,
-      'sessions'   => 0,
-      'results'    => 0,
-      'cashin'     => 0
-    ];
+        $userService = new UserService($mockedEntityManager);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $expectedUser    = new UserEntity();
+        $expectedUser->setPassword($data['password']);
+        $expectedUser->setName($data['name']);
+        $expectedUser->setLastname($data['lastname']);
+        $expectedUser->setEmail($data['email']);
+        $expectedUser->setUsername($data['username']);
+        $expectedUser->setMultiplier($data['multiplier']);
+        $expectedUser->setIsActive($data['active']);
+        $expectedUser->setHours($data['hours']);
+        $expectedUser->setPoints($data['points']);
+        $expectedUser->setSessions($data['sessions']);
+        $expectedUser->setResults($data['results']);
+        $expectedUser->setCashin($data['cashin']);
 
-   $userService = new UserService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('persist')
+        ->with(
+            $this->equalTo($expectedUser)
+        )/*->willReturn('anything')*/;
 
-    $expectedUser    = new UserEntity();
-    $expectedUser->setPassword($data['password']);
-    $expectedUser->setName($data['firstname']);
-    $expectedUser->setLastname($data['lastname']);
-    $expectedUser->setEmail($data['email']);
-    $expectedUser->setUsername($data['username']);
-    $expectedUser->setMultiplier($data['multiplier']);
-    $expectedUser->setIsActive($data['active']);
-    $expectedUser->setHours($data['hours']);
-    $expectedUser->setPoints($data['points']);
-    $expectedUser->setSessions($data['sessions']);
-    $expectedUser->setResults($data['results']);
-    $expectedUser->setCashin($data['cashin']);
+        $userService->add($data);
+        // y que se llame metodo flush con anythig
+    }
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedUser)
-   )/*->willReturn('anything')*/;
+    public function testUpdate()
+    {
+        $data = [
+            'id'         =>1,
+            'password'   => '123',
+            'name'  => 'Jhon',
+            'lastname'   => 'Doe',
+            'email'      => 'jhon@lmsuy.com',
+            'username'   => '12345',
+            'multiplier' => 0,
+            'active'     => 1,
+            'hours'      => 0,
+            'points'     => 0,
+            'sessions'   => 0,
+            'results'    => 0,
+            'cashin'     => 0
+        ];
 
-   $userService->add($data);
- // y que se llame metodo flush con anythig
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
 
- }
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(
+            new UserEntity(
+                1,
+                '123',
+                'origina@email.com',
+                'original lastname',
+                'original name',
+                'original username',
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            )
+        );
 
-public function testUpdate()
- {
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-    $data = [
-      'id'         =>1,
-      'password'   => '123',
-      'name'  => 'Jhon',
-      'lastname'   => 'Doe',
-      'email'      => 'jhon@lmsuy.com',
-      'username'   => '12345',
-      'multiplier' => 0,
-      'active'     => 1,
-      'hours'      => 0,
-      'points'     => 0,
-      'sessions'   => 0,
-      'results'    => 0,
-      'cashin'     => 0
-    ];
+        $userService = new UserService($mockedEntityManager);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $expectedUser    = new UserEntity();
+        $expectedUser->setId($data['id']);
+        $expectedUser->setPassword($data['password']);
+        $expectedUser->setName($data['name']);
+        $expectedUser->setLastname($data['lastname']);
+        $expectedUser->setEmail($data['email']);
+        $expectedUser->setUsername($data['username']);
+        $expectedUser->setMultiplier($data['multiplier']);
+        $expectedUser->setIsActive($data['active']);
+        $expectedUser->setHours($data['hours']);
+        $expectedUser->setPoints($data['points']);
+        $expectedUser->setSessions($data['sessions']);
+        $expectedUser->setResults($data['results']);
+        $expectedUser->setCashin($data['cashin']);
 
-  $mockedRepository = $this->createMock(BaseRepository::class);
-  $mockedRepository->method('find')->willReturn(
-      new UserEntity(
-    1,
-    '123',
-    null,
-    'origina@email.com',
-    'original lastname',
-    'original name',
-    'original username',
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0
-    )
-   );
+        $mockedEntityManager->expects($this->once())
+        ->method('flush')
+        ->with(
+           $this->equalTo($expectedUser)
+        )/*->willReturn('anything')*/;
 
+        $userService->update($data);
+        // y que se llame metodo flush con anythig
+    }
 
-  $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+    public function testDelete()
+    {
+        $data = [
+          'id' => 1
+        ];
 
-   $userService = new UserService($mockedEntityManager);
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
 
-    $expectedUser    = new UserEntity();
-    $expectedUser->setId($data['id']);
-    $expectedUser->setPassword($data['password']);
-    $expectedUser->setName($data['name']);
-    $expectedUser->setLastname($data['lastname']);
-    $expectedUser->setEmail($data['email']);
-    $expectedUser->setUsername($data['username']);
-    $expectedUser->setMultiplier($data['multiplier']);
-    $expectedUser->setIsActive($data['active']);
-    $expectedUser->setHours($data['hours']);
-    $expectedUser->setPoints($data['points']);
-    $expectedUser->setSessions($data['sessions']);
-    $expectedUser->setResults($data['results']);
-    $expectedUser->setCashin($data['cashin']);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(new UserEntity(1));
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedUser)
-   )/*->willReturn('anything')*/;
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-   $userService->update($data);
- // y que se llame metodo flush con anythig
+        $userService = new UserService($mockedEntityManager);
 
- }
+        $expectedUser = new UserEntity($data['id']);
 
-  public function testDelete()
-  {
-    $data = [
-      'id' => 1
-    ];
+        $mockedEntityManager->expects($this->once())
+        ->method('remove')
+        ->with(
+           $this->equalTo($expectedUser)
+        )/*->willReturn('anything')*/;
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('remove')->willReturn(true);
-
-   $mockedEntityManager->method('getReference')->willReturn(new UserEntity(1));
-
-   $userService = new UserService($mockedEntityManager);
-
-   $expectedUser = new UserEntity($data['id']);
-
-   $mockedEntityManager->expects($this->once())
-   ->method('remove')
-   ->with(
-       $this->equalTo($expectedUser)
-   )/*->willReturn('anything')*/;
-
-   $userService->delete($data['id']);
-
-  }
+        $userService->delete($data['id']);
+    }
 }

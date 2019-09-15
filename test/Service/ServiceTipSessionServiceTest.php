@@ -10,104 +10,102 @@ use Solcre\Pokerclub\Repository\BaseRepository;
 
 class ServiceTipSessionServiceTest extends TestCase
 {
+    public function testAdd()
+    {
+        $data = [
+          'id'        => 1, 
+          'hour'      => '2019-07-04T19:00', 
+          'serviceTip' => 100,
+          'idSession' => 3
+        ];
 
-public function testAdd()
- {
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('persist')->willReturn(true);
+        $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
 
-    $data = [
-      'id'        => 1, 
-      'hour'      => '2019-07-04T19:00', 
-      'serviceTip' => 100,
-      'idSession' => 3
-    ];
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
-   $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
+        $expectedServiceTip = new ServiceTipSessionEntity();
+        $expectedServiceTip->setHour(new \DateTime($data['hour']));
+        $expectedServiceTip->setServiceTip($data['serviceTip']);
+        $session = new SessionEntity(3);
+        $expectedServiceTip->setSession($session);
 
-    $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('persist')
+        ->with(
+           $this->equalTo($expectedServiceTip)
+        )/*->willReturn('anything')*/;
 
-    $expectedServiceTip = new ServiceTipSessionEntity();
-    $expectedServiceTip->setHour(new \DateTime($data['hour']));
-    $expectedServiceTip->setServiceTip($data['serviceTip']);
-    $session = new SessionEntity(3);
-    $expectedServiceTip->setSession($session);
+        $serviceTipSessionService->add($data);
+        // y que se llame metodo flush con anythig
+    }
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedServiceTip)
-   )/*->willReturn('anything')*/;
+    public function testUpdate()
+    {
+        $data = [
+          'id'        => 1, 
+          'hour'      => '2019-07-04T19:00', 
+          'serviceTip' => 100,
+          'idSession' => 3
+        ];
 
-   $serviceTipSessionService->add($data);
- // y que se llame metodo flush con anythig
-}
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
 
-public function testUpdate()
- {
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(new ServiceTipSessionEntity(
+        1,
+        new \DateTime('2019-07-04T15:00'),
+        80,
+        new SessionEntity(3)
+        )
+        );
 
-    $data = [
-      'id'        => 1, 
-      'hour'      => '2019-07-04T19:00', 
-      'serviceTip' => 100,
-      'idSession' => 3
-    ];
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
 
-    $mockedRepository = $this->createMock(BaseRepository::class);
-    $mockedRepository->method('find')->willReturn(new ServiceTipSessionEntity(
-    1,
-    new \DateTime('2019-07-04T15:00'),
-    80,
-    new SessionEntity(3)
-    )
-   );
+        $expectedServiceTip    = new ServiceTipSessionEntity();
+        $expectedServiceTip->setId(1);
+        $expectedServiceTip->setHour(new \DateTime($data['hour']));
+        $expectedServiceTip->setServiceTip($data['serviceTip']);
+        $session = new SessionEntity(3);
+        $expectedServiceTip->setSession($session);
 
-    $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $mockedEntityManager->expects($this->once())
+        ->method('flush')
+        ->with(
+           $this->equalTo($expectedServiceTip)
+        );
 
-    $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService->update($data);
+        // y que se llame metodo flush con anythig
+    }
 
-    $expectedServiceTip    = new ServiceTipSessionEntity();
-    $expectedServiceTip->setId(1);
-    $expectedServiceTip->setHour(new \DateTime($data['hour']));
-    $expectedServiceTip->setServiceTip($data['serviceTip']);
-    $session = new SessionEntity(3);
-    $expectedServiceTip->setSession($session);
+    public function testDelete()
+    {
+        $data = [
+          'id' => 1
+        ];
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedServiceTip)
-   );
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(new ServiceTipSessionEntity(1));
 
-   $serviceTipSessionService->update($data);
- // y que se llame metodo flush con anythig
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
- }
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
 
-  public function testDelete()
-  {
-    $data = [
-      'id' => 1
-    ];
+        $expectedServiceTip = new ServiceTipSessionEntity($data['id']);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('remove')->willReturn(true);
-   $mockedEntityManager->method('getReference')->willReturn(new ServiceTipSessionEntity(1));
+        $mockedEntityManager->expects($this->once())
+        ->method('remove')
+        ->with(
+            $this->equalTo($expectedServiceTip)
+        )/*->willReturn('anything')*/;
 
-   $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
-
-   $expectedServiceTip = new ServiceTipSessionEntity($data['id']);
-
-   $mockedEntityManager->expects($this->once())
-   ->method('remove')
-   ->with(
-       $this->equalTo($expectedServiceTip)
-   )/*->willReturn('anything')*/;
-
-   $serviceTipSessionService->delete($data['id']);
-
-  }
+        $serviceTipSessionService->delete($data['id']);
+    }
 }

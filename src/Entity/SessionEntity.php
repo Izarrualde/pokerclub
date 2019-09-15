@@ -10,7 +10,7 @@ use Solcre\Pokerclub\Exception\DealerTipAlreadyAddedException;
 use Solcre\Pokerclub\Exception\ServiceTipAlreadyAddedException;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Solcre\Pokerclub\Rakeback\RakebackAlgorithm;
+use Solcre\Pokerclub\Rakeback\RakeBackAlgorithm;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BaseRepository")

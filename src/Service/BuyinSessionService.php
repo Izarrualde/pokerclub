@@ -7,9 +7,10 @@ use Solcre\Pokerclub\Exception\BuyinInvalidException;
 use Solcre\Pokerclub\Exception\BuyinNotFoundException;
 use Exception;
 
-
 class BuyinSessionService extends BaseService
 {
+    const STATUS_CODE_404 = 404;
+
     protected $userSessionService;
 
     public function __construct(
@@ -83,10 +84,10 @@ class BuyinSessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == 404) { //magic number
-               throw new BuyinNotFoundException(); 
-            } 
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new BuyinNotFoundException();
+            }
             throw $e;
-        }  
-    } 
+        }
+    }
 }

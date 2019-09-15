@@ -610,7 +610,8 @@ class SessionEntityTest extends TestCase
             'comissionTotal'     => 100,
             'expensesTotal'      => 110,
             'dealerTipTotal'     => 120,
-            'serviceTipTotal'    => 130
+            'serviceTipTotal'    => 130,
+            'rakebackClass'      => null
         ];
 
         $sessionArray = $session->toArray();

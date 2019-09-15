@@ -11,7 +11,6 @@ class UserEntityTest extends TestCase
   {
     $id = 1;
     $password = '1234';
-    $mobile = null;
     $email = 'user@lmsuy.com';
     $lastname = 'Rod';
     $name = 'Diego';
@@ -27,7 +26,6 @@ class UserEntityTest extends TestCase
     $user = new UserEntity(
       $id,
       $password,
-      $mobile,
       $email,
       $lastname,
       $name,
@@ -43,7 +41,6 @@ class UserEntityTest extends TestCase
 
     $this->assertEquals($id, $user->getId());
     $this->assertEquals($password, $user->getPassword());
-    $this->assertEquals($mobile, $user->getMobile());
     $this->assertEquals($email, $user->getEmail());
     $this->assertEquals($lastname, $user->getLastname());
     $this->assertEquals($name, $user->getName());
@@ -62,7 +59,6 @@ class UserEntityTest extends TestCase
     $user = new UserEntity();
     $user->setId(1);
     $user->setPassword(123);
-    $user->setMobile(1234);
     $user->setEmail('diego@lmsuy.com');
     $user->setLastname('Rod');
     $user->setName('Diego');
@@ -78,7 +74,6 @@ class UserEntityTest extends TestCase
     $expectedArray = [
         'id'         => 1,
         'password'   => 123,
-        'mobile'     => 1234,
         'email'      => 'diego@lmsuy.com',
         'name'       => 'Diego',
         'lastname'   => 'Rod',

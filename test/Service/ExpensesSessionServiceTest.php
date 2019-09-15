@@ -10,103 +10,103 @@ use Solcre\Pokerclub\Repository\BaseRepository;
 
 class ExpensesSessionServiceTest extends TestCase
 {
+    public function testAdd()
+    {
+        $data = [
+          'id'          => 1, 
+          'description' => 'gasto de sesion', 
+          'amount'      => 100,
+          'idSession'   => 3
+        ];
 
-public function testAdd()
- {
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('persist')->willReturn(true);
+        $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
 
-    $data = [
-      'id'          => 1, 
-      'description' => 'gasto de sesion', 
-      'amount'      => 100,
-      'idSession'   => 3
-    ];
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
-   $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
+        $expectedExpenditure    = new ExpensesSessionEntity();
+        $expectedExpenditure->setDescription($data['description']);
+        $expectedExpenditure->setAmount($data['amount']);
+        $session = new SessionEntity(3);
+        $expectedExpenditure->setSession($session);
 
-    $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('persist')
+        ->with(
+            $this->equalTo($expectedExpenditure)
+        )/*->willReturn('anything')*/;
 
-    $expectedExpenditure    = new ExpensesSessionEntity();
-    $expectedExpenditure->setDescription($data['description']);
-    $expectedExpenditure->setAmount($data['amount']);
-    $session = new SessionEntity(3);
-    $expectedExpenditure->setSession($session);
+        $expensesSessionService->add($data);
+        // y que se llame metodo flush con anythig
+    }
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedExpenditure)
-   )/*->willReturn('anything')*/;
+    public function testUpdate()
+    {
+        $data = [
+          'id'          => 1, 
+          'description' => 'gasto de sesion', 
+          'amount'      => 100,
+          'idSession'   => 3
+        ];
 
-   $expensesSessionService->add($data);
- // y que se llame metodo flush con anythig
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
 
- }
-public function testUpdate()
- {
-    $data = [
-      'id'          => 1, 
-      'description' => 'gasto de sesion', 
-      'amount'      => 100,
-      'idSession'   => 3
-    ];
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(
+            new ExpensesSessionEntity(
+              1,
+              new SessionEntity(3),
+              'gasto de sesion',
+              100
+            )
+        );
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-   $mockedRepository = $this->createMock(BaseRepository::class);
-   $mockedRepository->method('find')->willReturn(new ExpensesSessionEntity(
-    1,
-    new SessionEntity(3),
-    'description original',
-    50    
-    )
-   );
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
 
-   $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $expectedExpenditure    = new ExpensesSessionEntity();
+        $expectedExpenditure->setId(1);
+        $expectedExpenditure->setDescription($data['description']);
+        $expectedExpenditure->setAmount($data['amount']);
+        $expectedExpenditure->setSession(new SessionEntity(3));
 
-    $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('flush')
+        ->with(
+            $this->equalTo($expectedExpenditure)
+        );
 
-    $expectedExpenditure    = new ExpensesSessionEntity();
-    $expectedExpenditure->setId(1);
-    $expectedExpenditure->setDescription($data['description']);
-    $expectedExpenditure->setAmount($data['amount']);
-    $expectedExpenditure->setSession(new SessionEntity(3));
-
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedExpenditure)
-   );
-
-   $expensesSessionService->update($data);
- // y que se llame metodo flush con anythig
-
- }
+        $expensesSessionService->update($data);
+        // y que se llame metodo flush con anythig
+    }
 
 
-  public function testDelete()
-  {
-    $data = [
-      'id' => 1
-    ];
+    public function testDelete()
+    {
+        $data = [
+          'id' => 1
+        ];
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('remove')->willReturn(true);
-   $mockedEntityManager->method('getReference')->willReturn(new ExpensesSessionEntity(1));
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(new ExpensesSessionEntity(1));
 
-   $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-   $expectedExpenditure = new ExpensesSessionEntity($data['id']);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
 
-   $mockedEntityManager->expects($this->once())
-   ->method('remove')
-   ->with(
-       $this->equalTo($expectedExpenditure)
-   )/*->willReturn('anything')*/;
+        $expectedExpenditure = new ExpensesSessionEntity($data['id']);
 
-   $expensesSessionService->delete($data['id']);
+        $mockedEntityManager->expects($this->once())
+        ->method('remove')
+        ->with(
+            $this->equalTo($expectedExpenditure)
+        )/*->willReturn('anything')*/;
 
-  }
+        $expensesSessionService->delete($data['id']);
+    }
 }

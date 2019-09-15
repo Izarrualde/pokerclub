@@ -9,6 +9,8 @@ use Exception;
 
 class ServiceTipSessionService extends BaseService
 {
+    const STATUS_CODE_404 = 404;
+
     public function __construct(EntityManager $em)
     {
         parent::__construct($em);
@@ -55,10 +57,10 @@ class ServiceTipSessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == 404) { //magic number
-               throw new ServiceTipNotFoundException(); 
-            } 
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new ServiceTipNotFoundException();
+            }
             throw $e;
-        }  
-    }  
+        }
+    }
 }

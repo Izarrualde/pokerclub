@@ -12,130 +12,129 @@ use Solcre\Pokerclub\Repository\BaseRepository;
 
 class BuyinSessionServiceTest extends TestCase
 {
+    public function testAdd()
+    {
+        $data = [
+            'id'            =>  1,
+            'amountCash'    => 50,
+            'amountCredit'  => 60,
+            'idUserSession' => null,
+            'hour'          => '2019-07-04T19:00',
+            'currency'      => 1,
+            'approved'      => 1
+        ];
 
-public function testAdd()
- {
-    $data = [
-        'id'            =>  1,
-        'amountCash'    => 50,
-        'amountCredit'  => 60,
-        'idUserSession' => null,
-        'hour'          => '2019-07-04T19:00',
-        'currency'      => 1,
-        'approved'      => 1
-    ];
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('persist')->willReturn(true);
+        $mockedUserSessionService = $this->createMock(UserSessionService::class);
+        $mockedUserSessionService->method('fetch')->willReturn(new UserSessionEntity(1));
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
-   $mockedUserSessionService = $this->createMock(UserSessionService::class);
-   $mockedUserSessionService->method('fetch')->willReturn(new UserSessionEntity(1));
+        $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
 
-   $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+        $expectedBuyin    = new BuyinSessionEntity();
+        $expectedBuyin->setHour(new \DateTime($data['hour']));
+        $expectedBuyin->setAmountCash($data['amountCash']);
+        $expectedBuyin->setAmountCredit($data['amountCredit']);
+        $expectedBuyin->setCurrency($data['currency']);
+        $expectedBuyin->setIsApproved($data['approved']);
+        $userSession = new UserSessionEntity(1);
+        $userSession->setStart(new \DateTime($data['hour']));
+        $expectedBuyin->setUserSession($userSession);
+      
 
-    $expectedBuyin    = new BuyinSessionEntity();
-    $expectedBuyin->setHour(new \DateTime($data['hour']));
-    $expectedBuyin->setAmountCash($data['amountCash']);
-    $expectedBuyin->setAmountCredit($data['amountCredit']);
-    $expectedBuyin->setCurrency($data['currency']);
-    $expectedBuyin->setIsApproved($data['approved']);
-    $userSession = new UserSessionEntity(1);
-    $userSession->setStart(new \DateTime($data['hour']));
-    $expectedBuyin->setUserSession($userSession);
-  
+        $mockedEntityManager->expects($this->exactly(2))
+        ->method('persist')
+        ->withConsecutive(
+            $this->equalTo($userSession),
+            $this->equalTo($expectedBuyin)
+        );
 
-   $mockedEntityManager->expects($this->exactly(2))
-   ->method('persist')
-   ->withConsecutive(
-      $this->equalTo($userSession),
-      $this->equalTo($expectedBuyin)
-   );
+        $buyinSessionService->add($data);
+        // y que se llame metodo flush con anythig
+    }
 
-   $buyinSessionService->add($data);
- // y que se llame metodo flush con anythig
- }
+    public function testUpdate()
+    {
+        $data = [
+            'id'            =>  1,
+            'amountCash'    => 50,
+            'amountCredit'  => 60,
+            'idUserSession' => null,
+            'hour'          => '2019-07-04T19:00',
+            'currency'      => 1,
+            'approved'      => 1
+        ];
 
-public function testUpdate()
- {
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
 
-    $data = [
-        'id'            =>  1,
-        'amountCash'    => 50,
-        'amountCredit'  => 60,
-        'idUserSession' => null,
-        'hour'          => '2019-07-04T19:00',
-        'currency'      => 1,
-        'approved'      => 1
-    ];
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(
+            new BuyinSessionEntity(
+                1,
+                10,
+                20,
+                new UserSessionEntity(1),
+                new \DateTime('2019-07-04T12:00'),
+                1,
+                1
+            )
+        );
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
+        $mockedUserSessionService = $this->createMock(UserSessionService::class);
 
-    $mockedRepository = $this->createMock(BaseRepository::class);
-    $mockedRepository->method('find')->willReturn(
-      new BuyinSessionEntity(
-        1,
-        10,
-        20,
-        new UserSessionEntity(1),
-        new \DateTime('2019-07-04T12:00'),
-        1,
-        1
-      )
-    );
+        $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
 
-    $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $expectedBuyin    = new BuyinSessionEntity();
+        $expectedBuyin->setId(1);
+        $expectedBuyin->setUserSession(new UserSessionEntity(1));
+        $expectedBuyin->setHour(new \DateTime($data['hour']));
+        $expectedBuyin->setAmountCash($data['amountCash']);
+        $expectedBuyin->setAmountCredit($data['amountCredit']);
+        $expectedBuyin->setIsApproved($data['approved']);
+        $expectedBuyin->setCurrency($data['currency']);
+      
 
-  $mockedUserSessionService = $this->createMock(UserSessionService::class);
+        $mockedEntityManager->expects($this->once())
+        ->method('flush')
+        ->with(
+           $this->equalTo($expectedBuyin)
+        )/*->willReturn('anything')*/;
 
-   $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
-
-    $expectedBuyin    = new BuyinSessionEntity();
-    $expectedBuyin->setId(1);
-    $expectedBuyin->setUserSession(new UserSessionEntity(1));
-    $expectedBuyin->setHour(new \DateTime($data['hour']));
-    $expectedBuyin->setAmountCash($data['amountCash']);
-    $expectedBuyin->setAmountCredit($data['amountCredit']);
-    $expectedBuyin->setIsApproved($data['approved']);
-    $expectedBuyin->setCurrency($data['currency']);
-  
-
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedBuyin)
-   )/*->willReturn('anything')*/;
-
-   $buyinSessionService->update($data);
- // y que se llame metodo flush con anythig
- }
+       $buyinSessionService->update($data);
+       // y que se llame metodo flush con anythig
+    }
 
 
-  public function testDelete()
-  {
-    $data = [
-      'id' => 1
-    ];
+    public function testDelete()
+    {
+        $data = [
+          'id' => 1
+        ];
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('remove')->willReturn(true);
-   $mockedEntityManager->method('getReference')->willReturn(new BuyinSessionEntity(1));
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        //$mockedEntityManager->method('getReference')->willReturn(new BuyinSessionEntity(1));
 
-   $mockedUserService = new UserService($mockedEntityManager);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(new BuyinSessionEntity(1));
 
-   $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-   $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+        $mockedUserService        = new UserService($mockedEntityManager);
+        $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
 
-   $expectedBuyin = new BuyinSessionEntity($data['id']);
+        $expectedBuyin = new BuyinSessionEntity($data['id']);
 
-   $mockedEntityManager->expects($this->once())
-   ->method('remove')
-   ->with(
-       $this->equalTo($expectedBuyin)
-   )/*->willReturn('anything')*/;
+        $mockedEntityManager->expects($this->once())
+        ->method('remove')
+        ->with(
+           $this->equalTo($expectedBuyin)
+        )/*->willReturn('anything')*/;
 
-   $buyinSessionService->delete($data['id']);
-
-  }
+        $buyinSessionService->delete($data['id']);
+    }
 }

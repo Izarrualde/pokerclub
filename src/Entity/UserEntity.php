@@ -24,10 +24,6 @@ class UserEntity
      */
     protected $password;
 
-
-    protected $mobile;
-
-
     /**
      * @ORM\Column(type="string")
      */
@@ -99,7 +95,6 @@ class UserEntity
     public function __construct(
         $id = null,
         $password = null,
-        $mobile = null,
         $email = null,
         $lastname = null,
         $name = null,
@@ -114,7 +109,6 @@ class UserEntity
     ) {
         $this->setId($id);
         $this->setPassword($password);
-        $this->setMobile($mobile);
         $this->setEmail($email);
         $this->setLastname($lastname);
         $this->setName($name);
@@ -148,18 +142,6 @@ class UserEntity
     public function setPassword($password)
     {
         $this->password = $password;
-        return $this;
-    }
-
-    public function getMobile()
-    {
-        return $this->mobile;
-    }
-
-
-    public function setMobile($mobile)
-    {
-        $this->mobile = $mobile;
         return $this;
     }
 
@@ -292,7 +274,6 @@ class UserEntity
         return [
         'id'         => $this->getId(),
         'password'   => $this->getPassword(),
-        'mobile'     => $this->getMobile(),
         'email'      => $this->getEmail(),
         'name'       => $this->getName(),
         'lastname'   => $this->getLastname(),

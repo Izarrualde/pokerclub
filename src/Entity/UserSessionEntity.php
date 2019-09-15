@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class UserSessionEntity
 {
+    const PERCENTAGE_100 = 100;
 
     /**
      * @ORM\Id
@@ -281,7 +282,7 @@ class UserSessionEntity
             return 0;
         } elseif (($from >= $start) && ($to <= $end)) {
         //case 100% - enclosing & enclosing %% touching
-            return 100;
+            return self::PERCENTAGE_100;
         } else {
         // other cases
             $sample = $this->inMinutes($from, $to);
@@ -290,12 +291,10 @@ class UserSessionEntity
             if (($from <= $start) && ($to <= $end)) {
             // start is inside & start is inside && end touching
                 $fraction = $this->inMinutes($to, $start);
-            } 
-            elseif (($from >= $start) && ($to > $end)) {
+            } elseif (($from >= $start) && ($to > $end)) {
             // end is inside & end is inside && start touching
                 $fraction = $this->inMinutes($from, $end); //from end
-            } 
-            elseif (($from < $start) && ($to > $end)) {
+            } elseif (($from < $start) && ($to > $end)) {
             // Inside start and end
                 $fraction = $this->inMinutes($end, $start);
             }

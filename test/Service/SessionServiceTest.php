@@ -10,144 +10,142 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class SessionServiceTest extends TestCase
 {
+    public function testAdd()
+    {
+        $data = [
+          'id'            => 1, 
+          'hour'          => '2019-07-04T19:00', 
+          'comission'     => 100,
+          'idSession'     => 3,
+          'date'          => '2019-07-04',
+          'start_at'      => '2019-07-04T19:00',
+          'real_start_at' => '2019-07-04T19:15',
+          'end_at'        => '2019-07-04T20:00',
+          'title'         => 'mesa mixta',
+          'description'   => 'lunes',
+          'seats'         => 9,
+          'rakebackClass' => 'Solcre\Pokerclub\Rakeback\SimpleRakeback'
+        ];
 
-public function testAdd()
- {
-    $data = [
-      'id'            => 1, 
-      'hour'          => '2019-07-04T19:00', 
-      'comission'     => 100,
-      'idSession'     => 3,
-      'date'          => '2019-07-04',
-      'startTime'     => '2019-07-04T19:00',
-      'startTimeReal' => '2019-07-04T19:15',
-      'endTime'       => '2019-07-04T20:00',
-      'title'         => 'mesa mixta',
-      'description'   => 'lunes',
-      'seats'         => 9,
-      'rakebackClass' => 'Solcre\Pokerclub\Rakeback\SimpleRakeback'
-    ];
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('persist')->willReturn(true);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $sessionService = new SessionService($mockedEntityManager);
 
-   $sessionService = new SessionService($mockedEntityManager);
+        $expectedSession    = new SessionEntity();
+        $expectedSession->setDate(new \DateTime($data['date']));
+        $expectedSession->setStartTime(new \DateTime($data['start_at']));
+        $expectedSession->setStartTimeReal(new \DateTime($data['real_start_at']));
+        $expectedSession->setEndTime(new \DateTime($data['end_at']));
 
-    $expectedSession    = new SessionEntity();
-    $expectedSession->setDate(new \DateTime($data['date']));
-    $expectedSession->setStartTime(new \DateTime($data['startTime']));
-    $expectedSession->setStartTimeReal(new \DateTime($data['startTimeReal']));
-    $expectedSession->setEndTime(new \DateTime($data['endTime']));
+        $expectedSession->setTitle($data['title']);
+        $expectedSession->setDescription($data['description']);
+        $expectedSession->setSeats($data['seats']);
+        $expectedSession->setRakebackClass($data['rakebackClass']);
 
-    $expectedSession->setTitle($data['title']);
-    $expectedSession->setDescription($data['description']);
-    $expectedSession->setSeats($data['seats']);
-    $expectedSession->setRakebackClass($data['rakebackClass']);
+        $mockedEntityManager->expects($this->once())
+        ->method('persist')
+        ->with(
+           $this->equalTo($expectedSession)
+        )/*->willReturn('anything')*/;
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedSession)
-   )/*->willReturn('anything')*/;
+        $sessionService->add($data);
+        // y que se llame metodo flush con anythig
+    }
 
-   $sessionService->add($data);
- // y que se llame metodo flush con anythig
+    public function testUpdate()
+    {
+        $data = [
+            'id'            => 1, 
+            'hour'          => '2019-07-04T19:00', 
+            'comission'     => 100,
+            'idSession'     => 3,
+            'date'          => '2019-07-04',
+            'start_at'      => '2019-07-04T19:00',
+            'real_start_at' => '2019-07-04T19:15',
+            'end_at'        => '2019-07-04T20:00',
+            'title'         => 'title actualizado',
+            'description'   => 'desscription actualizada',
+            'seats'         => 9
+        ];
 
- }
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
 
- public function testUpdate()
- {
-    $data = [
-      'id'            => 1, 
-      'hour'          => '2019-07-04T19:00', 
-      'comission'     => 100,
-      'idSession'     => 3,
-      'date'          => '2019-07-04',
-      'startTime'     => '2019-07-04T19:00',
-      'startTimeReal' => '2019-07-04T19:15',
-      'endTime'       => '2019-07-04T20:00',
-      'title'         => 'title actualizado',
-      'description'   => 'desscription actualizada',
-      'seats'         => 9
-    ];
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(
+            new SessionEntity(
+                1,
+                new \DateTime('2019-07-04T15:00'),
+                'title original',
+                'description original',
+                'photo original',
+                9,
+                new \DateTime('2019-07-04T18:00'),
+                new \DateTime('2019-07-04T18:30'),
+                null
+            )
+        );
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-    $mockedRepository = $this->createMock(BaseRepository::class);
-    $mockedRepository->method('find')->willReturn(
-      new SessionEntity(
-      1,
-      new \DateTime('2019-07-04T15:00'),
-      'title original',
-      'description original',
-      'photo original',
-      9,
-      new \DateTime('2019-07-04T18:00'),
-      new \DateTime('2019-07-04T18:30'),
-      null
-    )
-   );
+        $sessionService = new SessionService($mockedEntityManager);
 
-   $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $expectedSession    = new SessionEntity();
+        $expectedSession->setId($data['id']);
+        $expectedSession->setDate(new \DateTime($data['date']));
+        $expectedSession->setTitle($data['title']);
+        $expectedSession->setDescription($data['description']);
+        $expectedSession->setSeats($data['seats']);
+        $expectedSession->setPhoto('photo original');
+        $expectedSession->setStartTime(new \DateTime($data['start_at']));
+        $expectedSession->setStartTimeReal(new \DateTime($data['real_start_at']));
+        $expectedSession->setEndTime(new \DateTime($data['end_at']));
 
-   $sessionService = new SessionService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('flush')
+        ->with(
+            $this->equalTo($expectedSession)
+        )/*->willReturn('anything')*/;
 
-    $expectedSession    = new SessionEntity();
-    $expectedSession->setId($data['id']);
-    $expectedSession->setDate(new \DateTime($data['date']));
-    $expectedSession->setTitle($data['title']);
-    $expectedSession->setDescription($data['description']);
-    $expectedSession->setSeats($data['seats']);
-    $expectedSession->setPhoto('photo original');
-    $expectedSession->setStartTime(new \DateTime($data['startTime']));
-    $expectedSession->setStartTimeReal(new \DateTime($data['startTimeReal']));
-    $expectedSession->setEndTime(new \DateTime($data['endTime']));
+        $sessionService->update($data);
+        // y que se llame metodo flush con anythig
+    }
 
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->equalTo($expectedSession)
-   )/*->willReturn('anything')*/;
+    public function testDelete()
+    {
+        $data = [
+          'id'        => 1
+        ];
 
-   $sessionService->update($data);
- // y que se llame metodo flush con anythig
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->willReturn(new SessionEntity(1));
 
- }
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
 
-   public function testDelete()
-  {
-    $data = [
-      'id'        => 1
-    ];
+        $sessionService = new SessionService($mockedEntityManager);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('remove')->willReturn(true);
-   $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(1));
+        $expectedSession = new SessionEntity($data['id']);
 
-   $sessionService = new SessionService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('remove')
+        ->with(
+            $this->equalTo($expectedSession)
+        )/*->willReturn('anything')*/;
+     
+        $sessionService->delete($data['id']);
+    }
 
+    public function createRakebackAlgorithm()
+    {
+        $className = 'Solcre\Pokerclub\Rakeback\SimpleRakeback';
 
-   $expectedSession = new SessionEntity($data['id']);
+        $rakebackAlgoritmClass = get_class($sessionService->createRakebackAlgorithm($className));
 
-   $mockedEntityManager->expects($this->once())
-   ->method('remove')
-   ->with(
-       $this->equalTo($expectedSession)
-   )/*->willReturn('anything')*/;
-
-   $sessionService->delete($data['id']);
-
-  }
-
-  public function createRakebackAlgorithm()
-  {
-    $className = 'Solcre\Pokerclub\Rakeback\SimpleRakeback';
-
-    $rakebackAlgoritmClass = get_class($sessionService->createRakebackAlgorithm($className));
-
-    $this->assertEquals('Solcre\lmsuy\Rakeback\SimpleRakeback', $rakebackAlgoritmClass);
-  }
+        $this->assertEquals('Solcre\lmsuy\Rakeback\SimpleRakeback', $rakebackAlgoritmClass);
+    }
 
 /*
  public function testCalculateRakeback()
@@ -231,5 +229,4 @@ public function testAdd()
  // y que se llame metodo flush con anythig
  }
 */
-
 }

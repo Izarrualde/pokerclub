@@ -9,16 +9,16 @@ require __DIR__ .'/../vendor/autoload.php';
 $app = AppFactory::create();
 
 $beforeMiddleware = function (Request $request, RequestHandler $handler) {
-  $response = new Response();
-  $response->getBody()->write('BEFORE' . $existingContent);
+    $response = new Response();
+    $response->getBody()->write('BEFORE' . $existingContent);
 
-  return $response;
+    return $response;
 };
 
 $afterMiddleware = function ($request, $handler) {
-  $response = $handler->handle($request);
-  $response->getBody()->write('AFTER');
-  return $response;
+    $response = $handler->handle($request);
+    $response->getBody()->write('AFTER');
+    return $response;
 };
 
 $app->add($beforeMiddleware);

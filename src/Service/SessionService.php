@@ -8,6 +8,8 @@ use Exception;
 
 class SessionService extends BaseService
 {
+    const STATUS_CODE_404 = 404;
+
     public function __construct(EntityManager $em)
     {
         parent::__construct($em);
@@ -57,12 +59,12 @@ class SessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == 404) { //magic number
-               throw new SessionNotFoundException(); 
-            } 
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new SessionNotFoundException();
+            }
             throw $e;
-        }  
-    } 
+        }
+    }
 
     protected function createRakebackAlgorithm($classname)
     {

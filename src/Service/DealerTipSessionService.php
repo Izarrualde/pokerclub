@@ -9,6 +9,7 @@ use Exception;
 
 class DealerTipSessionService extends BaseService
 {
+    const STATUS_CODE_404 = 404;
 
     public function __construct(EntityManager $em)
     {
@@ -56,10 +57,10 @@ class DealerTipSessionService extends BaseService
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == 404) { //magic number
-               throw new DealerTipNotFoundException(); 
-            } 
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new DealerTipNotFoundException();
+            }
             throw $e;
-        }  
-    } 
+        }
+    }
 }
