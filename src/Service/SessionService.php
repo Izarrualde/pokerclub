@@ -17,11 +17,21 @@ class SessionService extends BaseService
         parent::__construct($em);
     }
 
-    public function checkGenericInputData($data) 
+    public function checkGenericInputData($data)
     {
         // does not include id
 
-        if (!isset($data['date'], $data['title'], $data['description'], $data['seats'], $data['start_at'], $data['real_start_at'], $data['end_at'], $data['rakebackClass'])) {
+        if (!isset(
+            $data['date'],
+            $data['title'],
+            $data['description'],
+            $data['seats'],
+            $data['start_at'],
+            $data['real_start_at'],
+            $data['end_at'],
+            $data['rakebackClass']
+        )
+        ) {
             // check with: will->throwException
             throw new IncompleteDataException();
         }
@@ -56,7 +66,7 @@ class SessionService extends BaseService
         }
 
         try {
-           $session = parent::fetch($data['id']); 
+            $session = parent::fetch($data['id']);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
                 throw new SessionNotFoundException();
@@ -97,7 +107,7 @@ class SessionService extends BaseService
 
     public function createRakebackAlgorithm($classname)
     {
-        // checkear si existe la clase
+        // checkear si existe la clase (class exist)
         return new $classname();
     }
     

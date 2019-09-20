@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\UserHadActionException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Solcre\Pokerclub\Exception\UserNotFoundException;
+use Solcre\Pokerclub\Exception\UserInvalidException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Exception;
 
@@ -18,21 +19,34 @@ class UserService extends BaseService
         parent::__construct($em);
     }
 
-    public function checkGenericInputData($data) 
+    public function checkGenericInputData($data)
     {
         // does not include id
 
-        if (!isset($data['password'], $data['name'], $data['lastname'], $data['email'], $data['username'], $data['multiplier'], $data['active'], $data['hours'], $data['points'], $data['sessions'], $data['results'], $data['cashin'])) {
+        if (!isset(
+            $data['password'],
+            $data['name'],
+            $data['lastname'],
+            $data['email'],
+            $data['username'],
+            $data['multiplier'],
+            $data['active'],
+            $data['hours'],
+            $data['points'],
+            $data['sessions'],
+            $data['results'],
+            $data['cashin']
+        )
+        ) {
             throw new IncompleteDataException();
         }
 
-        if (!is_numeric($data['multiplier']) || 
-            (!is_numeric($data['hours']) && $data['hours'] > 0) || 
-            (!is_numeric($data['points']) && $data['points'] > 0) || 
-            (!is_numeric($data['sessions']) && $data['sessions'] > 0)|| 
-            !is_numeric($data['results']) || 
+        if (!is_numeric($data['multiplier']) ||
+            (!is_numeric($data['hours']) && $data['hours'] > 0) ||
+            (!is_numeric($data['points']) && $data['points'] > 0) ||
+            (!is_numeric($data['sessions']) && $data['sessions'] > 0)||
+            !is_numeric($data['results']) ||
             (!is_numeric($data['cashin']) && $data['cashin'] > 0)) {
-            
             throw new UserInvalidException();
         }
     }
@@ -70,10 +84,10 @@ class UserService extends BaseService
         }
 
         try {
-            $user = parent::fetch($data['id']);           
+            $user = parent::fetch($data['id']);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new UserFoundException();
+                throw new UserNotFoundException();
             }
             throw $e;
         }

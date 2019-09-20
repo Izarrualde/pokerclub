@@ -17,7 +17,7 @@ class ServiceTipSessionService extends BaseService
         parent::__construct($em);
     }
 
-    public function checkGenericInputData($data) 
+    public function checkGenericInputData($data)
     {
         // does not include id
 
@@ -59,7 +59,7 @@ class ServiceTipSessionService extends BaseService
             $serviceTip   = parent::fetch($data['id']);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new DealerTipNotFoundException();
+                throw new ServiceTipNotFoundException();
             }
             throw $e;
         }

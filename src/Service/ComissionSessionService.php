@@ -18,7 +18,7 @@ class ComissionSessionService extends BaseService
         parent::__construct($em);
     }
 
-    public function checkGenericInputData($data) 
+    public function checkGenericInputData($data)
     {
         // does not include id
 

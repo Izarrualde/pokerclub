@@ -341,7 +341,7 @@ class SessionEntity
             $this->sessionExpenses->toArray(),
             function ($expensesTotal, $expenditure) {
                 return $expensesTotal + $expenditure->getAmount();
-            }, 
+            },
             0
         );
     }

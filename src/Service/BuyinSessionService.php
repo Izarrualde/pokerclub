@@ -28,19 +28,26 @@ class BuyinSessionService extends BaseService
         return $this->repository->fetchAll($sessionId);
     }
 
-    public function checkGenericInputData($data) 
+    public function checkGenericInputData($data)
     {
         // does not include id
 
-        if (!isset($data['hour'], $data['amountCash'], $data['amountCredit'], $data['currency'], $data['approved'], $data['idUserSession'])) {
+        if (!isset(
+            $data['hour'],
+            $data['amountCash'],
+            $data['amountCredit'],
+            $data['currency'],
+            $data['approved'],
+            $data['idUserSession']
+        )
+        ) {
             throw new IncompleteDataException();
         }
 
-        if (!is_numeric($data['amountCash']) || 
-            !is_numeric($data['amountCredit']) || 
-            ($data['amountCash'] < 0) || 
+        if (!is_numeric($data['amountCash']) ||
+            !is_numeric($data['amountCredit']) ||
+            ($data['amountCash'] < 0) ||
             ($data['amountCredit'] < 0)) {
-            
             throw new BuyinInvalidException();
         }
     }
@@ -57,7 +64,7 @@ class BuyinSessionService extends BaseService
         $buyin->setIsApproved($data['approved']);
 
         try {
-            $userSession = $this->userSessionService->fetch($data['idUserSession']);   
+            $userSession = $this->userSessionService->fetch($data['idUserSession']);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
                 throw new UserSessionNotFoundException();
@@ -87,7 +94,7 @@ class BuyinSessionService extends BaseService
         }
 
         try {
-            $buyin = parent::fetch($data['id']);     
+            $buyin = parent::fetch($data['id']);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
                 throw new BuyinNotFoundException();

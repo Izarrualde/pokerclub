@@ -17,7 +17,7 @@ class ExpensesSessionService extends BaseService
         parent::__construct($em);
     }
 
-    public function checkGenericInputData($data) 
+    public function checkGenericInputData($data)
     {
         // does not include id
 
@@ -26,7 +26,7 @@ class ExpensesSessionService extends BaseService
         }
 
         if (!is_numeric($data['amount']) || $data['amount'] < 0) {
-            throw new ExpenditureInvalidException();
+            throw new ExpensesInvalidException();
         }
     }
 

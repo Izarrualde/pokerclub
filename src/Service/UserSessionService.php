@@ -22,7 +22,7 @@ class UserSessionService extends BaseService
         $this->userService = $userService;
     }
 
-    public function checkGenericInputData($data) 
+    public function checkGenericInputData($data)
     {
         // does not include id
 
@@ -70,10 +70,10 @@ class UserSessionService extends BaseService
         }
 
         try {
-            $userSession = parent::fetch($data['id']);    
+            $userSession = parent::fetch($data['id']);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new UserSessionFoundException();
+                throw new UserSessionNotFoundException();
             }
             throw $e;
         }
@@ -120,7 +120,7 @@ class UserSessionService extends BaseService
             $userSession = parent::fetch($data['id']);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new UserSessionFoundException();
+                throw new UserSessionNotFoundException();
             }
             throw $e;
         }

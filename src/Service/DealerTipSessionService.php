@@ -5,6 +5,7 @@ use Solcre\Pokerclub\Entity\DealerTipSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\DealerTipInvalidException;
 use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Exception;
 
 class DealerTipSessionService extends BaseService
@@ -16,7 +17,7 @@ class DealerTipSessionService extends BaseService
         parent::__construct($em);
     }
 
-    public function checkGenericInputData($data) 
+    public function checkGenericInputData($data)
     {
         // does not include id
 
@@ -54,7 +55,7 @@ class DealerTipSessionService extends BaseService
         }
 
         try {
-            $dealerTip    = parent::fetch($data['id']);    
+            $dealerTip    = parent::fetch($data['id']);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
                 throw new DealerTipNotFoundException();
