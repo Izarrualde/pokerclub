@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\Pokerclub\Entity\UserEntity;
+use Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Service\UserService;
 use Solcre\Pokerclub\Exception\UserHadActionException;

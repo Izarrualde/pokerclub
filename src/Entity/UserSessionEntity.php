@@ -271,7 +271,6 @@ class UserSessionEntity
         return $minutes;
     }
 
-
     public function getPercentagePlayed(\DateTime $from, \DateTime $to)
     {
         $start = $this->getStart();
@@ -302,21 +301,19 @@ class UserSessionEntity
             return ($fraction * 100) / $sample;
         }
     }
-
-        
+    
     public function toArray()
     {
         $ret =  [
-        'id'          => $this->getId(),
-        'idSession'   => $this->getSession()->getId(),
-        'idUser'      => $this->getIdUser(),
-        'isApproved'  => $this->getIsApproved(),
-        'cashout'     => $this->getCashout(),
-        'startTime'   => $this->getStart(),
-        'endTime'     => $this->getEnd(),
-        'cashin'      => $this->getCashin(),
-        'totalCredit' => $this->getTotalCredit()
-
+            'id'          => $this->getId(),
+            'idSession'   => $this->getSession()->getId(),
+            'idUser'      => $this->getIdUser(),
+            'isApproved'  => $this->getIsApproved(),
+            'cashout'     => $this->getCashout(),
+            'startTime'   => $this->getStart(),
+            'endTime'     => $this->getEnd(),
+            'cashin'      => $this->getCashin(),
+            'totalCredit' => $this->getTotalCredit()
         ];
         
         $user = $this->getUser();

@@ -1,11 +1,11 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\Pokerclub\Entity\ExpensesSessionEntity;
-use \Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\ExpensesSessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Service\ExpensesSessionService;
 use Doctrine\ORM\EntityManager;
-use \Solcre\Pokerclub\Exception\ExpensesInvalidException;
+use Solcre\Pokerclub\Exception\ExpensesInvalidException;
 use Solcre\Pokerclub\Repository\BaseRepository;
 
 class ExpensesSessionServiceTest extends TestCase

@@ -6,6 +6,7 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\ComissionInvalidException;
 use Solcre\Pokerclub\Exception\ComissionNotFoundException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Exception;
 
 class ComissionSessionService extends BaseService
@@ -17,13 +18,24 @@ class ComissionSessionService extends BaseService
         parent::__construct($em);
     }
 
-    public function add($data, $strategies = null)
+    public function checkGenericInputData($data) 
     {
-        if (!is_numeric($data['comission'])) {
-            throw new ComissionInvalidException();
+        // does not include id
+
+        if (!isset($data['idSession'], $data['hour'], $data['comission'])) {
+            throw new IncompleteDataException();
         }
 
-        $comission    = new ComissionSessionEntity();
+        if (!is_numeric($data['comission']) || $data['comission'] < 0) {
+            throw new ComissionInvalidException();
+        }
+    }
+
+    public function add($data, $strategies = null)
+    {
+        $this->checkGenericInputData($data);
+
+        $comission  = new ComissionSessionEntity();
         $comission->setHour(new \DateTime($data['hour']));
         $comission->setComission($data['comission']);
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
@@ -35,26 +47,24 @@ class ComissionSessionService extends BaseService
         return $comission;
     }
 
-
-/*
-        public function fetchParent($id)
-        // only for purposes of unit testing
-        {
-            $comission = parent::fetch($id);
-            return $comission;
-        }
-*/
-
     public function update($data, $strategies = null)
     {
-        if (!is_numeric($data['comission'])) {
-            throw new ComissionInvalidException();
-        }
-                
-        $data['hour'] = new \DateTime($data['hour']);
+        $this->checkGenericInputData($data);
 
-        $comission    = parent::fetch($data['id']);
-        $comission->setHour($data['hour']);
+        if (!isset($data['id'])) {
+            throw new IncompleteDataException();
+        }
+
+        try {
+            $comission = parent::fetch($data['id']);
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new ComissionNotFoundException();
+            }
+            throw $e;
+        }
+        
+        $comission->setHour(new \DateTime($data['hour']));
         $comission->setComission($data['comission']);
 
         $this->entityManager->flush($comission);

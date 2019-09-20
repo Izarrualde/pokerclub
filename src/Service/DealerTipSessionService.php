@@ -1,10 +1,10 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
-use \Solcre\Pokerclub\Entity\DealerTipSessionEntity;
+use Solcre\Pokerclub\Entity\DealerTipSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\Pokerclub\Exception\DealerTipInvalidException;
-use \Solcre\Pokerclub\Exception\DealerTipNotFoundException;
+use Solcre\Pokerclub\Exception\DealerTipInvalidException;
+use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
 use Exception;
 
 class DealerTipSessionService extends BaseService
@@ -16,15 +16,25 @@ class DealerTipSessionService extends BaseService
         parent::__construct($em);
     }
 
-    public function add($data, $strategies = null)
+    public function checkGenericInputData($data) 
     {
-        if (!is_numeric($data['dealerTip'])) {
-            throw new DealerTipInvalidException();
+        // does not include id
+
+        if (!isset($data['idSession'], $data['hour'], $data['dealerTip'])) {
+            throw new IncompleteDataException();
         }
 
-        $data['hour'] = new \DateTime($data['hour']);
+        if (!is_numeric($data['dealerTip']) || $data['dealerTip'] < 0) {
+            throw new DealerTipInvalidException();
+        }
+    }
+
+    public function add($data, $strategies = null)
+    {
+        $this->checkGenericInputData($data);
+
         $dealerTip    = new DealerTipSessionEntity();
-        $dealerTip->setHour($data['hour']);
+        $dealerTip->setHour(new \DateTime($data['hour']));
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
         $dealerTip->setSession($session);
         $dealerTip->setDealerTip($data['dealerTip']);
@@ -37,8 +47,21 @@ class DealerTipSessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
-       
-        $dealerTip    = parent::fetch($data['id']);
+        $this->checkGenericInputData($data);
+
+        if (!isset($data['id'])) {
+            throw new IncompleteDataException();
+        }
+
+        try {
+            $dealerTip    = parent::fetch($data['id']);    
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new DealerTipNotFoundException();
+            }
+            throw $e;
+        }
+        
         $dealerTip->setHour(new \DateTime($data['hour']));
         $dealerTip->setDealerTip($data['dealerTip']);
 

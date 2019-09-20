@@ -1,13 +1,14 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\Pokerclub\Entity\BuyinSessionEntity;
-use \Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Entity\BuyinSessionEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
 use Solcre\Pokerclub\Service\BuyinSessionService;
 use Solcre\Pokerclub\Service\UserSessionService;
 use Solcre\Pokerclub\Service\UserService;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\BuyinInvalidException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Repository\BaseRepository;
 
 class BuyinSessionServiceTest extends TestCase
@@ -18,7 +19,7 @@ class BuyinSessionServiceTest extends TestCase
             'id'            =>  1,
             'amountCash'    => 50,
             'amountCredit'  => 60,
-            'idUserSession' => null,
+            'idUserSession' => 1,
             'hour'          => '2019-07-04T19:00',
             'currency'      => 1,
             'approved'      => 1
@@ -59,7 +60,7 @@ class BuyinSessionServiceTest extends TestCase
             'id'            =>  1,
             'amountCash'    => 50,
             'amountCredit'  => 60,
-            'idUserSession' => null,
+            'idUserSession' => 1,
             'hour'          => '2019-07-04T19:00',
             'currency'      => 1,
             'approved'      => 1

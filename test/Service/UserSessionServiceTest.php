@@ -1,9 +1,9 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use \Solcre\Pokerclub\Entity\UserSessionEntity;
-use \Solcre\Pokerclub\Entity\UserEntity;
-use \Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Entity\UserEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Service\UserSessionService;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;

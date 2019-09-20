@@ -297,7 +297,7 @@ class SessionEntity
     }
 
 
-    // @codeCoverageIgnoreEnd
+
 
     public function getBuyins()
     {
@@ -308,7 +308,8 @@ class SessionEntity
                     $buyins = [];
                 }
                 return array_merge($buyins, $userSession->getBuyins()->toArray());
-            }
+            },
+            []
         );
     }
 
@@ -318,7 +319,8 @@ class SessionEntity
             $this->sessionUsers->toArray(),
             function ($cashout, $user) {
                 return $cashout + $user->getCashout();
-            }
+            },
+            0
         );
     }
 
@@ -328,7 +330,8 @@ class SessionEntity
             $this->sessionDealerTips->toArray(),
             function ($dealerTipTotal, $tipHour) {
                 return $dealerTipTotal + $tipHour->getDealerTip();
-            }
+            },
+            0
         );
     }
 
@@ -338,7 +341,8 @@ class SessionEntity
             $this->sessionExpenses->toArray(),
             function ($expensesTotal, $expenditure) {
                 return $expensesTotal + $expenditure->getAmount();
-            }
+            }, 
+            0
         );
     }
 
@@ -348,7 +352,8 @@ class SessionEntity
             $this->sessionServiceTips->toArray(),
             function ($serviceTipTotal, $tipHour) {
                 return $serviceTipTotal + $tipHour->getServiceTip();
-            }
+            },
+            0
         );
     }
 
@@ -358,7 +363,8 @@ class SessionEntity
             $this->sessionComissions->toArray(),
             function ($comissionTotal, $comissionHour) {
                 return $comissionTotal + $comissionHour->getComission();
-            }
+            },
+            0
         );
     }
 
@@ -370,10 +376,23 @@ class SessionEntity
                 return $amountTotal +
                 $buyin->getAmountCash() +
                 $buyin->getAmountCredit();
-            }
+            },
+            0
         );
     }
 
+
+    public function getValid()
+    {
+        $total = $this->getTotalCashout() +
+        $this->getComissionTotal() +
+        $this->getDealerTipTotal()+
+        $this-> getServiceTipTotal();
+        return $this->getTotalPlayed() == $total;
+    }
+
+
+/*
     public function validateSession($session)
     {
         $total = $session->getTotalCashout() +
@@ -382,6 +401,7 @@ class SessionEntity
         $session-> getServiceTipTotal();
         return $session->getTotalPlayed() == $total;
     }
+*/
 
     public function getActivePlayers()
     {
@@ -406,14 +426,14 @@ class SessionEntity
         }
         return $distinctPlayers;
     }
-/*
+    /*
     public function calculatePoints()
     {
         foreach ($this->sessionUsers as $userSession) {
             $userSession->setAccumulatedPoints($this->rakebackAlgorithm->calculate($userSession));
         }
     }
-*/
+    */
 
     public function getAveragePlayersInPerdiod(\DateTime $from, \DateTime $to)
     {
@@ -446,7 +466,8 @@ class SessionEntity
         'expensesTotal'      => $this->getExpensesTotal(),
         'dealerTipTotal'     => $this->getDealerTipTotal(),
         'serviceTipTotal'    => $this->getServiceTipTotal(),
-        'rakebackClass'      => $this->getRakebackClass()
+        'rakebackClass'      => $this->getRakebackClass(),
+        'valid'              => $this->getValid()
         ];
 
        /* foreach ($this->sessionUsers as $userSession) {

@@ -1,11 +1,12 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
-use \Solcre\Pokerclub\Entity\UserSessionEntity;
-use \Solcre\Pokerclub\Entity\UserEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
 use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Exception;
 
@@ -21,8 +22,19 @@ class UserSessionService extends BaseService
         $this->userService = $userService;
     }
 
+    public function checkGenericInputData($data) 
+    {
+        // does not include id
+
+        if (!isset($data['idSession'], $data['idUser'], $data['start'], $data['isApproved'])) {
+            throw new IncompleteDataException();
+        }
+    }
+
     public function add($data, $strategies = null)
     {
+        $this->checkGenericInputData($data);
+
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
         $user    = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $data['idUser']);
 
@@ -34,14 +46,13 @@ class UserSessionService extends BaseService
             throw new TableIsFullException();
         }
 */
-        $data['start'] = new \DateTime($data['start']);
         $userSession   = new UserSessionEntity();
 
         $userSession->setSession($session);
         $userSession->setIdUser($data['idUser']);
         $userSession->setIsApproved($data['isApproved']);
         $userSession->setAccumulatedPoints((int)$data['points']);
-        $userSession->setStart($data['start']);
+        $userSession->setStart(new \DateTime($data['start']));
         $userSession->setUser($user);
 
         $this->entityManager->persist($userSession);
@@ -52,7 +63,21 @@ class UserSessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
-        $userSession = parent::fetch($data['id']);
+        $this->checkGenericInputData($data);
+
+        if (!isset($data['id'])) {
+            throw new IncompleteDataException();
+        }
+
+        try {
+            $userSession = parent::fetch($data['id']);    
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new UserSessionFoundException();
+            }
+            throw $e;
+        }
+        
         $userSession->setAccumulatedPoints($data['points']);
         $userSession->setCashout($data['cashout']);
         $userSession->setStart(new \DateTime($data['start']));
@@ -83,16 +108,24 @@ class UserSessionService extends BaseService
         }
     }
 
-    public function close($data)
+    public function close($data, $strategies = null)
     {
+        $this->checkGenericInputData($data);
+
+        if (!isset($data['id'])) {
+            throw new IncompleteDataException();
+        }
+
         try {
             $userSession = parent::fetch($data['id']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new UserSessionFoundException();
+            }
             throw $e;
         }
 
-        $data['end'] = new \DateTime($data['end']);
-        $userSession->setEnd($data['end']);
+        $userSession->setEnd(new \DateTime($data['end']));
         $userSession->setCashout($data['cashout']);
 
         if ($this->userService instanceof UserService) {

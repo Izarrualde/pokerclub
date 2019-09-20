@@ -1,9 +1,11 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
-use \Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\Pokerclub\Exception\SessionNotFoundException;
+use Solcre\Pokerclub\Exception\SessionNotFoundException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
+
 use Exception;
 
 class SessionService extends BaseService
@@ -15,8 +17,20 @@ class SessionService extends BaseService
         parent::__construct($em);
     }
 
+    public function checkGenericInputData($data) 
+    {
+        // does not include id
+
+        if (!isset($data['date'], $data['title'], $data['description'], $data['seats'], $data['start_at'], $data['real_start_at'], $data['end_at'], $data['rakebackClass'])) {
+            // check with: will->throwException
+            throw new IncompleteDataException();
+        }
+    }
+
     public function add($data, $strategies = null)
     {
+        $this->checkGenericInputData($data);
+
         $session = new SessionEntity();
         $session->setDate(new \DateTime($data['date']));
         $session->setTitle($data['title']);
@@ -35,6 +49,21 @@ class SessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
+        $this->checkGenericInputData($data);
+
+        if (!isset($data['id'])) {
+            throw new IncompleteDataException();
+        }
+
+        try {
+           $session = parent::fetch($data['id']); 
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new SessionNotFoundException();
+            }
+            throw $e;
+        }
+
         $session = parent::fetch($data['id']);
         $session->setDate(new \DateTime($data['date']));
         $session->setTitle($data['title']);
@@ -66,7 +95,7 @@ class SessionService extends BaseService
         }
     }
 
-    protected function createRakebackAlgorithm($classname)
+    public function createRakebackAlgorithm($classname)
     {
         // checkear si existe la clase
         return new $classname();

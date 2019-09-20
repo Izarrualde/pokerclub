@@ -1,10 +1,11 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
-use \Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
+use Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
 use Doctrine\ORM\EntityManager;
-use \Solcre\Pokerclub\Exception\ServiceTipInvalidException;
-use \Solcre\Pokerclub\Exception\ServiceTipNotFoundException;
+use Solcre\Pokerclub\Exception\ServiceTipInvalidException;
+use Solcre\Pokerclub\Exception\ServiceTipNotFoundException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Exception;
 
 class ServiceTipSessionService extends BaseService
@@ -16,15 +17,26 @@ class ServiceTipSessionService extends BaseService
         parent::__construct($em);
     }
 
-    public function add($data, $strategies = null)
+    public function checkGenericInputData($data) 
     {
-        if (!is_numeric($data['serviceTip'])) {
-            throw new ServiceTipInvalidException();
+        // does not include id
+
+        if (!isset($data['idSession'], $data['hour'], $data['serviceTip'])) {
+            throw new IncompleteDataException();
         }
 
-        $data['hour'] = new \DateTime($data['hour']);
+        if (!is_numeric($data['serviceTip']) || $data['serviceTip'] < 0) {
+            throw new ServiceTipInvalidException();
+        }
+    }
+      
+
+    public function add($data, $strategies = null)
+    {
+        $this->checkGenericInputData($data);
+
         $serviceTip   = new  ServiceTipSessionEntity();
-        $serviceTip->setHour($data['hour']);
+        $serviceTip->setHour(new \DateTime($data['hour']));
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
         $serviceTip->setSession($session);
         $serviceTip->setServiceTip($data['serviceTip']);
@@ -37,9 +49,22 @@ class ServiceTipSessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
-        $data['hour'] = new \DateTime($data['hour']);
-        $serviceTip   = parent::fetch($data['id']);
-        $serviceTip->setHour($data['hour']);
+         $this->checkGenericInputData($data);
+
+        if (!isset($data['id'])) {
+            throw new IncompleteDataException();
+        }
+
+        try {
+            $serviceTip   = parent::fetch($data['id']);
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new DealerTipNotFoundException();
+            }
+            throw $e;
+        }
+        
+        $serviceTip->setHour(new \DateTime($data['hour']));
         $serviceTip->setServiceTip($data['serviceTip']);
 
         $this->entityManager->flush($serviceTip);

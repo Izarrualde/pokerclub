@@ -1,10 +1,12 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
-use \Solcre\Pokerclub\Entity\BuyinSessionEntity;
+use Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\BuyinInvalidException;
 use Solcre\Pokerclub\Exception\BuyinNotFoundException;
+use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Exception;
 
 class BuyinSessionService extends BaseService
@@ -26,30 +28,50 @@ class BuyinSessionService extends BaseService
         return $this->repository->fetchAll($sessionId);
     }
 
-    public function add($data, $strategies = null)
+    public function checkGenericInputData($data) 
     {
-        if (!is_numeric($data['amountCash']) ||
-            (!is_numeric($data['amountCredit']))) {
-            throw new BuyinInvalidException();
+        // does not include id
+
+        if (!isset($data['hour'], $data['amountCash'], $data['amountCredit'], $data['currency'], $data['approved'], $data['idUserSession'])) {
+            throw new IncompleteDataException();
         }
 
-        $data['hour'] = new \DateTime($data['hour']);
+        if (!is_numeric($data['amountCash']) || 
+            !is_numeric($data['amountCredit']) || 
+            ($data['amountCash'] < 0) || 
+            ($data['amountCredit'] < 0)) {
+            
+            throw new BuyinInvalidException();
+        }
+    }
+
+    public function add($data, $strategies = null)
+    {
+        $this->checkGenericInputData($data);
+
         $buyin        = new BuyinSessionEntity();
-        $buyin->setHour($data['hour']);
+        $buyin->setHour(new \DateTime($data['hour']));
         $buyin->setAmountCash($data['amountCash']);
         $buyin->setAmountCredit($data['amountCredit']);
-        $buyin->setCurrency(1);
+        $buyin->setCurrency($data['currency']);
         $buyin->setIsApproved($data['approved']);
-        $userSession = $this->userSessionService->fetch($data['idUserSession']);
 
-        $buyin->setUserSession($userSession);
+        try {
+            $userSession = $this->userSessionService->fetch($data['idUserSession']);   
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new UserSessionNotFoundException();
+            }
+            throw $e;
+        }
         
-
         if ($userSession->getBuyins()->isEmpty()) {
             $userSession->setStart($data['hour']);
             $this->entityManager->persist($userSession);
         }
         
+        $buyin->setUserSession($userSession);
+
         $this->entityManager->persist($buyin);
         $this->entityManager->flush();
 
@@ -58,14 +80,22 @@ class BuyinSessionService extends BaseService
 
     public function update($data, $strategies = null)
     {
-        if (!is_numeric($data['amountCash']) ||
-            (!is_numeric($data['amountCredit']))) {
-            throw new BuyinInvalidException();
-        }
-        $data['hour'] = new \DateTime($data['hour']);
-        $buyin        = parent::fetch($data['id']);
+        $this->checkGenericInputData($data);
 
-        $buyin->setHour($data['hour']);
+        if (!isset($data['id'])) {
+            throw new IncompleteDataException();
+        }
+
+        try {
+            $buyin = parent::fetch($data['id']);     
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new BuyinNotFoundException();
+            }
+            throw $e;
+        }
+
+        $buyin->setHour(new \DateTime($data['hour']));
         $buyin->setAmountCash($data['amountCash']);
         $buyin->setAmountCredit($data['amountCredit']);
 
