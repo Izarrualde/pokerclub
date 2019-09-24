@@ -290,4 +290,131 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->delete($data);
     }
 
+    public function testDeleteWithException()
+    {
+        $data = [
+          'id' => 'an existing id'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new \Exception('Solcre\Pokerclub\Entity\BuyinSessionEntity' . " Entity not found", 404))
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $mockedUserService        = new UserService($mockedEntityManager);
+        $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+
+        $this->expectException(\Exception::class);
+        $buyinSessionService->delete($data);
+    }
+
+    public function testCheckGenericInputDataWithIncompleteDataException()
+    {
+        // $data without idUserSession
+        $data = [
+          'hour'          => '2019-07-04T19:00', 
+          'amountCash'    => 100,
+          'amountCredit'  => 100,
+          'currency'      => 1,
+          'approved'      => 2
+        ];
+
+        $mockedEntityManager      = $this->createMock(EntityManager::class);
+        $mockedUserService        = new UserService($mockedEntityManager);
+        $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+
+        $this->expectException(IncompleteDataException::class);
+        $buyinSessionService->checkGenericInputData($data);
+    }
+
+    public function testCheckGenericInputDataWithNonNumericAmountCash()
+    {
+        // $data without idUserSession
+        $data = [
+          'hour'          => '2019-07-04T19:00', 
+          'amountCash'    => 'a non numeric value',
+          'amountCredit'  => 100,
+          'currency'      => 1,
+          'approved'      => 2,
+          'idUserSession' => 1
+        ];
+
+        $mockedEntityManager      = $this->createMock(EntityManager::class);
+        $mockedUserService        = new UserService($mockedEntityManager);
+        $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+
+        $this->expectException(BuyinInvalidException::class);
+        $buyinSessionService->checkGenericInputData($data);
+    }
+
+    public function testCheckGenericInputDataWithNonNumericAmountCredit()
+    {
+        // $data without idUserSession
+        $data = [
+          'hour'          => '2019-07-04T19:00', 
+          'amountCash'    => 100,
+          'amountCredit'  => 'a non numeric value',
+          'currency'      => 1,
+          'approved'      => 2,
+          'idUserSession' => 1
+        ];
+
+        $mockedEntityManager      = $this->createMock(EntityManager::class);
+        $mockedUserService        = new UserService($mockedEntityManager);
+        $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+
+        $this->expectException(BuyinInvalidException::class);
+        $buyinSessionService->checkGenericInputData($data);
+    }
+
+    public function testCheckGenericInputDataWithNegativeAmountCash()
+    {
+        // $data without idUserSession
+        $data = [
+          'hour'          => '2019-07-04T19:00', 
+          'amountCash'    => -100,
+          'amountCredit'  => 100,
+          'currency'      => 1,
+          'approved'      => 2,
+          'idUserSession' => 1
+        ];
+
+        $mockedEntityManager      = $this->createMock(EntityManager::class);
+        $mockedUserService        = new UserService($mockedEntityManager);
+        $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+
+        $this->expectException(BuyinInvalidException::class);
+        $buyinSessionService->checkGenericInputData($data);
+    }
+
+    public function testCheckGenericInputDataWithNegativeAmountCredit()
+    {
+        // $data without idUserSession
+        $data = [
+          'hour'          => '2019-07-04T19:00', 
+          'amountCash'    => 100,
+          'amountCredit'  => -100,
+          'currency'      => 1,
+          'approved'      => 2,
+          'idUserSession' => 1
+        ];
+
+        $mockedEntityManager      = $this->createMock(EntityManager::class);
+        $mockedUserService        = new UserService($mockedEntityManager);
+        $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+
+        $this->expectException(BuyinInvalidException::class);
+        $buyinSessionService->checkGenericInputData($data);
+    }
+
 }

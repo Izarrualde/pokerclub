@@ -113,7 +113,7 @@ class SessionService extends BaseService
             return new $classname();  
         }
 
-        throw new ClassNotExistingException();
+        throw new RakebackClassNotFoundException();
     }
     
     public function calculateRakeback($idSession)
@@ -129,6 +129,10 @@ class SessionService extends BaseService
 
             $sessionPoints = $rakebackAlgorithm->calculate($userSession);
             
+            if (!is_numeric($sessionPoints)) {
+                throw new InvalidRakebackClassException("Type error: calculate method must return a valid number", 1);
+            }
+
             $userSession->setAccumulatedPoints($sessionPoints);
 
             $user = $userSession->getUser();
