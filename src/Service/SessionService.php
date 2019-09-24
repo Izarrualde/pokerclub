@@ -83,6 +83,7 @@ class SessionService extends BaseService
         $session->setStartTime(new \DateTime($data['start_at']));
         $session->setStartTimeReal(new \DateTime($data['real_start_at']));
         $session->setEndTime(new \DateTime($data['end_at']));
+        $session->setRakebackClass($data['rakebackClass']);
 
         $this->entityManager->flush($session);
 
