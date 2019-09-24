@@ -124,7 +124,7 @@ class UserSessionEntity
 
     public function getIdUser()
     {
-        return $this->idUser;
+        return ($this->user instanceof UserEntity ? $this->getUser()->getId() : null);
     }
     
     public function setIdUser($idUser)
@@ -313,7 +313,8 @@ class UserSessionEntity
             'startTime'   => $this->getStart(),
             'endTime'     => $this->getEnd(),
             'cashin'      => $this->getCashin(),
-            'totalCredit' => $this->getTotalCredit()
+            'totalCredit' => $this->getTotalCredit(),
+            'accumulatedPoints' = $this->getAccumulatedPoints()
         ];
         
         $user = $this->getUser();

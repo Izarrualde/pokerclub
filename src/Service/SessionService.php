@@ -5,6 +5,7 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Exception\ClassNotExistingException;
 
 use Exception;
 
@@ -108,29 +109,31 @@ class SessionService extends BaseService
     public function createRakebackAlgorithm($classname)
     {
         // checkear si existe la clase (class exist)
-        return new $classname();
+        if (class_exists($classname)) {
+            return new $classname();  
+        }
+
+        throw new ClassNotExistingException();
     }
     
     public function calculateRakeback($idSession)
     {
         $session = parent::fetch($idSession);
 
-        $rakebackAlgorithm = $this->createRakebackAlgorithm(
-            $session->getRakebackClass()
-        );
-
+        $rakebackAlgorithm = $this->createRakebackAlgorithm($session->getRakebackClass());
+        
         $usersSession = $session->getSessionUsers();
         
         foreach ($usersSession as $userSession) {
+            $sessionPointsOld = (int)$userSession->getAccumulatedPoints();
+
             $sessionPoints = $rakebackAlgorithm->calculate($userSession);
             
             $userSession->setAccumulatedPoints($sessionPoints);
 
             $user = $userSession->getUser();
 
-            $user->setPoints($user->getPoints()+$sessionPoints);
-
-            // $this->entityManager->persist($userSession);
+            $user->setPoints($user->getPoints()+$sessionPoints-$sessionPointsOld);
         }
 
         $this->entityManager->flush();

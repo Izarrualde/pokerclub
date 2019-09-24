@@ -73,15 +73,14 @@ class BuyinSessionService extends BaseService
         }
         
         if ($userSession->getBuyins()->isEmpty()) {
-            $userSession->setStart($data['hour']);
-            $this->entityManager->persist($userSession);
+            $userSession->setStart(new \DateTime($data['hour']));
         }
         
         $buyin->setUserSession($userSession);
 
         $this->entityManager->persist($buyin);
         $this->entityManager->flush();
-
+        
         return $buyin;
     }
 
