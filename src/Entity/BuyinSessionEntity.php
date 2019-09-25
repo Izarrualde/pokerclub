@@ -185,7 +185,8 @@ class BuyinSessionEntity
         'idSession'    => $this->getIdSession(),
         'amountCash'   => $this->getAmountCash(),
         'amountCredit' => $this->getAmountCredit(),
-        'hour'         => $this->getHour()
+        'hour'         => $this->getHour(),
+        'approved'     => $this->getIsApproved()
         ];
   
         $userSession = $this->getUserSession();
