@@ -467,6 +467,8 @@ class SessionEntity
         'dealerTipTotal'     => $this->getDealerTipTotal(),
         'serviceTipTotal'    => $this->getServiceTipTotal(),
         'rakebackClass'      => $this->getRakebackClass(),
+        'totalCashout'       => $this->getTotalCashout(),
+        'totalPlayed'        => $this->getTotalPlayed(),
         'valid'              => $this->getValid()
         ];
 
