@@ -58,9 +58,11 @@ class ExpensesSessionService extends BaseService
         try {
             $expenditure = parent::fetch($data['id']);
         } catch (Exception $e) {
+
             if ($e->getCode() == self::STATUS_CODE_404) {
                 throw new ExpenditureNotFoundException();
             }
+
             throw $e;
         }
         

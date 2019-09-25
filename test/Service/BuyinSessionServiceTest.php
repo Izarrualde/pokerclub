@@ -417,4 +417,46 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->checkGenericInputData($data);
     }
 
+/*
+    public function testFetchAllBuyins()
+    {
+        // como testear que se llama a fetchAll con el parametro idSession?
+        $idSession = 1;
+
+        $mockedEntityManager      = $this->createMock(EntityManager::class);
+        $mockedUserService        = new UserService($mockedEntityManager);
+        $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService);
+        
+        $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+
+        $repository->expects($this->once())
+        ->method('fetchAll')
+        ->with(
+            $this->equalTo($idSession)
+        );
+
+        $buyinSessionService->fetchAllBuyins($idSession);
+    }
+*/
+/*
+    public function testFetchAllBuyins()
+    {
+        // testear des esta  manera tambien
+        $userSession = new UserSessionEntity();
+        $buyins[] = new BuyinSessionEntity(1,100,0,$userSession);
+        $buyins[] = new BuyinSessionEntity(2,200,0,$userSession);
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedUserSessionService = $this->createMock(UserSessionService::class);
+        //$mockedRepository = $this->createMock(BaseRepository::class);
+        //$mockedRepository->method('fetchAllBuyins')-willReturn($buyins);
+
+        //$mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService);
+        var_dump($buyinSessionService->getRepository());
+
+        // $this->assertEquals($buyinSessionService->repository->fetchAllBuyins(1), $buyins);
+        // ver como hacer que fetchAll de mockedRepository devuelva $buyins solo si lo llamo con '1'
+    }
+    */
 }

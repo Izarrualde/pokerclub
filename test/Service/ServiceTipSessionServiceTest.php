@@ -7,6 +7,8 @@ use Solcre\Pokerclub\Service\ServiceTipSessionService;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\ServiceTipInvalidException;
 use Solcre\Pokerclub\Repository\BaseRepository;
+use Solcre\Pokerclub\Exception\ServiceTipNotFoundException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 
 class ServiceTipSessionServiceTest extends TestCase
 {
@@ -83,6 +85,73 @@ class ServiceTipSessionServiceTest extends TestCase
         // y que se llame metodo flush con anythig
     }
 
+    public function testUpdateWithIncompleteDataException()
+    {
+        // $data without id
+        $data = [
+            'hour'       => '2019-07-04T19:00', 
+            'serviceTip' => 100,
+            'idSession'  => 3
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+
+        $this->expectException(IncompleteDataException::class);
+        $serviceTipSessionService->update($data);
+    }
+
+    public function testUpdateWithServiceTipNotFoundException()
+    {
+        $data = [
+            'id'         => 'an unexisting id',
+            'hour'       => '2019-07-04T19:00', 
+            'serviceTip' => 100,
+            'idSession'  => 3
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new ServiceTipNotFoundException())
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+
+        $this->expectException(ServiceTipNotFoundException::class);
+        $serviceTipSessionService->update($data);
+    }
+
+    public function testUpdateWithException()
+    {
+        $data = [
+            'id'         => 'an unexisting id',
+            'hour'       => '2019-07-04T19:00', 
+            'serviceTip' => 100,
+            'idSession'  => 3
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new \Exception('Solcre\Pokerclub\Entity\ServiceTipSessionEntity' . " Entity not found", 404))
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+
+        $this->expectException(\Exception::class);
+        $serviceTipSessionService->update($data);
+    }
+
     public function testDelete()
     {
         $data = [
@@ -108,4 +177,100 @@ class ServiceTipSessionServiceTest extends TestCase
 
         $serviceTipSessionService->delete($data['id']);
     }
+
+    public function testDeleteWithServiceTipNotFoundException()
+    {
+        $data = [
+            'id'         => 'an unexisting id',
+            'hour'       => '2019-07-04T19:00', 
+            'serviceTip' => 100,
+            'idSession'  => 3
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new ServiceTipNotFoundException())
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+
+        $this->expectException(ServiceTipNotFoundException::class);
+        $serviceTipSessionService->delete($data);
+    }
+
+    public function testDeleteWithException()
+    {
+        $data = [
+            'id'         => 'an unexisting id',
+            'hour'       => '2019-07-04T19:00', 
+            'serviceTip' => 100,
+            'idSession'  => 3
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new \Exception('Solcre\Pokerclub\Entity\ServiceTipSessionEntity' . " Entity not found", 404))
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+
+        $this->expectException(\Exception::class);
+        $serviceTipSessionService->delete($data);
+    }
+
+    public function testCheckGenericInputDataWithIncompleteDataException()
+    {
+        // $data without idSession
+          $data = [
+            'hour'       => '2019-07-04T19:00', 
+            'serviceTip' => 100,
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+
+        $this->expectException(IncompleteDataException::class);
+        $serviceTipSessionService->checkGenericInputData($data);
+    }
+
+    public function testCheckGenericInputDataWithServiceTipNonNumeric()
+    {
+        $data = [
+            'hour'       => '2019-07-04T19:00', 
+            'serviceTip' => 'a non numeric value',
+            'idSession'  => 3
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+
+        $this->expectException(ServiceTipInvalidException::class);
+        $serviceTipSessionService->checkGenericInputData($data);
+    }
+
+    public function testCheckGenericInputDataWithServiceTipNegativeValue()
+    {
+        $data = [
+            'hour'       => '2019-07-04T19:00', 
+            'serviceTip' => -50,
+            'idSession'  => 3
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+
+        $this->expectException(ServiceTipInvalidException::class);
+        $serviceTipSessionService->checkGenericInputData($data);
+    }
+
 }

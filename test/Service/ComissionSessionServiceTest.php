@@ -107,7 +107,6 @@ class ComissionSessionServiceTest extends TestCase
 
     public function testUpdateWithComissionNotFoundException()
     {
-        // $data without id
         $data = [
             'id'        => 'an unexisting id',
             'hour'      => '2019-07-04T19:00', 
@@ -133,7 +132,6 @@ class ComissionSessionServiceTest extends TestCase
 
     public function testUpdateWithException()
     {
-        // $data without id
         $data = [
             'id'        => 'an unexisting id',
             'hour'      => '2019-07-04T19:00', 
@@ -252,7 +250,7 @@ class ComissionSessionServiceTest extends TestCase
 
     public function testCheckGenericInputDataWithComissionNonNumeric()
     {
-        // $data without idSession
+        // $data with non numeric comission
         $data = [
           'hour'      => '2019-07-04T19:00', 
           'comission' => 'a non numeric value',
@@ -268,7 +266,7 @@ class ComissionSessionServiceTest extends TestCase
 
     public function testCheckGenericInputDataWithComissionNegativeValue()
     {
-        // $data without idSession
+        // $data with negative comission
         $data = [
           'hour'      => '2019-07-04T19:00', 
           'comission' => -50,

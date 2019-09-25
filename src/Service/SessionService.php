@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\ClassNotExistingException;
+use Solcre\Pokerclub\Exception\RakebackClassNotFoundException;
 
 use Exception;
 

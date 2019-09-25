@@ -60,6 +60,7 @@ class DealerTipSessionService extends BaseService
             if ($e->getCode() == self::STATUS_CODE_404) {
                 throw new DealerTipNotFoundException();
             }
+
             throw $e;
         }
         
