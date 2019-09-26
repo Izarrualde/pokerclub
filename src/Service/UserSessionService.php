@@ -26,7 +26,7 @@ class UserSessionService extends BaseService
     {
         // does not include id
 
-        if (!isset($data['idSession'], $data['idUser'], $data['start'], $data['isApproved'])) {
+        if (!isset($data['idSession'], $data['idUser'], $data['start'], $data['isApproved']), $data['points'])) {
             throw new IncompleteDataException();
         }
     }

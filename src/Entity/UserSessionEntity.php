@@ -305,16 +305,16 @@ class UserSessionEntity
     public function toArray()
     {
         $ret =  [
-            'id'                => $this->getId(),
-            'idSession'         => $this->getSession()->getId(),
-            'idUser'            => $this->getIdUser(),
-            'isApproved'        => $this->getIsApproved(),
-            'cashout'           => $this->getCashout(),
-            'startTime'         => $this->getStart(),
-            'endTime'           => $this->getEnd(),
-            'cashin'            => $this->getCashin(),
-            'totalCredit'       => $this->getTotalCredit(),
-            'accumulatedPoints' => (float)$this->getAccumulatedPoints()
+            'id'          => $this->getId(),
+            'idSession'   => $this->getSession()->getId(),
+            'idUser'      => $this->getIdUser(),
+            'isApproved'  => $this->getIsApproved(),
+            'cashout'     => $this->getCashout(),
+            'startTime'   => $this->getStart(),
+            'endTime'     => $this->getEnd(),
+            'cashin'      => $this->getCashin(),
+            'totalCredit' => $this->getTotalCredit(),
+            'points'      => (float)$this->getAccumulatedPoints()
         ];
         
         $user = $this->getUser();
