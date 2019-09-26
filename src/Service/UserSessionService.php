@@ -46,6 +46,7 @@ class UserSessionService extends BaseService
             throw new TableIsFullException();
         }
 */
+        
         $userSession   = new UserSessionEntity();
 
         $userSession->setSession($session);
