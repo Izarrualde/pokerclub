@@ -12,16 +12,6 @@ use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Rakeback\rakebackAlgorithm;
 
-class SimpleRakeback 
-{
-    const RAKEBACK_PERCENTAGE = 0.01;
-
-    public function calculate(UserSessionEntity $userSession)
-    {
-      var_dump('created simpleRakebackClass');
-    }
-}
-
 class SessionServiceTest extends TestCase
 {
   const SESSION_POINTS_10 = 10;
@@ -29,10 +19,6 @@ class SessionServiceTest extends TestCase
     public function testAdd()
     {
         $data = [
-          'id'            => 1, 
-          'hour'          => '2019-07-04T19:00', 
-          'comission'     => 100,
-          'idSession'     => 3,
           'date'          => '2019-07-04',
           'start_at'      => '2019-07-04T19:00',
           'real_start_at' => '2019-07-04T19:15',
@@ -73,9 +59,6 @@ class SessionServiceTest extends TestCase
     {
         $data = [
             'id'            => 1, 
-            'hour'          => '2019-07-04T19:00', 
-            'comission'     => 100,
-            'idSession'     => 3,
             'date'          => '2019-07-04',
             'start_at'      => '2019-07-04T19:00',
             'real_start_at' => '2019-07-04T19:15',
@@ -118,6 +101,7 @@ class SessionServiceTest extends TestCase
         $expectedSession->setStartTime(new \DateTime($data['start_at']));
         $expectedSession->setStartTimeReal(new \DateTime($data['real_start_at']));
         $expectedSession->setEndTime(new \DateTime($data['end_at']));
+        $expectedSession->setRakebackClass($data['rakebackClass']);
 
         $mockedEntityManager->expects($this->once())
         ->method('flush')
@@ -128,6 +112,29 @@ class SessionServiceTest extends TestCase
         $sessionService->update($data);
         // y que se llame metodo flush con anythig
     }
+
+    public function testUpdateWithIncompleteDataException()
+    {
+        // $data without id
+        $data = [
+            'date'          => '2019-07-04',
+            'start_at'      => '2019-07-04T19:00',
+            'real_start_at' => '2019-07-04T19:15',
+            'end_at'        => '2019-07-04T20:00',
+            'title'         => 'title actualizado',
+            'description'   => 'desscription actualizada',
+            'seats'         => 9,
+            'rakebackClass' => 'SimpleRakeback'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+
+        $sessionService = new SessionService($mockedEntityManager);
+
+        $this->expectException(IncompleteDataException::class);
+        $sessionService->update($data);
+    }
+
 
     public function testDelete()
     {

@@ -54,7 +54,7 @@ class BuyinSessionEntityTest extends TestCase
     //$buyin->setUserSession($user);
     $buyin->setHour(date_create('2019-06-26 19:00:00'));
     //$buyin->setCurrency(1);
-    //$buyin->setIsApproved(1);
+    $buyin->setIsApproved(1);
 
     $expectedArray = [
       'id'           => 1,
@@ -62,7 +62,8 @@ class BuyinSessionEntityTest extends TestCase
       'amountCash'   => 300,
       'amountCredit' => 200,
       'hour'         => date_create('2019-06-26 19:00:00'),
-      'user_session' => $userSession->toArray()
+      'user_session' => $userSession->toArray(),
+      'approved'     => 1
     ]; 
 
     $this->assertEquals($expectedArray, $buyin->toArray());

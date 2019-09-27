@@ -44,13 +44,11 @@ class BuyinSessionServiceTest extends TestCase
         $userSession->setStart(new \DateTime($data['hour']));
         $expectedBuyin->setUserSession($userSession);
       
-
-        $mockedEntityManager->expects($this->exactly(2))
+        $mockedEntityManager->expects($this->once())
         ->method('persist')
-        ->withConsecutive(
-            $this->equalTo($userSession),
-            $this->equalTo($expectedBuyin)
-        );
+        ->with(
+           $this->equalTo($expectedBuyin)
+        )/*->willReturn('anything')*/;
 
         $buyinSessionService->add($data);
         // y que se llame metodo flush con anythig

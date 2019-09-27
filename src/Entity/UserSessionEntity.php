@@ -83,7 +83,7 @@ class UserSessionEntity
         $idUser = null,
         $isApproved = null,
         $accumulatedPoints = 0,
-        $cashout = null,
+        $cashout = 0,
         $start = null,
         $end = null,
         UserEntity $user = null
