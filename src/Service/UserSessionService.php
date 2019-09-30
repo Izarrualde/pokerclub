@@ -25,8 +25,7 @@ class UserSessionService extends BaseService
     public function checkGenericInputData($data)
     {
         // does not include id
-
-        if (!isset($data['idSession'], $data['idUser'], $data['start'], $data['isApproved'], $data['points'])) {
+        if (!isset($data['idSession'], $data['idUser'], $data['isApproved'], $data['points'])) {
             throw new IncompleteDataException();
         }
     }
@@ -41,11 +40,11 @@ class UserSessionService extends BaseService
         if (in_array($data['idUser'], $session->getActivePlayers())) {
             throw new UserSessionAlreadyAddedException();
         }
-/*
+        /*
         if (!$session->hasSeatAvailable()) {
             throw new TableIsFullException();
         }
-*/
+        */
         
         $userSession   = new UserSessionEntity();
 
@@ -53,7 +52,6 @@ class UserSessionService extends BaseService
         $userSession->setIdUser($data['idUser']);
         $userSession->setIsApproved($data['isApproved']);
         $userSession->setAccumulatedPoints((int)$data['points']);
-        $userSession->setStart(new \DateTime($data['start']));
         $userSession->setUser($user);
 
         $this->entityManager->persist($userSession);

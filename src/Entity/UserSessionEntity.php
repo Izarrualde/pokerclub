@@ -234,6 +234,17 @@ class UserSessionEntity
         return $credit;
     }
 
+    public function getTotalCash()
+    {
+        $cash = 0;
+        $buyins = $this->getBuyins()->toArray();
+
+        foreach ($buyins as $buyin) {
+            $cash += $buyin->getAmountCash();
+        }
+        return $cash;
+    }
+
     public function getResult()
     {
         return $this->getCashout() - $this->getCashin();
