@@ -325,6 +325,7 @@ class UserSessionEntity
             'endTime'     => $this->getEnd(),
             'cashin'      => $this->getCashin(),
             'totalCredit' => $this->getTotalCredit(),
+            'totalCash'   => $this->getTotalCash(),
             'points'      => (float)$this->getAccumulatedPoints()
         ];
         
