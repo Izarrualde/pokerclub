@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\ClassNotExistingException;
-use Solcre\Pokerclub\Exception\RakebackClassNotFoundException;
+use Solcre\Pokerclub\Exception\InvalidRakebackClassException;
 use Exception;
 
 class SessionService extends BaseService
@@ -111,10 +111,10 @@ class SessionService extends BaseService
     {
         // checkear si existe la clase (class exist)
         if (class_exists($classname)) {
-            return new $classname();  
+            return new $classname();
         }
 
-        throw new RakebackClassNotFoundException();
+        throw new ClassNotExistingException();
     }
     
     public function calculateRakeback($idSession)

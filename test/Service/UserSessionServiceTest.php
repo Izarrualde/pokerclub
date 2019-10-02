@@ -17,8 +17,7 @@ class UserSessionServiceTest extends TestCase
           'idSession'  => 3,
           'idUser'     => 1,
           'isApproved' => 1,
-          'points'     => 0,
-          'start'      => '2019-07-04T19:00'
+          'points'     => 0
         ];
 
         $map = [
@@ -40,7 +39,6 @@ class UserSessionServiceTest extends TestCase
         $expectedUserSession->setIdUser($data['idUser']);
         $expectedUserSession->setIsApproved($data['isApproved']);
         $expectedUserSession->setAccumulatedPoints($data['points']);
-        $expectedUserSession->setStart(new \DateTime($data['start']));
 
         $mockedEntityManager->expects($this->once())
         ->method('persist')

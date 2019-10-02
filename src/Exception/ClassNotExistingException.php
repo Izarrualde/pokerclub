@@ -4,7 +4,7 @@ namespace Solcre\Pokerclub\Exception;
 /**
  * @codeCoverageIgnore
  */
-class RakebackClassNotFoundException extends \Exception
+class ClassNotExistingException extends \Exception
 {
 
     public function __construct()

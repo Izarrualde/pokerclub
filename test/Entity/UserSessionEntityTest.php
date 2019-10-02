@@ -439,6 +439,7 @@ class UserSessionEntityTest extends TestCase
       'endTime'     => date_create('2019-06-26 23:00:00'),
       'cashin'      => 1200,
       'totalCredit' => 200,
+      'totalCash'   => 1000,
       'points'      => 0,
       'user'        => $user->toArray(),
       'session'     =>$session->toArray()
@@ -446,10 +447,4 @@ class UserSessionEntityTest extends TestCase
 
     $this->assertEquals($expectedArray, $userSession->toArray());
   }
-
-
-
-
-
-
 }
