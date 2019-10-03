@@ -183,7 +183,6 @@ class ComissionSessionServiceTest extends TestCase
 
     public function testDeleteWithComissionNotFoundException()
     {
-        // $data without id
         $data = [
             'id'        => 'an unexisting id',
             'hour'      => '2019-07-04T19:00', 

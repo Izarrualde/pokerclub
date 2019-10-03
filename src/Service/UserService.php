@@ -22,7 +22,6 @@ class UserService extends BaseService
     public function checkGenericInputData($data)
     {
         // does not include id
-
         if (!isset(
             $data['password'],
             $data['name'],
@@ -42,11 +41,11 @@ class UserService extends BaseService
         }
 
         if (!is_numeric($data['multiplier']) ||
-            (!is_numeric($data['hours']) && $data['hours'] > 0) ||
-            (!is_numeric($data['points']) && $data['points'] > 0) ||
-            (!is_numeric($data['sessions']) && $data['sessions'] > 0)||
+            (!is_numeric($data['hours']) || $data['hours'] < 0) ||
+            (!is_numeric($data['points']) || $data['points'] < 0) ||
+            (!is_numeric($data['sessions']) || $data['sessions'] < 0)||
             !is_numeric($data['results']) ||
-            (!is_numeric($data['cashin']) && $data['cashin'] > 0)) {
+            (!is_numeric($data['cashin']) || $data['cashin'] < 0)) {
             throw new UserInvalidException();
         }
     }

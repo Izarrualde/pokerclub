@@ -6,6 +6,9 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Service\UserService;
 use Solcre\Pokerclub\Exception\UserHadActionException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Solcre\Pokerclub\Exception\UserNotFoundException;
+use Solcre\Pokerclub\Exception\UserInvalidException;
+use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Repository\BaseRepository;
 
 class UserServiceTest extends TestCase
@@ -125,6 +128,102 @@ class UserServiceTest extends TestCase
         // y que se llame metodo flush con anythig
     }
 
+    public function testUpdateWithIncompleteDataException()
+    {
+        // $data without id
+        $data = [
+            'password'   => '123',
+            'name'  => 'Jhon',
+            'lastname'   => 'Doe',
+            'email'      => 'jhon@lmsuy.com',
+            'username'   => '12345',
+            'multiplier' => 0,
+            'active'     => 1,
+            'hours'      => 0,
+            'points'     => 0,
+            'sessions'   => 0,
+            'results'    => 0,
+            'cashin'     => 0
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+
+        $userService = new UserService($mockedEntityManager);
+
+        $this->expectException(IncompleteDataException::class);
+        $userService->update($data);
+    }
+
+    public function testUpdateWithUserNotFoundException()
+    {
+        // $data without id
+        $data = [
+            'id'         => 'an unexisting id',
+            'password'   => '123',
+            'name'       => 'Jhon',
+            'lastname'   => 'Doe',
+            'email'      => 'jhon@lmsuy.com',
+            'username'   => '12345',
+            'multiplier' => 0,
+            'active'     => 1,
+            'hours'      => 0,
+            'points'     => 0,
+            'sessions'   => 0,
+            'results'    => 0,
+            'cashin'     => 0
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new UserNotFoundException())
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $userService = new UserService($mockedEntityManager);
+
+        $this->expectException(UserNotFoundException::class);
+        $userService->update($data);
+    }
+
+    public function testUpdateWitException()
+    {
+        // $data without id
+        $data = [
+            'id'         => 'an unexisting id',
+            'password'   => '123',
+            'name'       => 'Jhon',
+            'lastname'   => 'Doe',
+            'email'      => 'jhon@lmsuy.com',
+            'username'   => '12345',
+            'multiplier' => 0,
+            'active'     => 1,
+            'hours'      => 0,
+            'points'     => 0,
+            'sessions'   => 0,
+            'results'    => 0,
+            'cashin'     => 0
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new \Exception('Solcre\Pokerclub\Entity\UserEntity' . " Entity not found", 404))
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $userService = new UserService($mockedEntityManager);
+
+        $this->expectException(\Exception::class);
+        $userService->update($data);
+    }
+
     public function testDelete()
     {
         $data = [
@@ -150,5 +249,98 @@ class UserServiceTest extends TestCase
         )/*->willReturn('anything')*/;
 
         $userService->delete($data['id']);
+    }
+
+    public function testDeleteWithUserNotFoundException()
+    {
+        $data = [
+          'id' => 'an unexisting id'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new UserNotFoundException())
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $userService = new UserService($mockedEntityManager);
+
+        $this->expectException(UserNotFoundException::class);     
+        $userService->delete($data['id']);
+    }
+
+    public function testDeleteWithException()
+    {
+        $data = [
+          'id' => 'an unexisting id'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new \Exception('Solcre\Pokerclub\Entity\UserEntity' . " Entity not found", 404))
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $userService = new UserService($mockedEntityManager);
+
+        $this->expectException(\Exception::class);      
+        $userService->delete($data['id']);
+    }
+
+    public function testCheckGenericInputDataWithIncompleteDataException()
+    {
+        // $data without cashin
+        $data = [
+            'id'         => 1,
+            'password'   => '123',
+            'name'       => 'Jhon',
+            'lastname'   => 'Doe',
+            'email'      => 'jhon@lmsuy.com',
+            'username'   => '12345',
+            'multiplier' => 0,
+            'active'     => 1,
+            'hours'      => 0,
+            'points'     => 0,
+            'sessions'   => 0,
+            'results'    => 0
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $userService = new UserService($mockedEntityManager);
+
+        $this->expectException(IncompleteDataException::class);
+        $userService->checkGenericInputData($data);
+    }
+
+    public function testCheckGenericInputDataWithUserInvalidException()
+    {
+        // $data with non numeric cashin
+        $data = [
+            'id'         => 1,
+            'password'   => '123',
+            'name'       => 'Jhon',
+            'lastname'   => 'Doe',
+            'email'      => 'jhon@lmsuy.com',
+            'username'   => '12345',
+            'multiplier' => 0,
+            'active'     => 1,
+            'hours'      => 0,
+            'points'     => 0,
+            'sessions'   => 0,
+            'results'    => 0,
+            'cashin'     => 'a non numeric value'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $userService = new UserService($mockedEntityManager);
+
+        $this->expectException(UserInvalidException::class);
+        $userService->checkGenericInputData($data);
     }
 }

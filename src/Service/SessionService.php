@@ -20,8 +20,7 @@ class SessionService extends BaseService
 
     public function checkGenericInputData($data)
     {
-        // does not include id
-
+        // don't include id
         if (!isset(
             $data['date'],
             $data['title'],

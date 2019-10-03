@@ -20,7 +20,7 @@ class ComissionSessionService extends BaseService
 
     public function checkGenericInputData($data)
     {
-        // does not include id
+        // don't include id
 
         if (!isset($data['idSession'], $data['hour'], $data['comission'])) {
             throw new IncompleteDataException();

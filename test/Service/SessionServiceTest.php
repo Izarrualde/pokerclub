@@ -10,6 +10,7 @@ use Solcre\Pokerclub\Repository\BaseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Exception\UserInvalidException;
 use Solcre\Pokerclub\Rakeback\rakebackAlgorithm;
 
 class SessionServiceTest extends TestCase
@@ -135,6 +136,65 @@ class SessionServiceTest extends TestCase
         $sessionService->update($data);
     }
 
+    public function testUpdateWithSessionNotFoundException()
+    {
+        $data = [
+            'id'            => 'an unexisting id',
+            'date'          => '2019-07-04',
+            'start_at'      => '2019-07-04T19:00',
+            'real_start_at' => '2019-07-04T19:15',
+            'end_at'        => '2019-07-04T20:00',
+            'title'         => 'title actualizado',
+            'description'   => 'desscription actualizada',
+            'seats'         => 9,
+            'rakebackClass' => 'SimpleRakeback'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new SessionNotFoundException())
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $sessionService = new SessionService($mockedEntityManager);
+
+        $this->expectException(SessionNotFoundException::class);
+        $sessionService->update($data);
+    }
+
+    public function testUpdateWithException()
+    {
+        $data = [
+            'id'            => 'an unexisting id',
+            'date'          => '2019-07-04',
+            'start_at'      => '2019-07-04T19:00',
+            'real_start_at' => '2019-07-04T19:15',
+            'end_at'        => '2019-07-04T20:00',
+            'title'         => 'title actualizado',
+            'description'   => 'desscription actualizada',
+            'seats'         => 9,
+            'rakebackClass' => 'SimpleRakeback'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('flush')->willReturn(true);
+
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new \Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404))
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $sessionService = new SessionService($mockedEntityManager);
+
+        $this->expectException(\Exception::class);
+        $sessionService->update($data);
+    }
 
     public function testDelete()
     {
@@ -161,6 +221,70 @@ class SessionServiceTest extends TestCase
      
         $sessionService->delete($data['id']);
     }
+
+    public function testDeleteWithSessionNotFoundException()
+    {
+        $data = [
+          'id' => 'an unexisting id'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new SessionNotFoundException())
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $sessionService = new SessionService($mockedEntityManager);
+
+        $this->expectException(SessionNotFoundException::class);     
+        $sessionService->delete($data['id']);
+    }
+
+    public function testDeleteWithException()
+    {
+        $data = [
+          'id' => 'an unexisting id'
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('remove')->willReturn(true);
+        $mockedRepository = $this->createMock(BaseRepository::class);
+        $mockedRepository->method('find')->will($this->throwException(
+          new \Exception('Solcre\Pokerclub\Entity\SessionEntity' . " Entity not found", 404))
+        );
+
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+
+        $sessionService = new SessionService($mockedEntityManager);
+
+        $this->expectException(\Exception::class);    
+        $sessionService->delete($data['id']);
+    }
+
+    public function testCheckGenericInputDataWithIncompleteDataException()
+    {
+        // $data without rakebackClass
+        $data = [
+            'id'            => 1,
+            'date'          => '2019-07-04',
+            'start_at'      => '2019-07-04T19:00',
+            'real_start_at' => '2019-07-04T19:15',
+            'end_at'        => '2019-07-04T20:00',
+            'title'         => 'title actualizado',
+            'description'   => 'desscription actualizada',
+            'seats'         => 9
+        ];
+
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $sessionService = new SessionService($mockedEntityManager);
+
+        $this->expectException(IncompleteDataException::class);
+        $sessionService->checkGenericInputData($data);
+    }
+
 
 /*
     public function testCreateRakebackAlgorithm()

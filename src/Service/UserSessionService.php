@@ -85,6 +85,9 @@ class UserSessionService extends BaseService
         $userSession->setSession($session);
         $userSession->setIdUser($data['idUser']);
 
+        var_dump('en userSessionService');
+        var_dump($userSession->getStart());
+
         $this->entityManager->flush($userSession);
 
         return $userSession;
@@ -126,14 +129,14 @@ class UserSessionService extends BaseService
 
         $userSession->setEnd(new \DateTime($data['end']));
         $userSession->setCashout($data['cashout']);
-
+        
         if ($this->userService instanceof UserService) {
             $user = $this->userService->fetch($data['idUser']);
             $user->setHours($user->getHours()+$userSession->getDuration());
 
             $this->entityManager->persist($user);
         }
-            
+        
             $this->entityManager->persist($userSession);
             $this->entityManager->flush();
     }

@@ -405,7 +405,7 @@ class SessionEntity
 
     public function getActivePlayers()
     {
-        $activePlayers = array();
+        $activePlayers = [];
         foreach ($this->sessionUsers as $user) {
             if (!in_array($user->getUser()->getId(), $activePlayers) &&
                 ($user->getEnd() == null) &&
@@ -416,9 +416,21 @@ class SessionEntity
         return $activePlayers;
     }
 
+    public function getSeatedPlayers()
+    {
+        $seatedPlayers = [];
+        foreach ($this->sessionUsers as $user) {
+            if (!in_array($user->getUser()->getId(), $activePlayers) &&
+                ($user->getEnd() == null) {
+                $seatedPlayers[]= $user->getUser()->getId();
+            }
+        }
+        return $seatedPlayers;
+    }
+
     public function getDistinctPlayers()
     {
-        $distinctPlayers = array();
+        $distinctPlayers = [];
         foreach ($this->sessionUsers as $user) {
             if (!in_array($user->getUser()->getId(), $distinctPlayers)) {
                 $distinctPlayers[]= $user->getUser()->getId();
@@ -460,6 +472,7 @@ class SessionEntity
         'countActivePlayers' => count($this->getActivePlayers()),
         'activePlayers'      => $this->getActivePlayers(),
         'distinctPlayers'    => $this->getDistinctPlayers(),
+        'seatedPlayers'      => $this->getSeatedPlayers()
         'seats'              => $this->getSeats(),
         'endTime'            => $this->getEndTime(),
         'comissionTotal'     => $this->getComissionTotal(),
