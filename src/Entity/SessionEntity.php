@@ -421,7 +421,7 @@ class SessionEntity
         $seatedPlayers = [];
         foreach ($this->sessionUsers as $user) {
             if (!in_array($user->getUser()->getId(), $activePlayers) &&
-                ($user->getEnd() == null) {
+                ($user->getEnd() == null)) {
                 $seatedPlayers[]= $user->getUser()->getId();
             }
         }
@@ -472,7 +472,7 @@ class SessionEntity
         'countActivePlayers' => count($this->getActivePlayers()),
         'activePlayers'      => $this->getActivePlayers(),
         'distinctPlayers'    => $this->getDistinctPlayers(),
-        'seatedPlayers'      => $this->getSeatedPlayers()
+        'countSeatedPlayers' => count($this->getSeatedPlayers()),
         'seats'              => $this->getSeats(),
         'endTime'            => $this->getEndTime(),
         'comissionTotal'     => $this->getComissionTotal(),
