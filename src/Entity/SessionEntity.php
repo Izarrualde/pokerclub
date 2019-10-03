@@ -420,7 +420,7 @@ class SessionEntity
     {
         $seatedPlayers = [];
         foreach ($this->sessionUsers as $user) {
-            if (!in_array($user->getUser()->getId(), $activePlayers) &&
+            if (!in_array($user->getUser()->getId(), $seatedPlayers) &&
                 ($user->getEnd() == null)) {
                 $seatedPlayers[]= $user->getUser()->getId();
             }
