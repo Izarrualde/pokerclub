@@ -111,7 +111,7 @@ class UserService extends BaseService
     public function delete($id, $entityObj = null)
     {
         try {
-            $user    = parent::fetch($id);
+            $user = parent::fetch($id);
 
             $this->entityManager->remove($user);
             $this->entityManager->flush();
