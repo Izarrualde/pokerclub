@@ -21,7 +21,7 @@ class ComissionSessionEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\SessionEntity", inversedBy="sessionComissions")
-     * @ORM\JoinColumn(name="session_id",                               referencedColumnName="id")
+     * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
      */
     protected $session;
 

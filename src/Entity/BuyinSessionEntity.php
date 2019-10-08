@@ -34,6 +34,7 @@ class BuyinSessionEntity
      */
     protected $currency;
 
+
     /**
      * @ORM\Column(type="datetime", name="created_at")
      */
@@ -48,7 +49,7 @@ class BuyinSessionEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\UserSessionEntity", inversedBy="buyins")
-     * @ORM\JoinColumn(name="session_user_id",                              referencedColumnName="id")
+     * @ORM\JoinColumn(name="session_user_id", referencedColumnName="id")
      */
     protected $userSession;
 

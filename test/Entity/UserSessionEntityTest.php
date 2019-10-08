@@ -28,6 +28,7 @@ class UserSessionEntityTest extends TestCase
     $cashout = 500;
     $start = date_create('2019-06-26 19:00:00');
     $end = date_create('2019-06-26 23:00:00');
+    $minimumHours = null;
     $user = New UserEntity(5);
 
     $userSession = new UserSessionEntity(
@@ -39,6 +40,7 @@ class UserSessionEntityTest extends TestCase
       $cashout,
       $start,
       $end,
+      $minimumHours,
       $user
     );
 
@@ -430,19 +432,20 @@ class UserSessionEntityTest extends TestCase
     $userSession->setBuyins($buyins1);
 
     $expectedArray = [
-      'id'          => 1,
-      'idSession'   => 2,
-      'idUser'      => 3,
-      'isApproved'  => 1,
-      'cashout'     => 0,
-      'startTime'   => date_create('2019-06-26 19:00:00'),
-      'endTime'     => date_create('2019-06-26 23:00:00'),
-      'cashin'      => 1200,
-      'totalCredit' => 200,
-      'totalCash'   => 1000,
-      'points'      => 0,
-      'user'        => $user->toArray(),
-      'session'     =>$session->toArray()
+      'id'           => 1,
+      'idSession'    => 2,
+      'idUser'       => 3,
+      'isApproved'   => 1,
+      'cashout'      => 0,
+      'startTime'    => date_create('2019-06-26 19:00:00'),
+      'endTime'      => date_create('2019-06-26 23:00:00'),
+      'cashin'       => 1200,
+      'totalCredit'  => 200,
+      'totalCash'    => 1000,
+      'points'       => 0,
+      'user'         => $user->toArray(),
+      'session'      =>$session->toArray(),
+      'minimumHours' => null
     ];
 
     $this->assertEquals($expectedArray, $userSession->toArray());

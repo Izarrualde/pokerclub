@@ -61,11 +61,17 @@ class UserSessionEntity
     protected $end;
 
 
+    /**
+     * @ORM\Column(type="float", name="minimum_hours")
+     */
+    protected $minimumHours;
 
-       /**
-        * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\UserEntity", inversedBy="sessionUsers")
-        * @ORM\JoinColumn(name="user_id",                               referencedColumnName="id")
-        */
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\UserEntity", inversedBy="sessionUsers")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
     protected $user;
 
 
@@ -86,6 +92,7 @@ class UserSessionEntity
         $cashout = 0,
         $start = null,
         $end = null,
+        $minimumHours = null,
         UserEntity $user = null
     ) {
         $this->setId($id);
@@ -97,6 +104,7 @@ class UserSessionEntity
         $this->setStart($start);
         $this->setEnd($end);
         $this->setUser($user);
+        $this->setMinimumHours($minimumHours);
         $this->buyins = new ArrayCollection();
     }
     
@@ -185,6 +193,25 @@ class UserSessionEntity
     public function setEnd($end)
     {
         $this->end = $end;
+        return $this;
+    }
+
+    public function getMinimumHours()
+    {
+        return $this->minimumHours;
+    }
+    
+    public function setMinimumHours($minimumHours = null)
+    {
+        if ($minimumHours != null) {
+            $this->minimumHours = $minimumHours;
+        } 
+        else {
+            $this->session instanceof SessionEntity ? 
+            $this->minimumHours = $this->getSession()->getMinimumUserSessionHours() :
+            null;
+        }
+
         return $this;
     }
 
@@ -316,17 +343,18 @@ class UserSessionEntity
     public function toArray()
     {
         $ret =  [
-            'id'          => $this->getId(),
-            'idSession'   => $this->getSession()->getId(),
-            'idUser'      => $this->getIdUser(),
-            'isApproved'  => $this->getIsApproved(),
-            'cashout'     => $this->getCashout(),
-            'startTime'   => $this->getStart(),
-            'endTime'     => $this->getEnd(),
-            'cashin'      => $this->getCashin(),
-            'totalCredit' => $this->getTotalCredit(),
-            'totalCash'   => $this->getTotalCash(),
-            'points'      => (float)$this->getAccumulatedPoints()
+            'id'           => $this->getId(),
+            'idSession'    => $this->getSession()->getId(),
+            'idUser'       => $this->getIdUser(),
+            'isApproved'   => $this->getIsApproved(),
+            'cashout'      => $this->getCashout(),
+            'startTime'    => $this->getStart(),
+            'endTime'      => $this->getEnd(),
+            'cashin'       => $this->getCashin(),
+            'totalCredit'  => $this->getTotalCredit(),
+            'totalCash'    => $this->getTotalCash(),
+            'points'       => (float)$this->getAccumulatedPoints(),
+            'minimumHours' => (float)$this->getMinimumHours()
         ];
         
         $user = $this->getUser();

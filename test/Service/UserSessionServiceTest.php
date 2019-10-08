@@ -111,14 +111,15 @@ class UserSessionServiceTest extends TestCase
     public function testUpdate()
     {
         $data = [
-            'id'         => 1,
-            'idSession'  => 3,
-            'idUser'     => 1,
-            'isApproved' => 1,
-            'points'     => 0,
-            'cashout'    => 0,
-            'start'      => '2019-07-04T19:00',
-            'end'        =>  null
+            'id'           => 1,
+            'idSession'    => 3,
+            'idUser'       => 1,
+            'isApproved'   => 1,
+            'points'       => 0,
+            'cashout'      => 0,
+            'start'        => '2019-07-04T19:00',
+            'end'          =>  null,
+            'minimumHours' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -135,6 +136,7 @@ class UserSessionServiceTest extends TestCase
                 0,
                 0,
                 new \DateTime('2019-07-04T18:00'),
+                null,
                 null,
                 new UserEntity(1)
             )
@@ -153,14 +155,13 @@ class UserSessionServiceTest extends TestCase
         $expectedUserSession->setAccumulatedPoints($data['points']);
         $expectedUserSession->setCashout($data['cashout']);
         $expectedUserSession->setStart(new \DateTime($data['start']));
+        $expectedUserSession->setMinimumHours($data['minimumHours']);
 
         $mockedEntityManager->expects($this->once())
         ->method('flush')
         ->with(
             $this->equalTo($expectedUserSession)
         )/*->willReturn('anything')*/;
-
-        var_dump($expectedUserSession->getStart());
 
         $userSessionService->update($data);
         // y que se llame metodo flush con anythig
@@ -170,13 +171,14 @@ class UserSessionServiceTest extends TestCase
     {
         // $data without id
         $data = [
-            'idSession'  => 3,
-            'idUser'     => 1,
-            'isApproved' => 1,
-            'points'     => 0,
-            'cashout'    => 0,
-            'start'      => '2019-07-04T19:00',
-            'end'        =>  null
+            'idSession'    => 3,
+            'idUser'       => 1,
+            'isApproved'   => 1,
+            'points'       => 0,
+            'cashout'      => 0,
+            'start'        => '2019-07-04T19:00',
+            'end'          =>  null,
+            'minimumHours' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -190,14 +192,15 @@ class UserSessionServiceTest extends TestCase
     public function testUpdateWithUserSessionNotFoundException()
     {
         $data = [
-            'id'         => 'an unexisting id',
-            'idSession'  => 3,
-            'idUser'     => 1,
-            'isApproved' => 1,
-            'points'     => 0,
-            'cashout'    => 0,
-            'start'      => '2019-07-04T19:00',
-            'end'        =>  null
+            'id'           => 'an unexisting id',
+            'idSession'    => 3,
+            'idUser'       => 1,
+            'isApproved'   => 1,
+            'points'       => 0,
+            'cashout'      => 0,
+            'start'        => '2019-07-04T19:00',
+            'end'          =>  null,
+            'minimumHours' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -219,14 +222,15 @@ class UserSessionServiceTest extends TestCase
     public function testUpdateWithException()
     {
         $data = [
-            'id'         => 'an unexisting id',
-            'idSession'  => 3,
-            'idUser'     => 1,
-            'isApproved' => 1,
-            'points'     => 0,
-            'cashout'    => 0,
-            'start'      => '2019-07-04T19:00',
-            'end'        =>  null
+            'id'           => 'an unexisting id',
+            'idSession'    => 3,
+            'idUser'       => 1,
+            'isApproved'   => 1,
+            'points'       => 0,
+            'cashout'      => 0,
+            'start'        => '2019-07-04T19:00',
+            'end'          =>  null,
+            'minimumHours' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -274,14 +278,15 @@ class UserSessionServiceTest extends TestCase
     public function testDeleteWithUserSessionNotFoundException()
     {
         $data = [
-            'id'         => 'an unexisting id',
-            'idSession'  => 3,
-            'idUser'     => 1,
-            'isApproved' => 1,
-            'points'     => 0,
-            'cashout'    => 0,
-            'start'      => '2019-07-04T19:00',
-            'end'        =>  null
+            'id'           => 'an unexisting id',
+            'idSession'    => 3,
+            'idUser'       => 1,
+            'isApproved'   => 1,
+            'points'       => 0,
+            'cashout'      => 0,
+            'start'        => '2019-07-04T19:00',
+            'end'          =>  null,
+            'minimumHours' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -303,14 +308,15 @@ class UserSessionServiceTest extends TestCase
     public function testDeleteWithException()
     {
         $data = [
-            'id'         => 'an unexisting id',
-            'idSession'  => 3,
-            'idUser'     => 1,
-            'isApproved' => 1,
-            'points'     => 0,
-            'cashout'    => 0,
-            'start'      => '2019-07-04T19:00',
-            'end'        =>  null
+            'id'           => 'an unexisting id',
+            'idSession'    => 3,
+            'idUser'       => 1,
+            'isApproved'   => 1,
+            'points'       => 0,
+            'cashout'      => 0,
+            'start'        => '2019-07-04T19:00',
+            'end'          =>  null,
+            'minimumHours' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -333,12 +339,13 @@ class UserSessionServiceTest extends TestCase
     {
         // $data without idSession
          $data = [
-            'idUser'     => 1,
-            'isApproved' => 1,
-            'points'     => 0,
-            'cashout'    => 0,
-            'start'      => '2019-07-04T19:00',
-            'end'        =>  null
+            'idUser'       => 1,
+            'isApproved'   => 1,
+            'points'       => 0,
+            'cashout'      => 0,
+            'start'        => '2019-07-04T19:00',
+            'end'          =>  null,
+            'minimumHours' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -351,14 +358,15 @@ class UserSessionServiceTest extends TestCase
     public function testClose()
     {
         $data = [
-            'id'         => 1,
-            'idSession'  => 3,
-            'idUser'     => 1,
-            'isApproved' => 1,
-            'points'     => 0,
-            'cashout'    => 500,
-            'start'      => '2019-07-04T19:00',
-            'end'        => '2019-07-04T23:00'
+            'id'           => 1,
+            'idSession'    => 3,
+            'idUser'       => 1,
+            'isApproved'   => 1,
+            'points'       => 0,
+            'cashout'      => 500,
+            'start'        => '2019-07-04T19:00',
+            'end'          => '2019-07-04T23:00',
+            'minimumHours' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -377,6 +385,7 @@ class UserSessionServiceTest extends TestCase
                 0,
                 new \DateTime('2019-07-04T19:00'),
                 null,
+                3,
                 new UserEntity(1)
             )
         );
@@ -405,9 +414,7 @@ class UserSessionServiceTest extends TestCase
         $expectedUserSession->setCashout($data['cashout']);
         $expectedUserSession->setStart(new \DateTime($data['start']));
         $expectedUserSession->setEnd(new \DateTime($data['end']));
-
-        var_dump('en test');
-        var_dump($expectedUserSession->getUser()->getHours());
+        $expectedUserSession->setMinimumHours($data['minimumHours']);
 
         // no testea que los argumentos de cada vez sean los que pido, si pongo 'hola' como argumento igual funciona porque si llama dos veces da test ok solo se rompe test si llama una vez
         $mockedEntityManager->expects($this->exactly(2))

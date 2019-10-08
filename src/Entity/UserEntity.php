@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserEntity
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

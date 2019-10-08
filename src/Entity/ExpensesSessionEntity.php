@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ExpensesSessionEntity
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -21,7 +20,7 @@ class ExpensesSessionEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\SessionEntity", inversedBy="sessionExpenses")
-     * @ORM\JoinColumn(name="session_id",                               referencedColumnName="id")
+     * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
      */
     protected $session;
 

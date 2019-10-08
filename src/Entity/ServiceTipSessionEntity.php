@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ServiceTipSessionEntity
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -21,9 +20,10 @@ class ServiceTipSessionEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\SessionEntity", inversedBy="sessionServiceTips")
-     * @ORM\JoinColumn(name="session_id",                               referencedColumnName="id")
+     * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
      */
     protected $session;
+
 
     /**
      * @ORM\Column(type="datetime", name="created_at")

@@ -18,7 +18,6 @@ use Solcre\Pokerclub\Rakeback\RakeBackAlgorithm;
  */
 class SessionEntity
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -44,12 +43,15 @@ class SessionEntity
      */
     protected $description;
 
+
     protected $photo;
+
 
     /**
      * @ORM\Column(type="integer", name="count_of_seats")
      */
     protected $seats;
+
 
     /**
      * @ORM\Column(type="datetime", name="start_at")
@@ -68,6 +70,7 @@ class SessionEntity
      */
     protected $endTime;
 
+
     /**
      * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\DealerTipSessionEntity", mappedBy="session")
      */
@@ -79,25 +82,35 @@ class SessionEntity
      */
     protected $sessionServiceTips;
 
+
     /**
      * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\UserSessionEntity", mappedBy="session")
      */
     protected $sessionUsers;
+
 
     /**
      * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\ComissionSessionEntity", mappedBy="session")
      */
     protected $sessionComissions;
 
+
     /**
      * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\ExpensesSessionEntity", mappedBy="session")
      */
     protected $sessionExpenses;
 
+
     /**
      * @ORM\Column(type="string", name="rakeback_class")
      */
     protected $rakebackClass;
+
+
+    /**
+     * @ORM\Column(type="float", name="minimum_user_session_hours")
+     */
+    protected $minimumUserSessionHours;
 
     public function __construct(
         $id = null,
@@ -109,7 +122,8 @@ class SessionEntity
         $startTime = null,
         $startTimeReal = null,
         $endTime = null,
-        $rakebackClass = null
+        $rakebackClass = null,
+        $minimumUserSessionHours = null
     ) {
         $this->setId($id);
         $this->setDate($date);
@@ -121,6 +135,7 @@ class SessionEntity
         $this->setStartTimeReal($startTimeReal);
         $this->setEndTime($endTime);
         $this->setRakebackClass($rakebackClass);
+        $this->setMinimumUserSessionHours($minimumUserSessionHours);
         $this->sessionExpenses    = new ArrayCollection();
         $this->sessionComissions  = new ArrayCollection();
         $this->sessionUsers       = new ArrayCollection();
@@ -144,7 +159,6 @@ class SessionEntity
     {
         return $this->date;
     }
-
 
     public function setDate($date)
     {
@@ -229,6 +243,16 @@ class SessionEntity
         return $this;
     }
 
+    public function getMinimumUserSessionHours()
+    {
+        return $this->minimumUserSessionHours;
+    }
+
+    public function setMinimumUserSessionHours($minimumUserSessionHours = null)
+    {
+        $this->minimumUserSessionHours = $minimumUserSessionHours;
+        return $this;
+    }
 
     public function getSessionDealerTips()
     {
@@ -295,8 +319,6 @@ class SessionEntity
         $this->rakebackClass=$rakebackClass;
         return $this;
     }
-
-
 
 
     public function getBuyins()
@@ -463,26 +485,27 @@ class SessionEntity
     public function toArray()
     {
         $ret = [
-        'id'                 => $this->getId(),
-        'created_at'         => $this->getDate(),
-        'title'              => $this->getTitle(),
-        'description'        => $this->getDescription(),
-        'startTime'          => $this->getStartTime(),
-        'startTimeReal'      => $this->getStartTimeReal(),
-        'countActivePlayers' => count($this->getActivePlayers()),
-        'activePlayers'      => $this->getActivePlayers(),
-        'distinctPlayers'    => $this->getDistinctPlayers(),
-        'countSeatedPlayers' => count($this->getSeatedPlayers()),
-        'seats'              => $this->getSeats(),
-        'endTime'            => $this->getEndTime(),
-        'comissionTotal'     => $this->getComissionTotal(),
-        'expensesTotal'      => $this->getExpensesTotal(),
-        'dealerTipTotal'     => $this->getDealerTipTotal(),
-        'serviceTipTotal'    => $this->getServiceTipTotal(),
-        'rakebackClass'      => $this->getRakebackClass(),
-        'totalCashout'       => $this->getTotalCashout(),
-        'totalPlayed'        => $this->getTotalPlayed(),
-        'valid'              => $this->getValid()
+        'id'                      => $this->getId(),
+        'created_at'              => $this->getDate(),
+        'title'                   => $this->getTitle(),
+        'description'             => $this->getDescription(),
+        'startTime'               => $this->getStartTime(),
+        'startTimeReal'           => $this->getStartTimeReal(),
+        'countActivePlayers'      => count($this->getActivePlayers()),
+        'activePlayers'           => $this->getActivePlayers(),
+        'distinctPlayers'         => $this->getDistinctPlayers(),
+        'countSeatedPlayers'      => count($this->getSeatedPlayers()),
+        'seats'                   => $this->getSeats(),
+        'endTime'                 => $this->getEndTime(),
+        'comissionTotal'          => $this->getComissionTotal(),
+        'expensesTotal'           => $this->getExpensesTotal(),
+        'dealerTipTotal'          => $this->getDealerTipTotal(),
+        'serviceTipTotal'         => $this->getServiceTipTotal(),
+        'rakebackClass'           => $this->getRakebackClass(),
+        'totalCashout'            => $this->getTotalCashout(),
+        'totalPlayed'             => $this->getTotalPlayed(),
+        'valid'                   => $this->getValid(),
+        'minimumUserSessionHours' => (float)$this->getMinimumUserSessionHours()
         ];
 
        /* foreach ($this->sessionUsers as $userSession) {
