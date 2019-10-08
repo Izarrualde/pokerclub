@@ -12,6 +12,7 @@ use Exception;
 
 class UserSessionService extends BaseService
 {
+    // ult
     const STATUS_CODE_404 = 404;
 
     protected $userService;

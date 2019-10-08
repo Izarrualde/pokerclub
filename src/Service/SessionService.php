@@ -11,6 +11,7 @@ use Exception;
 
 class SessionService extends BaseService
 {
+    // ult
     const STATUS_CODE_404 = 404;
 
     public function __construct(EntityManager $em)
