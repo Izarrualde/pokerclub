@@ -41,7 +41,6 @@ class SessionService extends BaseService
 
     public function add($data, $strategies = null)
     {
-        var_dump($data);
         $this->checkGenericInputData($data);
 
         $session = new SessionEntity();

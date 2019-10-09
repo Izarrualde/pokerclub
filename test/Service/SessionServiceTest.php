@@ -20,15 +20,15 @@ class SessionServiceTest extends TestCase
     public function testAdd()
     {
         $data = [
-          'date'                    => '2019-07-04',
-          'start_at'                => '2019-07-04T19:00',
-          'real_start_at'           => '2019-07-04T19:15',
-          'end_at'                  => '2019-07-04T20:00',
-          'title'                   => 'mesa mixta',
-          'description'             => 'lunes',
-          'seats'                   => 9,
-          'rakebackClass'           => 'Solcre\Pokerclub\Rakeback\SimpleRakeback',
-          'minimumUserSessionHours' => 4 
+          'date'                         => '2019-07-04',
+          'start_at'                     => '2019-07-04T19:00',
+          'real_start_at'                => '2019-07-04T19:15',
+          'end_at'                       => '2019-07-04T20:00',
+          'title'                        => 'mesa mixta',
+          'description'                  => 'lunes',
+          'seats'                        => 9,
+          'rakebackClass'                => 'Solcre\Pokerclub\Rakeback\SimpleRakeback',
+          'minimum_user_session_minutes' =>  240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -46,7 +46,7 @@ class SessionServiceTest extends TestCase
         $expectedSession->setDescription($data['description']);
         $expectedSession->setSeats($data['seats']);
         $expectedSession->setRakebackClass($data['rakebackClass']);
-        $expectedSession->setMinimumUserSessionHours($data['minimumUserSessionHours']);
+        $expectedSession->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
         $mockedEntityManager->expects($this->once())
         ->method('persist')
@@ -61,16 +61,16 @@ class SessionServiceTest extends TestCase
     public function testUpdate()
     {
         $data = [
-            'id'                      => 1, 
-            'date'                    => '2019-07-04',
-            'start_at'                => '2019-07-04T19:00',
-            'real_start_at'           => '2019-07-04T19:15',
-            'end_at'                  => '2019-07-04T20:00',
-            'title'                   => 'title actualizado',
-            'description'             => 'description actualizada',
-            'seats'                   => 9,
-            'rakebackClass'           => 'SimpleRakeback',
-            'minimumUserSessionHours' => 4
+            'id'                           => 1, 
+            'date'                         => '2019-07-04',
+            'start_at'                     => '2019-07-04T19:00',
+            'real_start_at'                => '2019-07-04T19:15',
+            'end_at'                       => '2019-07-04T20:00',
+            'title'                        => 'title actualizado',
+            'description'                  => 'description actualizada',
+            'seats'                        => 9,
+            'rakebackClass'                => 'SimpleRakeback',
+            'minimum_user_session_minutes' => 240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -88,7 +88,7 @@ class SessionServiceTest extends TestCase
                 new \DateTime('2019-07-04T18:00'),
                 new \DateTime('2019-07-04T18:30'),
                 'SimpleRakeback',
-                4
+                240
             )
         );
 
@@ -107,7 +107,7 @@ class SessionServiceTest extends TestCase
         $expectedSession->setStartTimeReal(new \DateTime($data['real_start_at']));
         $expectedSession->setEndTime(new \DateTime($data['end_at']));
         $expectedSession->setRakebackClass($data['rakebackClass']);
-        $expectedSession->setMinimumUserSessionHours($data['minimumUserSessionHours']);
+        $expectedSession->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
         $mockedEntityManager->expects($this->once())
         ->method('flush')
@@ -123,15 +123,15 @@ class SessionServiceTest extends TestCase
     {
         // $data without id
         $data = [
-            'date'                    => '2019-07-04',
-            'start_at'                => '2019-07-04T19:00',
-            'real_start_at'           => '2019-07-04T19:15',
-            'end_at'                  => '2019-07-04T20:00',
-            'title'                   => 'title actualizado',
-            'description'             => 'desscription actualizada',
-            'seats'                   => 9,
-            'rakebackClass'           => 'SimpleRakeback',
-            'minimumUserSessionHours' => 4
+            'date'                         => '2019-07-04',
+            'start_at'                     => '2019-07-04T19:00',
+            'real_start_at'                => '2019-07-04T19:15',
+            'end_at'                       => '2019-07-04T20:00',
+            'title'                        => 'title actualizado',
+            'description'                  => 'desscription actualizada',
+            'seats'                        => 9,
+            'rakebackClass'                => 'SimpleRakeback',
+            'minimum_user_session_minutes' => 240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -145,16 +145,16 @@ class SessionServiceTest extends TestCase
     public function testUpdateWithSessionNotFoundException()
     {
         $data = [
-            'id'                      => 'an unexisting id',
-            'date'                    => '2019-07-04',
-            'start_at'                => '2019-07-04T19:00',
-            'real_start_at'           => '2019-07-04T19:15',
-            'end_at'                  => '2019-07-04T20:00',
-            'title'                   => 'title actualizado',
-            'description'             => 'desscription actualizada',
-            'seats'                   => 9,
-            'rakebackClass'           => 'SimpleRakeback',
-            'minimumUserSessionHours' => 4
+            'id'                           => 'an unexisting id',
+            'date'                         => '2019-07-04',
+            'start_at'                     => '2019-07-04T19:00',
+            'real_start_at'                => '2019-07-04T19:15',
+            'end_at'                       => '2019-07-04T20:00',
+            'title'                        => 'title actualizado',
+            'description'                  => 'desscription actualizada',
+            'seats'                        => 9,
+            'rakebackClass'                => 'SimpleRakeback',
+            'minimum_user_session_minutes' => 240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -176,16 +176,16 @@ class SessionServiceTest extends TestCase
     public function testUpdateWithException()
     {
         $data = [
-            'id'                      => 'an unexisting id',
-            'date'                    => '2019-07-04',
-            'start_at'                => '2019-07-04T19:00',
-            'real_start_at'           => '2019-07-04T19:15',
-            'end_at'                  => '2019-07-04T20:00',
-            'title'                   => 'title actualizado',
-            'description'             => 'desscription actualizada',
-            'seats'                   => 9,
-            'rakebackClass'           => 'SimpleRakeback',
-            'minimumUserSessionHours' => 4
+            'id'                           => 'an unexisting id',
+            'date'                         => '2019-07-04',
+            'start_at'                     => '2019-07-04T19:00',
+            'real_start_at'                => '2019-07-04T19:15',
+            'end_at'                       => '2019-07-04T20:00',
+            'title'                        => 'title actualizado',
+            'description'                  => 'desscription actualizada',
+            'seats'                        => 9,
+            'rakebackClass'                => 'SimpleRakeback',
+            'minimum_user_session_minutes' => 240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -276,15 +276,15 @@ class SessionServiceTest extends TestCase
     {
         // $data without rakebackClass
         $data = [
-            'id'                      => 1,
-            'date'                    => '2019-07-04',
-            'start_at'                => '2019-07-04T19:00',
-            'real_start_at'           => '2019-07-04T19:15',
-            'end_at'                  => '2019-07-04T20:00',
-            'title'                   => 'title actualizado',
-            'description'             => 'desscription actualizada',
-            'seats'                   => 9,
-            'minimumUserSessionHours' => 4
+            'id'                           => 1,
+            'date'                         => '2019-07-04',
+            'start_at'                     => '2019-07-04T19:00',
+            'real_start_at'                => '2019-07-04T19:15',
+            'end_at'                       => '2019-07-04T20:00',
+            'title'                        => 'title actualizado',
+            'description'                  => 'updated description',
+            'seats'                        => 9,
+            'minimum_user_session_minutes' => 240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);

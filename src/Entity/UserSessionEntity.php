@@ -205,9 +205,8 @@ class UserSessionEntity
     {
         if ($minimumMinutes != null) {
             $this->minimumMinutes = $minimumMinutes;
-        } 
-        else {
-            $this->session instanceof SessionEntity ? 
+        } else {
+            $this->session instanceof SessionEntity ?
             $this->minimumMinutes = $this->getSession()->getMinimumUserSessionMinutes() :
             null;
         }

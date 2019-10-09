@@ -680,30 +680,32 @@ class SessionEntityTest extends TestCase
         $session->setSessionServiceTips($sessionServiceTips);
 
         $expectedArray = [
-            'id'                 => 1,
-            'created_at'         => date_create('2019-06-26 18:00:00'),
-            'title'              => 'Mesa Mixta',
-            'description'        => 'miercoles',
-            'startTime'          => date_create('2019-06-26 19:00:00'),
-            'startTimeReal'      => date_create('2019-06-26 19:00:00'),
-            'countActivePlayers' => 2,
-            'activePlayers'      => $expectedActivePlayers,
-            'distinctPlayers'    => $expectedDistinctPlayers,
-            'seats'              => 9,
-            'endTime'            => date_create('2019-06-26 23:00:00'),
-            'comissionTotal'     => 100,
-            'expensesTotal'      => 110,
-            'dealerTipTotal'     => 120,
-            'serviceTipTotal'    => 130,
-            'rakebackClass'      => null,
-            'getTotalCashout'    => 0,
-            'totalPlayed'        => 0,
-            'valid'              => false
+            'id'                        => 1,
+            'created_at'                => date_create('2019-06-26 18:00:00'),
+            'title'                     => 'Mesa Mixta',
+            'description'               => 'miercoles',
+            'startTime'                 => date_create('2019-06-26 19:00:00'),
+            'startTimeReal'             => date_create('2019-06-26 19:00:00'),
+            'countActivePlayers'        => 2,
+            'activePlayers'             => $expectedActivePlayers,
+            'distinctPlayers'           => $expectedDistinctPlayers,
+            'countSeatedPlayers'        => 3,
+            'seats'                     => 9,
+            'endTime'                   => date_create('2019-06-26 23:00:00'),
+            'comissionTotal'            => 100,
+            'expensesTotal'             => 110,
+            'dealerTipTotal'            => 120,
+            'serviceTipTotal'           => 130,
+            'rakebackClass'             => null,
+            'totalCashout'              => 0,
+            'totalPlayed'               => 0,
+            'valid'                     => false,
+            'minimumUserSessionMinutes' => 0
             ];
 
         $sessionArray = $session->toArray();
 
-        $this->assertEquals($expectedArray['comissionTotal'], $session->toArray()['comissionTotal']);
+        $this->assertEquals($expectedArray, $session->toArray());
         /*
         foreach ($expectedArray as $key => $value) {
             $this->assertEquals($expectedArray[$key], $sessionArray[$key]);

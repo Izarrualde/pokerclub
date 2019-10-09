@@ -129,7 +129,7 @@ class UserSessionService extends BaseService
         $attemptEndSession = new \DateTime();
         $requiredTime      =  $userSession->getMinimumMinutes();
         if ($userSession->inMinutes($startSession, $attemptEndSession) < $requiredTime) {
-            throw new InsufficientUserSessionTimeException(); 
+            throw new InsufficientUserSessionTimeException();
         }
 
         $userSession->setEnd(new \DateTime($data['end']));
