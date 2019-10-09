@@ -8,11 +8,11 @@ use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
 use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
+use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
 use Exception;
 
 class UserSessionService extends BaseService
 {
-    // ult
     const STATUS_CODE_404 = 404;
 
     protected $userService;
@@ -125,7 +125,12 @@ class UserSessionService extends BaseService
             throw $e;
         }
 
-        // hacer un userSession->getDuration() que calcule entre start y now, ver si getDuration lo hace
+        $startSession      = $userSession->getStart();
+        $attemptEndSession = new \DateTime();
+        $requiredTime      =  $userSession->getMinimumMinutes();
+        if ($userSession->inMinutes($startSession, $attemptEndSession) < $requiredTime) {
+            throw new InsufficientUserSessionTimeException(); 
+        }
 
         $userSession->setEnd(new \DateTime($data['end']));
         $userSession->setCashout($data['cashout']);
