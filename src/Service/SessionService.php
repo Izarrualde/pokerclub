@@ -31,7 +31,7 @@ class SessionService extends BaseService
             $data['real_start_at'],
             $data['end_at'],
             $data['rakebackClass'],
-            $data['minimum_user_session_hours']
+            $data['minimum_user_session_minutes']
         )
         ) {
             // check with: will->throwException
@@ -53,7 +53,7 @@ class SessionService extends BaseService
         $session->setStartTimeReal(new \DateTime($data['real_start_at']));
         $session->setEndTime(new \DateTime($data['end_at']));
         $session->setRakebackClass($data['rakebackClass']);
-        $session->setMinimumUserSessionHours($data['minimum_user_session_hours']);
+        $session->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
         $this->entityManager->persist($session);
         $this->entityManager->flush($session);
@@ -87,7 +87,7 @@ class SessionService extends BaseService
         $session->setStartTimeReal(new \DateTime($data['real_start_at']));
         $session->setEndTime(new \DateTime($data['end_at']));
         $session->setRakebackClass($data['rakebackClass']);
-        $session->setMinimumUserSessionHours($data['minimum_user_session_hours']);
+        $session->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
         $this->entityManager->flush($session);
 

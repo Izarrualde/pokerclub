@@ -62,9 +62,9 @@ class UserSessionEntity
 
 
     /**
-     * @ORM\Column(type="float", name="minimum_hours")
+     * @ORM\Column(type="float", name="minimum_minutes")
      */
-    protected $minimumHours;
+    protected $minimumMinutes;
 
 
 
@@ -92,7 +92,7 @@ class UserSessionEntity
         $cashout = 0,
         $start = null,
         $end = null,
-        $minimumHours = null,
+        $minimumMinutes = null,
         UserEntity $user = null
     ) {
         $this->setId($id);
@@ -104,7 +104,7 @@ class UserSessionEntity
         $this->setStart($start);
         $this->setEnd($end);
         $this->setUser($user);
-        $this->setMinimumHours($minimumHours);
+        $this->setMinimumMinutes($minimumMinutes);
         $this->buyins = new ArrayCollection();
     }
     
@@ -196,19 +196,19 @@ class UserSessionEntity
         return $this;
     }
 
-    public function getMinimumHours()
+    public function getMinimumMinutes()
     {
-        return $this->minimumHours;
+        return $this->minimumMinutes;
     }
     
-    public function setMinimumHours($minimumHours = null)
+    public function setMinimumMinutes($minimumMinutes = null)
     {
-        if ($minimumHours != null) {
-            $this->minimumHours = $minimumHours;
+        if ($minimumMinutes != null) {
+            $this->minimumMinutes = $minimumMinutes;
         } 
         else {
             $this->session instanceof SessionEntity ? 
-            $this->minimumHours = $this->getSession()->getMinimumUserSessionHours() :
+            $this->minimumMinutes = $this->getSession()->getMinimumUserSessionMinutes() :
             null;
         }
 
@@ -312,7 +312,7 @@ class UserSessionEntity
     public function getPercentagePlayed(\DateTime $from, \DateTime $to)
     {
         $start = $this->getStart();
-        $end = $this->getEnd();
+        $end   = $this->getEnd();
 
         // case 0% - before or after
         if ((($from < $start) && ($to < $start)) || ($from > $end)) {
@@ -343,18 +343,18 @@ class UserSessionEntity
     public function toArray()
     {
         $ret =  [
-            'id'           => $this->getId(),
-            'idSession'    => $this->getSession()->getId(),
-            'idUser'       => $this->getIdUser(),
-            'isApproved'   => $this->getIsApproved(),
-            'cashout'      => $this->getCashout(),
-            'startTime'    => $this->getStart(),
-            'endTime'      => $this->getEnd(),
-            'cashin'       => $this->getCashin(),
-            'totalCredit'  => $this->getTotalCredit(),
-            'totalCash'    => $this->getTotalCash(),
-            'points'       => (float)$this->getAccumulatedPoints(),
-            'minimumHours' => (float)$this->getMinimumHours()
+            'id'             => $this->getId(),
+            'idSession'      => $this->getSession()->getId(),
+            'idUser'         => $this->getIdUser(),
+            'isApproved'     => $this->getIsApproved(),
+            'cashout'        => $this->getCashout(),
+            'startTime'      => $this->getStart(),
+            'endTime'        => $this->getEnd(),
+            'cashin'         => $this->getCashin(),
+            'totalCredit'    => $this->getTotalCredit(),
+            'totalCash'      => $this->getTotalCash(),
+            'points'         => (float)$this->getAccumulatedPoints(),
+            'minimumMinutes' => (int)$this->getMinimumMinutes()
         ];
         
         $user = $this->getUser();

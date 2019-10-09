@@ -108,9 +108,9 @@ class SessionEntity
 
 
     /**
-     * @ORM\Column(type="float", name="minimum_user_session_hours")
+     * @ORM\Column(type="float", name="minimum_user_session_minutes")
      */
-    protected $minimumUserSessionHours;
+    protected $minimumUserSessionMinutes;
 
     public function __construct(
         $id = null,
@@ -123,7 +123,7 @@ class SessionEntity
         $startTimeReal = null,
         $endTime = null,
         $rakebackClass = null,
-        $minimumUserSessionHours = null
+        $minimumUserSessionMinutes = null
     ) {
         $this->setId($id);
         $this->setDate($date);
@@ -135,7 +135,7 @@ class SessionEntity
         $this->setStartTimeReal($startTimeReal);
         $this->setEndTime($endTime);
         $this->setRakebackClass($rakebackClass);
-        $this->setMinimumUserSessionHours($minimumUserSessionHours);
+        $this->setMinimumUserSessionMinutes($minimumUserSessionMinutes);
         $this->sessionExpenses    = new ArrayCollection();
         $this->sessionComissions  = new ArrayCollection();
         $this->sessionUsers       = new ArrayCollection();
@@ -243,14 +243,14 @@ class SessionEntity
         return $this;
     }
 
-    public function getMinimumUserSessionHours()
+    public function getMinimumUserSessionMinutes()
     {
-        return $this->minimumUserSessionHours;
+        return $this->minimumUserSessionMinutes;
     }
 
-    public function setMinimumUserSessionHours($minimumUserSessionHours = null)
+    public function setMinimumUserSessionMinutes($minimumUserSessionMinutes = null)
     {
-        $this->minimumUserSessionHours = $minimumUserSessionHours;
+        $this->minimumUserSessionMinutes = $minimumUserSessionMinutes;
         return $this;
     }
 
@@ -485,27 +485,27 @@ class SessionEntity
     public function toArray()
     {
         $ret = [
-        'id'                      => $this->getId(),
-        'created_at'              => $this->getDate(),
-        'title'                   => $this->getTitle(),
-        'description'             => $this->getDescription(),
-        'startTime'               => $this->getStartTime(),
-        'startTimeReal'           => $this->getStartTimeReal(),
-        'countActivePlayers'      => count($this->getActivePlayers()),
-        'activePlayers'           => $this->getActivePlayers(),
-        'distinctPlayers'         => $this->getDistinctPlayers(),
-        'countSeatedPlayers'      => count($this->getSeatedPlayers()),
-        'seats'                   => $this->getSeats(),
-        'endTime'                 => $this->getEndTime(),
-        'comissionTotal'          => $this->getComissionTotal(),
-        'expensesTotal'           => $this->getExpensesTotal(),
-        'dealerTipTotal'          => $this->getDealerTipTotal(),
-        'serviceTipTotal'         => $this->getServiceTipTotal(),
-        'rakebackClass'           => $this->getRakebackClass(),
-        'totalCashout'            => $this->getTotalCashout(),
-        'totalPlayed'             => $this->getTotalPlayed(),
-        'valid'                   => $this->getValid(),
-        'minimumUserSessionHours' => (float)$this->getMinimumUserSessionHours()
+        'id'                        => $this->getId(),
+        'created_at'                => $this->getDate(),
+        'title'                     => $this->getTitle(),
+        'description'               => $this->getDescription(),
+        'startTime'                 => $this->getStartTime(),
+        'startTimeReal'             => $this->getStartTimeReal(),
+        'countActivePlayers'        => count($this->getActivePlayers()),
+        'activePlayers'             => $this->getActivePlayers(),
+        'distinctPlayers'           => $this->getDistinctPlayers(),
+        'countSeatedPlayers'        => count($this->getSeatedPlayers()),
+        'seats'                     => $this->getSeats(),
+        'endTime'                   => $this->getEndTime(),
+        'comissionTotal'            => $this->getComissionTotal(),
+        'expensesTotal'             => $this->getExpensesTotal(),
+        'dealerTipTotal'            => $this->getDealerTipTotal(),
+        'serviceTipTotal'           => $this->getServiceTipTotal(),
+        'rakebackClass'             => $this->getRakebackClass(),
+        'totalCashout'              => $this->getTotalCashout(),
+        'totalPlayed'               => $this->getTotalPlayed(),
+        'valid'                     => $this->getValid(),
+        'minimumUserSessionMinutes' => (int)$this->getMinimumUserSessionMinutes()
         ];
 
        /* foreach ($this->sessionUsers as $userSession) {

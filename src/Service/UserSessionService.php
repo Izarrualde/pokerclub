@@ -47,9 +47,9 @@ class UserSessionService extends BaseService
         }
         */
         
-        $userSession   = new UserSessionEntity();
+        $userSession   = new UserSessionEntity(null, $session);
 
-        $userSession->setSession($session);
+        // $userSession->setSession($session);
         $userSession->setIdUser($data['idUser']);
         $userSession->setIsApproved($data['isApproved']);
         $userSession->setAccumulatedPoints((int)$data['points']);
@@ -79,13 +79,12 @@ class UserSessionService extends BaseService
         }
         
         $userSession->setAccumulatedPoints($data['points']);
-        $userSession->setMinimumHours($data['minimumHours']);
+        $userSession->setMinimumMinutes($data['minimum_minutes']);
         $userSession->setCashout($data['cashout']);
         $userSession->setStart(new \DateTime($data['start']));
         $userSession->setIsApproved($data['isApproved']);
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
         $userSession->setSession($session);
-        $userSession->setIdUser($data['idUser']);
 
         $this->entityManager->flush($userSession);
 
@@ -125,6 +124,8 @@ class UserSessionService extends BaseService
             }
             throw $e;
         }
+
+        // hacer un userSession->getDuration() que calcule entre start y now, ver si getDuration lo hace
 
         $userSession->setEnd(new \DateTime($data['end']));
         $userSession->setCashout($data['cashout']);
