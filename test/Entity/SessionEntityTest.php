@@ -715,4 +715,3 @@ class SessionEntityTest extends TestCase
         // $this->assertEquals($expectedArray, $sessionArray)
     }
 }
-
