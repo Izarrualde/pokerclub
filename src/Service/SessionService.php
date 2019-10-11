@@ -28,8 +28,6 @@ class SessionService extends BaseService
             $data['description'],
             $data['seats'],
             $data['start_at'],
-            $data['real_start_at'],
-            $data['end_at'],
             $data['rakebackClass'],
             $data['minimum_user_session_minutes']
         )
