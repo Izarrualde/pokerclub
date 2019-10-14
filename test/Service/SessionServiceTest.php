@@ -22,8 +22,6 @@ class SessionServiceTest extends TestCase
         $data = [
           'date'                         => '2019-07-04',
           'start_at'                     => '2019-07-04T19:00',
-          'real_start_at'                => '2019-07-04T19:15',
-          'end_at'                       => '2019-07-04T20:00',
           'title'                        => 'mesa mixta',
           'description'                  => 'lunes',
           'seats'                        => 9,
@@ -35,13 +33,9 @@ class SessionServiceTest extends TestCase
         $mockedEntityManager->method('persist')->willReturn(true);
 
         $sessionService = new SessionService($mockedEntityManager);
-
         $expectedSession    = new SessionEntity();
         $expectedSession->setDate(new \DateTime($data['date']));
         $expectedSession->setStartTime(new \DateTime($data['start_at']));
-        $expectedSession->setStartTimeReal(new \DateTime($data['real_start_at']));
-        $expectedSession->setEndTime(new \DateTime($data['end_at']));
-
         $expectedSession->setTitle($data['title']);
         $expectedSession->setDescription($data['description']);
         $expectedSession->setSeats($data['seats']);
