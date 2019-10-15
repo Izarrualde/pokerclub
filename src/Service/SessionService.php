@@ -73,7 +73,6 @@ class SessionService extends BaseService
             throw $e;
         }
 
-        $session = parent::fetch($data['id']);
         $session->setDate(new \DateTime($data['date']));
         $session->setTitle($data['title']);
         $session->setDescription($data['description']);
