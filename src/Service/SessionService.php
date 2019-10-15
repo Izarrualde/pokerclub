@@ -149,4 +149,22 @@ class SessionService extends BaseService
         $this->entityManager->flush();
         return true;
     }
+
+    public function playSession($idSession)
+    {
+        try {
+            $session = parent::fetch($idSession);
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new SessionNotFoundException();
+            }
+            throw $e;
+        }
+
+        $session->setStartTimeReal(new \DateTime());
+
+        $this->entityManager->flush($session);
+
+        return $session;
+    }
 }
