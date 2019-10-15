@@ -150,7 +150,7 @@ class SessionService extends BaseService
         return true;
     }
 
-    public function playSession($idSession)
+    public function play($idSession)
     {
         try {
             $session = parent::fetch($idSession);
