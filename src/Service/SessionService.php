@@ -73,7 +73,6 @@ class SessionService extends BaseService
             throw $e;
         }
 
-        $session = parent::fetch($data['id']);
         $session->setDate(new \DateTime($data['date']));
         $session->setTitle($data['title']);
         $session->setDescription($data['description']);
@@ -149,5 +148,41 @@ class SessionService extends BaseService
 
         $this->entityManager->flush();
         return true;
+    }
+
+    public function play($idSession)
+    {
+        try {
+            $session = parent::fetch($idSession);
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new SessionNotFoundException();
+            }
+            throw $e;
+        }
+
+        $session->setStartTimeReal(new \DateTime());
+
+        $this->entityManager->flush($session);
+
+        return $session;
+    }
+
+    public function stop($idSession)
+    {
+        try {
+            $session = parent::fetch($idSession);
+        } catch (Exception $e) {
+            if ($e->getCode() == self::STATUS_CODE_404) {
+                throw new SessionNotFoundException();
+            }
+            throw $e;
+        }
+
+        $session->setEndTime(new \DateTime());
+
+        $this->entityManager->flush($session);
+
+        return $session;
     }
 }
