@@ -28,7 +28,7 @@ class SessionService extends BaseService
             $data['description'],
             $data['seats'],
             $data['start_at'],
-            $data['rakebackClass'],
+            $data['rakeback_class'],
             $data['minimum_user_session_minutes']
         )
         ) {
@@ -47,7 +47,7 @@ class SessionService extends BaseService
         $session->setDescription($data['description']);
         $session->setSeats($data['seats']);
         $session->setStartTime(new \DateTime($data['start_at']));
-        $session->setRakebackClass($data['rakebackClass']);
+        $session->setRakebackClass($data['rakeback_class']);
         $session->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
         $this->entityManager->persist($session);
@@ -87,7 +87,7 @@ class SessionService extends BaseService
             $session->setEndTime(new \DateTime($data['end_at']));
         }
         
-        $session->setRakebackClass($data['rakebackClass']);
+        $session->setRakebackClass($data['rakeback_class']);
         $session->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
         $this->entityManager->flush($session);

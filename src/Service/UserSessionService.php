@@ -79,8 +79,15 @@ class UserSessionService extends BaseService
         }
         
         $userSession->setAccumulatedPoints($data['points']);
-        $userSession->setMinimumMinutes($data['minimum_minutes']);
-        $userSession->setCashout($data['cashout']);
+
+        if (isset($data['minimum_minutes'])) {
+            $userSession->setMinimumMinutes($data['minimum_minutes']);            
+        }
+
+        if (isset($data['cashout'])) {
+            $userSession->setCashout($data['cashout']);            
+        }
+
         $userSession->setStart(new \DateTime($data['start']));
         $userSession->setIsApproved($data['isApproved']);
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
