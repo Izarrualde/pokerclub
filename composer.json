@@ -11,7 +11,8 @@
     ],
     "require": {
         "doctrine/doctrine-module": "^2.1",
-        "doctrine/orm": "^2.6"
+        "doctrine/orm": "^2.6",
+        "solcre/solcre-framework-2": "dev-master@dev"
     },
     "require-dev": {
         "friendsoftwig/twigcs": "^3.1",

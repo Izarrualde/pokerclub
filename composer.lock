@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< Updated upstream
     "content-hash": "104c3dcaaa691477dbbde4fde6471469",
+=======
+    "content-hash": "13e09b6532a593254c3348563c801354",
+>>>>>>> Stashed changes
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -7392,7 +7396,13 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
+<<<<<<< Updated upstream
     "stability-flags": [],
+=======
+    "stability-flags": {
+        "solcre/solcre-framework-2": 20
+    },
+>>>>>>> Stashed changes
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
