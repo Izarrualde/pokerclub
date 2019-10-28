@@ -12,16 +12,21 @@ use Exception;
 
 class BuyinSessionService extends BaseService
 {
-    const STATUS_CODE_404 = 404;
 
+    const STATUS_CODE_404 = 404;
+    const AVATAR_FILE_KEY = 'avatar_file';
+
+    private $config;
     protected $userSessionService;
 
     public function __construct(
         EntityManager $em,
-        userSessionService $userSessionService
+        userSessionService $userSessionService,
+        array $config
     ) {
         parent::__construct($em);
         $this->userSessionService = $userSessionService;
+        $this->config             = $config;
     }
 
     public function fetchAllBuyins($sessionId)

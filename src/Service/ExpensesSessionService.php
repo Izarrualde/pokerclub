@@ -11,11 +11,16 @@ use Exception;
 
 class ExpensesSessionService extends BaseService
 {
-    const STATUS_CODE_404 = 404;
 
-    public function __construct(EntityManager $em)
+    const STATUS_CODE_404 = 404;
+    const AVATAR_FILE_KEY = 'avatar_file';
+
+    private $config;
+
+    public function __construct(EntityManager $entityManager, array $config)
     {
-        parent::__construct($em);
+        parent::__construct($entityManager);
+        $this->config = $config;
     }
 
     public function checkGenericInputData($data)

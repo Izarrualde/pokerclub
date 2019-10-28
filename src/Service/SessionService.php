@@ -1,7 +1,6 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
-use Solcre\SolcreFramework2\Service\BaseService;
 use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
@@ -15,10 +14,14 @@ class SessionService extends BaseService
 {
     // ult
     const STATUS_CODE_404 = 404;
+    const AVATAR_FILE_KEY = 'avatar_file';
 
-    public function __construct(EntityManager $em)
+    private $config;
+
+    public function __construct(EntityManager $entityManager, array $config)
     {
-        parent::__construct($em);
+        parent::__construct($entityManager);
+        $this->config = $config;
     }
 
     public function checkGenericInputData($data)

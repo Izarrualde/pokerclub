@@ -13,6 +13,7 @@ use Exception;
 
 class UserService extends BaseService
 {
+    
     const STATUS_CODE_404 = 404;
     const AVATAR_FILE_KEY = 'avatar_file';
 

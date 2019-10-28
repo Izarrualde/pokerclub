@@ -13,7 +13,8 @@ class UserSessionServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): UserSessionService
     {
         $entityManager = $container->get(EntityManager::class);
+        $userService = $container->get(UserSessionService::class);
         $config        = $container->get('config');
-        return new UserSessionService($entityManager, $config);
+        return new UserSessionService($entityManager, $userService, $config);
     }
 }

@@ -4,12 +4,26 @@ use Solcre\Pokerclub\Service\AwardService;
 use Solcre\Pokerclub\Service\Factory\AwardServiceFactory;
 use Solcre\Pokerclub\Service\UserService;
 use Solcre\Pokerclub\Service\Factory\UserServiceFactory;
+use Solcre\Pokerclub\Service\BuyinSessionService;
+use Solcre\Pokerclub\Service\Factory\BuyinSessionServiceFactory;
+use Solcre\Pokerclub\Service\ComissionSessionService;
+use Solcre\Pokerclub\Service\Factory\ComissionSessionServiceFactory;
+use Solcre\Pokerclub\Service\DealerTipSessionService;
+use Solcre\Pokerclub\Service\Factory\DealerTipSessionServiceFactory;
+use Solcre\Pokerclub\Service\ServiceTipSessionService;
+use Solcre\Pokerclub\Service\Factory\ServiceTipSessionServiceFactory;
+use Solcre\Pokerclub\Service\ExpensesSessionService;
+use Solcre\Pokerclub\Service\Factory\ExpensesSessionServiceFactory;
+use Solcre\Pokerclub\Service\SessionService;
+use Solcre\Pokerclub\Service\Factory\SessionServiceFactory;
+use Solcre\Pokerclub\Service\UserSessionService;
+use Solcre\Pokerclub\Service\Factory\UserSessionServiceFactory;
 
 return [
     'service_manager' => [
         'factories' => [
             UserService::class              => UserServiceFactory::class,
-            BuyinSerssionService::class     => BuyinSessionServiceFactory::class,
+            BuyinSessionService::class      => BuyinSessionServiceFactory::class,
             ComissionSessionService::class  => ComissionSessionServiceFactory::class,
             DealerTipSessionService::class  => DealerTipSessionServiceFactory::class,
             ServiceTipSessionService::class => ServiceTipSessionServiceFactory::class,

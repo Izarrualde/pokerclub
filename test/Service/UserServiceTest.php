@@ -9,7 +9,7 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Solcre\Pokerclub\Exception\UserNotFoundException;
 use Solcre\Pokerclub\Exception\UserInvalidException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
-use Solcre\Pokerclub\Repository\BaseRepository;
+use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class UserServiceTest extends TestCase
 {
@@ -33,7 +33,7 @@ class UserServiceTest extends TestCase
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('persist')->willReturn(true);
 
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $expectedUser    = new UserEntity();
         $expectedUser->setPassword($data['password']);
@@ -100,8 +100,9 @@ class UserServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $userService = new UserService($mockedEntityManager, []);
 
-        $userService = new UserService($mockedEntityManager);
+        $user = $userService->fetch($data['id']);
 
         $expectedUser    = new UserEntity();
         $expectedUser->setId($data['id']);
@@ -124,7 +125,7 @@ class UserServiceTest extends TestCase
            $this->equalTo($expectedUser)
         )/*->willReturn('anything')*/;
 
-        $userService->update($data);
+        $userService->update($data['id'], $data);
         // y que se llame metodo flush con anythig
     }
 
@@ -148,10 +149,12 @@ class UserServiceTest extends TestCase
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
-        $userService->update($data);
+
+        $fakeIdForTesting = 1111;
+        $userService->update($fakeIdForTesting, $data);
     }
 
     public function testUpdateWithUserNotFoundException()
@@ -182,11 +185,10 @@ class UserServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(UserNotFoundException::class);
-        $userService->update($data);
+        $userService->update($data['id'], $data);
     }
 
     public function testUpdateWitException()
@@ -217,11 +219,10 @@ class UserServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
-        $userService->update($data);
+        $userService->update($data['id'], $data);
     }
 
     public function testDelete()
@@ -237,8 +238,7 @@ class UserServiceTest extends TestCase
         $mockedRepository->method('find')->willReturn(new UserEntity(1));
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $expectedUser = new UserEntity($data['id']);
 
@@ -265,8 +265,7 @@ class UserServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(UserNotFoundException::class);     
         $userService->delete($data['id']);
@@ -286,8 +285,7 @@ class UserServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);      
         $userService->delete($data['id']);
@@ -312,7 +310,7 @@ class UserServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
         $userService->checkGenericInputData($data);
@@ -338,7 +336,7 @@ class UserServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $userService = new UserService($mockedEntityManager);
+        $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(UserInvalidException::class);
         $userService->checkGenericInputData($data);

@@ -14,14 +14,18 @@ use Exception;
 
 class UserSessionService extends BaseService
 {
+
     const STATUS_CODE_404 = 404;
+    const AVATAR_FILE_KEY = 'avatar_file';
 
     protected $userService;
+    private $config;
 
-    public function __construct(EntityManager $em, $userService = null)
+    public function __construct(EntityManager $em, $userService, array $config)
     {
         parent::__construct($em);
         $this->userService = $userService;
+        $this->config      = $config;
     }
 
     public function checkGenericInputData($data)
@@ -82,11 +86,11 @@ class UserSessionService extends BaseService
         $userSession->setAccumulatedPoints($data['points']);
 
         if (isset($data['minimum_minutes'])) {
-            $userSession->setMinimumMinutes($data['minimum_minutes']);            
+            $userSession->setMinimumMinutes($data['minimum_minutes']);
         }
 
         if (isset($data['cashout'])) {
-            $userSession->setCashout($data['cashout']);            
+            $userSession->setCashout($data['cashout']);
         }
 
         $userSession->setStart(new \DateTime($data['start']));

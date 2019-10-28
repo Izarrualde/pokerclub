@@ -14,6 +14,6 @@ class BuyinSessionServiceFactory implements FactoryInterface
     {
         $entityManager = $container->get(EntityManager::class);
         $config        = $container->get('config');
-        return new BuyinSessionServiceService($entityManager, $config);
+        return new BuyinSessionService($entityManager, $userSessionService, $config);
     }
 }

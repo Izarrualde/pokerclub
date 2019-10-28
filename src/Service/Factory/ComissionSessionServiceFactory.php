@@ -9,9 +9,12 @@ use Solcre\Pokerclub\Service\ComissionSessionService;
 
 class ComissionSessionServiceFactory implements FactoryInterface
 {
-
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ComissionSessionService
-    {
+  
+    public function __invoke(
+        ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ): ComissionSessionService {
         $entityManager = $container->get(EntityManager::class);
         $config        = $container->get('config');
         return new ComissionSessionService($entityManager, $config);

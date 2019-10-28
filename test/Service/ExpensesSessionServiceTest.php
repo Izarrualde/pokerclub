@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\ExpensesInvalidException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\ExpenditureNotFoundException;
-use Solcre\Pokerclub\Repository\BaseRepository;
+use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class ExpensesSessionServiceTest extends TestCase
 {
@@ -25,7 +25,7 @@ class ExpensesSessionServiceTest extends TestCase
         $mockedEntityManager->method('persist')->willReturn(true);
         $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
 
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $expectedExpenditure    = new ExpensesSessionEntity();
         $expectedExpenditure->setDescription($data['description']);
@@ -66,8 +66,7 @@ class ExpensesSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $expectedExpenditure    = new ExpensesSessionEntity();
         $expectedExpenditure->setId(1);
@@ -81,7 +80,7 @@ class ExpensesSessionServiceTest extends TestCase
             $this->equalTo($expectedExpenditure)
         );
 
-        $expensesSessionService->update($data);
+        $expensesSessionService->update($data['id'], $data);
         // y que se llame metodo flush con anythig
     }
 
@@ -96,10 +95,12 @@ class ExpensesSessionServiceTest extends TestCase
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
-        $expensesSessionService->update($data);
+
+        $fakeIdForTesting = 1111;
+        $expensesSessionService->update($fakeIdForTesting, $data);
     }
 
     public function testUpdateWithExpenditureNotFoundException()
@@ -120,11 +121,10 @@ class ExpensesSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(ExpenditureNotFoundException::class);
-        $expensesSessionService->update($data);
+        $expensesSessionService->update($data['id'], $data);
     }
 
     public function testUpdateWithException()
@@ -145,11 +145,10 @@ class ExpensesSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
-        $expensesSessionService->update($data);
+        $expensesSessionService->update($data['id'], $data);
     }
 
     public function testDelete()
@@ -164,8 +163,7 @@ class ExpensesSessionServiceTest extends TestCase
         $mockedRepository->method('find')->willReturn(new ExpensesSessionEntity(1));
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $expectedExpenditure = new ExpensesSessionEntity($data['id']);
 
@@ -196,8 +194,7 @@ class ExpensesSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(ExpenditureNotFoundException::class);
         $expensesSessionService->delete($data);
@@ -221,8 +218,7 @@ class ExpensesSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
         $expensesSessionService->delete($data);
@@ -237,7 +233,7 @@ class ExpensesSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
         $expensesSessionService->checkGenericInputData($data);
@@ -252,7 +248,7 @@ class ExpensesSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(ExpensesInvalidException::class);
         $expensesSessionService->checkGenericInputData($data);
@@ -267,7 +263,7 @@ class ExpensesSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $expensesSessionService = new ExpensesSessionService($mockedEntityManager);
+        $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(ExpensesInvalidException::class);
         $expensesSessionService->checkGenericInputData($data);

@@ -6,9 +6,9 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Service\ServiceTipSessionService;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\ServiceTipInvalidException;
-use Solcre\Pokerclub\Repository\BaseRepository;
 use Solcre\Pokerclub\Exception\ServiceTipNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class ServiceTipSessionServiceTest extends TestCase
 {
@@ -25,7 +25,7 @@ class ServiceTipSessionServiceTest extends TestCase
         $mockedEntityManager->method('persist')->willReturn(true);
         $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
 
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $expectedServiceTip = new ServiceTipSessionEntity();
         $expectedServiceTip->setHour(new \DateTime($data['hour']));
@@ -65,8 +65,7 @@ class ServiceTipSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $expectedServiceTip    = new ServiceTipSessionEntity();
         $expectedServiceTip->setId(1);
@@ -81,7 +80,7 @@ class ServiceTipSessionServiceTest extends TestCase
            $this->equalTo($expectedServiceTip)
         );
 
-        $serviceTipSessionService->update($data);
+        $serviceTipSessionService->update($data['id'], $data);
         // y que se llame metodo flush con anythig
     }
 
@@ -96,10 +95,12 @@ class ServiceTipSessionServiceTest extends TestCase
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
-        $serviceTipSessionService->update($data);
+
+        $fakeIdForTesting = 1111;
+        $serviceTipSessionService->update($fakeIdForTesting, $data);
     }
 
     public function testUpdateWithServiceTipNotFoundException()
@@ -120,11 +121,10 @@ class ServiceTipSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $this->expectException(ServiceTipNotFoundException::class);
-        $serviceTipSessionService->update($data);
+        $serviceTipSessionService->update($data['id'], $data);
     }
 
     public function testUpdateWithException()
@@ -145,11 +145,10 @@ class ServiceTipSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
-        $serviceTipSessionService->update($data);
+        $serviceTipSessionService->update($data['id'], $data);
     }
 
     public function testDelete()
@@ -164,8 +163,7 @@ class ServiceTipSessionServiceTest extends TestCase
         $mockedRepository->method('find')->willReturn(new ServiceTipSessionEntity(1));
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $expectedServiceTip = new ServiceTipSessionEntity($data['id']);
 
@@ -196,8 +194,7 @@ class ServiceTipSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $this->expectException(ServiceTipNotFoundException::class);
         $serviceTipSessionService->delete($data);
@@ -221,9 +218,8 @@ class ServiceTipSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
-
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
+        
         $this->expectException(\Exception::class);
         $serviceTipSessionService->delete($data);
     }
@@ -237,7 +233,7 @@ class ServiceTipSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
         $serviceTipSessionService->checkGenericInputData($data);
@@ -252,7 +248,7 @@ class ServiceTipSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $this->expectException(ServiceTipInvalidException::class);
         $serviceTipSessionService->checkGenericInputData($data);
@@ -267,7 +263,7 @@ class ServiceTipSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager);
+        $serviceTipSessionService = new ServiceTipSessionService($mockedEntityManager, []);
 
         $this->expectException(ServiceTipInvalidException::class);
         $serviceTipSessionService->checkGenericInputData($data);
