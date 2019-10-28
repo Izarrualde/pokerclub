@@ -7,20 +7,26 @@ use Solcre\Pokerclub\Exception\BuyinInvalidException;
 use Solcre\Pokerclub\Exception\BuyinNotFoundException;
 use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class BuyinSessionService extends BaseService
 {
-    const STATUS_CODE_404 = 404;
 
+    const STATUS_CODE_404 = 404;
+    const AVATAR_FILE_KEY = 'avatar_file';
+
+    private $config;
     protected $userSessionService;
 
     public function __construct(
         EntityManager $em,
-        userSessionService $userSessionService
+        userSessionService $userSessionService,
+        array $config
     ) {
         parent::__construct($em);
         $this->userSessionService = $userSessionService;
+        $this->config             = $config;
     }
 
     public function fetchAllBuyins($sessionId)
@@ -52,11 +58,11 @@ class BuyinSessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
-        $buyin        = new BuyinSessionEntity();
+        $buyin = new BuyinSessionEntity();
         $buyin->setHour(new \DateTime($data['hour']));
         $buyin->setAmountCash($data['amountCash']);
         $buyin->setAmountCredit($data['amountCredit']);
@@ -84,7 +90,7 @@ class BuyinSessionService extends BaseService
         return $buyin;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -110,7 +116,7 @@ class BuyinSessionService extends BaseService
         return $buyin;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $buyin    = parent::fetch($id);

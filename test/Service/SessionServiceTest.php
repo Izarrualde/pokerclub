@@ -6,12 +6,12 @@ use Solcre\Pokerclub\Entity\UserEntity;
 use Solcre\Pokerclub\Entity\UserSessionEntity;
 use Solcre\Pokerclub\Service\SessionService;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Repository\BaseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\UserInvalidException;
 use Solcre\Pokerclub\Rakeback\rakebackAlgorithm;
+use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class SessionServiceTest extends TestCase
 {
@@ -25,21 +25,21 @@ class SessionServiceTest extends TestCase
           'title'                        => 'mesa mixta',
           'description'                  => 'lunes',
           'seats'                        => 9,
-          'rakebackClass'                => 'Solcre\Pokerclub\Rakeback\SimpleRakeback',
-          'minimum_user_session_minutes' =>  240
+          'rakeback_class'               => 'Solcre\Pokerclub\Rakeback\SimpleRakeback',
+          'minimum_user_session_minutes' => 240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('persist')->willReturn(true);
 
-        $sessionService = new SessionService($mockedEntityManager);
-        $expectedSession    = new SessionEntity();
+        $sessionService  = new SessionService($mockedEntityManager, []);
+        $expectedSession = new SessionEntity();
         $expectedSession->setDate(new \DateTime($data['date']));
         $expectedSession->setStartTime(new \DateTime($data['start_at']));
         $expectedSession->setTitle($data['title']);
         $expectedSession->setDescription($data['description']);
         $expectedSession->setSeats($data['seats']);
-        $expectedSession->setRakebackClass($data['rakebackClass']);
+        $expectedSession->setRakebackClass($data['rakeback_class']);
         $expectedSession->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
         $mockedEntityManager->expects($this->once())
@@ -63,7 +63,7 @@ class SessionServiceTest extends TestCase
             'title'                        => 'title actualizado',
             'description'                  => 'description actualizada',
             'seats'                        => 9,
-            'rakebackClass'                => 'SimpleRakeback',
+            'rakeback_class'               => 'SimpleRakeback',
             'minimum_user_session_minutes' => 240
         ];
 
@@ -87,8 +87,7 @@ class SessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $sessionService = new SessionService($mockedEntityManager);
+        $sessionService = new SessionService($mockedEntityManager, []);
 
         $expectedSession    = new SessionEntity();
         $expectedSession->setId($data['id']);
@@ -100,7 +99,7 @@ class SessionServiceTest extends TestCase
         $expectedSession->setStartTime(new \DateTime($data['start_at']));
         $expectedSession->setStartTimeReal(new \DateTime($data['real_start_at']));
         $expectedSession->setEndTime(new \DateTime($data['end_at']));
-        $expectedSession->setRakebackClass($data['rakebackClass']);
+        $expectedSession->setRakebackClass($data['rakeback_class']);
         $expectedSession->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
         $mockedEntityManager->expects($this->once())
@@ -109,7 +108,7 @@ class SessionServiceTest extends TestCase
             $this->equalTo($expectedSession)
         )/*->willReturn('anything')*/;
 
-        $sessionService->update($data);
+        $sessionService->update($data['id'], $data);
         // y que se llame metodo flush con anythig
     }
 
@@ -124,16 +123,18 @@ class SessionServiceTest extends TestCase
             'title'                        => 'title actualizado',
             'description'                  => 'desscription actualizada',
             'seats'                        => 9,
-            'rakebackClass'                => 'SimpleRakeback',
+            'rakeback_class'               => 'SimpleRakeback',
             'minimum_user_session_minutes' => 240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
-        $sessionService = new SessionService($mockedEntityManager);
+        $sessionService = new SessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
-        $sessionService->update($data);
+
+        $fakeIdForTesting = 1111;
+        $sessionService->update($fakeIdForTesting, $data);
     }
 
     public function testUpdateWithSessionNotFoundException()
@@ -145,9 +146,9 @@ class SessionServiceTest extends TestCase
             'real_start_at'                => '2019-07-04T19:15',
             'end_at'                       => '2019-07-04T20:00',
             'title'                        => 'title actualizado',
-            'description'                  => 'desscription actualizada',
+            'description'                  => 'description actualizada',
             'seats'                        => 9,
-            'rakebackClass'                => 'SimpleRakeback',
+            'rakeback_class'               => 'SimpleRakeback',
             'minimum_user_session_minutes' => 240
         ];
 
@@ -160,11 +161,10 @@ class SessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $sessionService = new SessionService($mockedEntityManager);
+        $sessionService = new SessionService($mockedEntityManager, []);
 
         $this->expectException(SessionNotFoundException::class);
-        $sessionService->update($data);
+        $sessionService->update($data['id'], $data);
     }
 
     public function testUpdateWithException()
@@ -178,7 +178,7 @@ class SessionServiceTest extends TestCase
             'title'                        => 'title actualizado',
             'description'                  => 'desscription actualizada',
             'seats'                        => 9,
-            'rakebackClass'                => 'SimpleRakeback',
+            'rakeback_class'               => 'SimpleRakeback',
             'minimum_user_session_minutes' => 240
         ];
 
@@ -191,11 +191,10 @@ class SessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $sessionService = new SessionService($mockedEntityManager);
+        $sessionService = new SessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
-        $sessionService->update($data);
+        $sessionService->update($data['id'], $data);
     }
 
     public function testDelete()
@@ -210,8 +209,7 @@ class SessionServiceTest extends TestCase
         $mockedRepository->method('find')->willReturn(new SessionEntity(1));
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $sessionService = new SessionService($mockedEntityManager);
+        $sessionService = new SessionService($mockedEntityManager, []);
 
         $expectedSession = new SessionEntity($data['id']);
 
@@ -238,8 +236,7 @@ class SessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $sessionService = new SessionService($mockedEntityManager);
+        $sessionService = new SessionService($mockedEntityManager, []);
 
         $this->expectException(SessionNotFoundException::class);     
         $sessionService->delete($data['id']);
@@ -259,8 +256,7 @@ class SessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $sessionService = new SessionService($mockedEntityManager);
+        $sessionService = new SessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);    
         $sessionService->delete($data['id']);
@@ -282,7 +278,7 @@ class SessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $sessionService = new SessionService($mockedEntityManager);
+        $sessionService = new SessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
         $sessionService->checkGenericInputData($data);
@@ -383,7 +379,7 @@ class SessionServiceTest extends TestCase
         $mockedSessionService->method('getEntityName')
                             ->willReturn('Solcre\Pokerclub\Entity\SessionEntity');
 
-        $mockedSessionService->__construct($mockedEntityManager);                             
+        $mockedSessionService->__construct($mockedEntityManager, []);                             
         $mockedSessionService->method('createRakebackAlgorithm')
                             ->willReturn($rakebackAlgorithm);
 

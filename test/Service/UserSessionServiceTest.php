@@ -11,7 +11,7 @@ use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
 use Solcre\Pokerclub\Exception\UserSessionInvalidException;
 use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
-use Solcre\Pokerclub\Repository\BaseRepository;
+use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class UserSessionServiceTest extends TestCase
 {
@@ -35,7 +35,9 @@ class UserSessionServiceTest extends TestCase
 
         $session = new SessionEntity(3);
         $user = new UserEntity(1);
-        $userSessionService = new UserSessionService($mockedEntityManager);
+        $userService = $this->createMock(UserService::class);
+
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
         $expectedUserSession    = new UserSessionEntity();
         $expectedUserSession->setSession($session);
@@ -142,9 +144,17 @@ class UserSessionServiceTest extends TestCase
             )
         );
 
-        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $userService        = $this->createMock(UserService::class);
 
-        $userSessionService = new UserSessionService($mockedEntityManager);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
+
+        /*
+        // Inject the mockedRepository by reflection
+        $reflection = new ReflectionProperty($userSessionService, 'repository');
+        $reflection->setAccessible(true);
+        $reflection->setValue($userSessionService, $mockedRepository);
+        */
 
         $expectedUserSession    = new UserSessionEntity();
         $expectedUserSession->setId($data['id']);
@@ -163,7 +173,7 @@ class UserSessionServiceTest extends TestCase
             $this->equalTo($expectedUserSession)
         )/*->willReturn('anything')*/;
 
-        $userSessionService->update($data);
+        $userSessionService->update($data['id'], $data);
         // y que se llame metodo flush con anythig
     }
 
@@ -182,11 +192,14 @@ class UserSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
+        $userService = $this->createMock(UserService::class);
 
-        $userSessionService = new UserSessionService($mockedEntityManager);
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
         $this->expectException(IncompleteDataException::class);
-        $userSessionService->update($data);
+
+        $fakeIdForTesting = 1111;
+        $userSessionService->update($fakeIdForTesting, $data);
     }
 
     public function testUpdateWithUserSessionNotFoundException()
@@ -211,12 +224,13 @@ class UserSessionServiceTest extends TestCase
           new UserSessionNotFoundException())
         );
 
-        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $userService        = $this->createMock(UserService::class);
 
-        $userSessionService = new UserSessionService($mockedEntityManager);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
         $this->expectException(UserSessionNotFoundException::class);
-        $userSessionService->update($data);
+        $userSessionService->update($data['id'], $data);
     }
 
     public function testUpdateWithException()
@@ -241,12 +255,12 @@ class UserSessionServiceTest extends TestCase
           new \Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404))
         );
 
+        $userService        = $this->createMock(UserService::class);
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $userSessionService = new UserSessionService($mockedEntityManager);
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
         $this->expectException(\Exception::class);
-        $userSessionService->update($data);
+        $userSessionService->update($data['id'], $data);
     }
 
     public function testDelete()
@@ -260,9 +274,9 @@ class UserSessionServiceTest extends TestCase
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->willReturn(new UserSessionEntity(1));
 
+        $userService        = $this->createMock(UserService::class);
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-     
-        $userSessionService = new UserSessionService($mockedEntityManager);
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
         $expectedUserSession = new UserSessionEntity($data['id']);
 
@@ -297,10 +311,10 @@ class UserSessionServiceTest extends TestCase
           new UserSessionNotFoundException())
         );
 
+        $userService        = $this->createMock(UserService::class);
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $userSessionService = new UserSessionService($mockedEntityManager);
-
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
+        
         $this->expectException(UserSessionNotFoundException::class);
         $userSessionService->delete($data);
     }
@@ -324,12 +338,12 @@ class UserSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new \Exception('Solcre\Pokerclub\Entity\UserSessionSessionEntity' . " Entity not found", 404))
+          new \Exception('Solcre\Pokerclub\Entity\UserEntity' . " Entity not found", 404))
         );
 
+        $userService        = $this->createMock(UserService::class);
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $userSessionService = new UserSessionService($mockedEntityManager);
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
         $this->expectException(\Exception::class);
         $userSessionService->delete($data);
@@ -349,7 +363,8 @@ class UserSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $userSessionService = new UserSessionService($mockedEntityManager);
+        $userService = $this->createMock(UserService::class);
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
         $this->expectException(IncompleteDataException::class);
         $userSessionService->checkGenericInputData($data);
@@ -390,14 +405,11 @@ class UserSessionServiceTest extends TestCase
             )
         );
 
-        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-
-        $userService = $this->createMock(UserService::class);
+        $userService        = $this->createMock(UserService::class);
         $userService->method('fetch')->willReturn(new UserEntity(1));
+        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
-
-        $userSessionService = new UserSessionService($mockedEntityManager, $userService);
 
         $expectedUserSession    = new UserSessionEntity();
         $expectedUserSession->setId($data['id']);

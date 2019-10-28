@@ -6,17 +6,23 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\DealerTipInvalidException;
 use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class DealerTipSessionService extends BaseService
 {
+
     const STATUS_CODE_404 = 404;
+    const AVATAR_FILE_KEY = 'avatar_file';
 
-    public function __construct(EntityManager $em)
+    private $config;
+
+    public function __construct(EntityManager $entityManager, array $config)
     {
-        parent::__construct($em);
+        parent::__construct($entityManager);
+        $this->config = $config;
     }
-
+    
     public function checkGenericInputData($data)
     {
         // does not include id
@@ -30,7 +36,7 @@ class DealerTipSessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
@@ -46,7 +52,7 @@ class DealerTipSessionService extends BaseService
         return $dealerTip;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -72,7 +78,7 @@ class DealerTipSessionService extends BaseService
         return $dealerTip;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $dealerTip    = parent::fetch($id);

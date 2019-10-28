@@ -9,18 +9,23 @@ use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class UserSessionService extends BaseService
 {
+
     const STATUS_CODE_404 = 404;
+    const AVATAR_FILE_KEY = 'avatar_file';
 
     protected $userService;
+    private $config;
 
-    public function __construct(EntityManager $em, $userService = null)
+    public function __construct(EntityManager $em, $userService, array $config)
     {
         parent::__construct($em);
         $this->userService = $userService;
+        $this->config      = $config;
     }
 
     public function checkGenericInputData($data)
@@ -31,7 +36,7 @@ class UserSessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
@@ -61,7 +66,7 @@ class UserSessionService extends BaseService
         return $userSession;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -81,11 +86,11 @@ class UserSessionService extends BaseService
         $userSession->setAccumulatedPoints($data['points']);
 
         if (isset($data['minimum_minutes'])) {
-            $userSession->setMinimumMinutes($data['minimum_minutes']);            
+            $userSession->setMinimumMinutes($data['minimum_minutes']);
         }
 
         if (isset($data['cashout'])) {
-            $userSession->setCashout($data['cashout']);            
+            $userSession->setCashout($data['cashout']);
         }
 
         $userSession->setStart(new \DateTime($data['start']));
@@ -98,7 +103,7 @@ class UserSessionService extends BaseService
         return $userSession;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $userSession    = parent::fetch($id);

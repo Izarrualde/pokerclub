@@ -5,7 +5,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\Expr\Join;
 use Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Solcre\Pokerclub\Entity\UserSessionEntity;
-use Solcre\Pokerclub\Repository\BaseRepository;
+use Solcre\SolcreFramework2\Common\BaseRepository;
 
 /**
  * @codeCoverageIgnore

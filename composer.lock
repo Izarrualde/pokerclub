@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "104c3dcaaa691477dbbde4fde6471469",
+    "content-hash": "13e09b6532a593254c3348563c801354",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -513,6 +513,99 @@
                 "zf"
             ],
             "time": "2019-02-17T20:11:57+00:00"
+        },
+        {
+            "name": "doctrine/doctrine-orm-module",
+            "version": "2.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/DoctrineORMModule.git",
+                "reference": "652d8aa636333b6b3f39a2f079c1565b5a9f5a6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/DoctrineORMModule/zipball/652d8aa636333b6b3f39a2f079c1565b5a9f5a6e",
+                "reference": "652d8aa636333b6b3f39a2f079c1565b5a9f5a6e",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^2.6.0",
+                "doctrine/doctrine-module": "^2.1.3",
+                "doctrine/orm": "^2.6.3",
+                "php": "^7.1",
+                "symfony/console": "^3.3 || ^4.0",
+                "zendframework/zend-hydrator": "^2.3",
+                "zendframework/zend-mvc": "^3.1",
+                "zendframework/zend-servicemanager": "^3.3",
+                "zendframework/zend-stdlib": "^3.2.1"
+            },
+            "require-dev": {
+                "doctrine/data-fixtures": "^1.2.1",
+                "doctrine/migrations": "^1.5 || ^2.0",
+                "phpunit/phpunit": "^7.0.3",
+                "squizlabs/php_codesniffer": "^2.7",
+                "zendframework/zend-console": "^2.6",
+                "zendframework/zend-developer-tools": "^1.1",
+                "zendframework/zend-i18n": "^2.7.3",
+                "zendframework/zend-log": "^2.9",
+                "zendframework/zend-modulemanager": "^2.7.2",
+                "zendframework/zend-mvc-console": "^1.2",
+                "zendframework/zend-serializer": "^2.8"
+            },
+            "suggest": {
+                "doctrine/migrations": "doctrine migrations if you want to keep your schema definitions versioned",
+                "zendframework/zend-developer-tools": "zend-developer-tools if you want to profile operations executed by the ORM during development",
+                "zendframework/zend-form": "if you want to use form elements backed by Doctrine"
+            },
+            "type": "library",
+            "extra": {
+                "zf": {
+                    "config-provider": "DoctrineORMModule\\ConfigProvider",
+                    "module": "DoctrineORMModule"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/autoload.php"
+                ],
+                "psr-0": {
+                    "DoctrineORMModule\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kyle Spraggs",
+                    "email": "theman@spiffyjr.me",
+                    "homepage": "http://www.spiffyjr.me/"
+                },
+                {
+                    "name": "Evan Coury",
+                    "email": "me@evancoury.com",
+                    "homepage": "http://blog.evan.pro/"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@hotmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://marco-pivetta.com/"
+                }
+            ],
+            "description": "Zend Framework Module that provides Doctrine ORM functionality",
+            "homepage": "http://www.doctrine-project.org/",
+            "keywords": [
+                "doctrine",
+                "module",
+                "orm",
+                "zf"
+            ],
+            "time": "2019-07-10T21:59:42+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -1152,6 +1245,48 @@
                 "simple-cache"
             ],
             "time": "2017-10-23T01:57:42+00:00"
+        },
+        {
+            "name": "solcre/solcre-framework-2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/solcre-org/solcre-framework.git",
+                "reference": "88f47b4cf3808c0188b5f778f22813a68962f6df"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/solcre-org/solcre-framework/zipball/88f47b4cf3808c0188b5f778f22813a68962f6df",
+                "reference": "88f47b4cf3808c0188b5f778f22813a68962f6df",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/doctrine-orm-module": "^2.1",
+                "php": "^7.3"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.11.8",
+                "phpstan/phpstan-doctrine": "^0.9.1",
+                "phpstan/phpstan-strict-rules": "^0.9.0",
+                "phpunit/phpunit": "^7.1",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Solcre\\SolcreFramework2\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Base stuff of many internal projects",
+            "keywords": [
+                "Solcre",
+                "framework"
+            ],
+            "time": "2019-10-25T23:21:50+00:00"
         },
         {
             "name": "symfony/console",
@@ -7392,7 +7527,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "solcre/solcre-framework-2": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

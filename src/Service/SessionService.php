@@ -7,16 +7,21 @@ use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\ClassNotExistingException;
 use Solcre\Pokerclub\Exception\InvalidRakebackClassException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class SessionService extends BaseService
 {
     // ult
     const STATUS_CODE_404 = 404;
+    const AVATAR_FILE_KEY = 'avatar_file';
 
-    public function __construct(EntityManager $em)
+    private $config;
+
+    public function __construct(EntityManager $entityManager, array $config)
     {
-        parent::__construct($em);
+        parent::__construct($entityManager);
+        $this->config = $config;
     }
 
     public function checkGenericInputData($data)
@@ -37,7 +42,7 @@ class SessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
@@ -56,7 +61,7 @@ class SessionService extends BaseService
         return $session;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -95,7 +100,7 @@ class SessionService extends BaseService
         return $session;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $session = parent::fetch($id);

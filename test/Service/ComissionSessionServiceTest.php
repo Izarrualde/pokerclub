@@ -9,7 +9,7 @@ use Solcre\Pokerclub\Exception\ComissionInvalidException;
 use Solcre\Pokerclub\Exception\ComissionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Service\BaseService;
-use Solcre\Pokerclub\Repository\BaseRepository;
+use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class ComissionSessionServiceTest extends TestCase
 {
@@ -26,7 +26,7 @@ class ComissionSessionServiceTest extends TestCase
         $mockedEntityManager->method('persist')->willReturn(true);
         $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
 
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $expectedComission    = new ComissionSessionEntity();
         $expectedComission->setHour(new \DateTime($data['hour']));
@@ -68,8 +68,7 @@ class ComissionSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $expectedComission    = new ComissionSessionEntity();
         $expectedComission->setId(1);
@@ -84,7 +83,7 @@ class ComissionSessionServiceTest extends TestCase
            $this->equalTo($expectedComission)
         );
 
-        $comissionSessionService->update($data);
+        $comissionSessionService->update($data['id'], $data);
         // y que se llame metodo flush con anythig
     }
 
@@ -99,10 +98,12 @@ class ComissionSessionServiceTest extends TestCase
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
-        $comissionSessionService->update($data);
+
+        $fakeIdForTesting = 1111;
+        $comissionSessionService->update($fakeIdForTesting, $data);
     }
 
     public function testUpdateWithComissionNotFoundException()
@@ -123,11 +124,10 @@ class ComissionSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $this->expectException(ComissionNotFoundException::class);
-        $comissionSessionService->update($data);
+        $comissionSessionService->update($data['id'], $data);
     }
 
     public function testUpdateWithException()
@@ -148,11 +148,10 @@ class ComissionSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
-        $comissionSessionService->update($data);
+        $comissionSessionService->update($data['id'], $data);
     }
 
     public function testDelete()
@@ -167,8 +166,7 @@ class ComissionSessionServiceTest extends TestCase
         $mockedRepository->method('find')->willReturn(new ComissionSessionEntity(1));
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $expectedComission = new ComissionSessionEntity($data['id']);
 
@@ -199,8 +197,7 @@ class ComissionSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $this->expectException(ComissionNotFoundException::class);
         $comissionSessionService->delete($data);
@@ -225,8 +222,7 @@ class ComissionSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
         $comissionSessionService->delete($data);
@@ -241,7 +237,7 @@ class ComissionSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
         $comissionSessionService->checkGenericInputData($data);
@@ -257,7 +253,7 @@ class ComissionSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $this->expectException(ComissionInvalidException::class);
         $comissionSessionService->checkGenericInputData($data);
@@ -273,7 +269,7 @@ class ComissionSessionServiceTest extends TestCase
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager);
+        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
 
         $this->expectException(ComissionInvalidException::class);
         $comissionSessionService->checkGenericInputData($data);
