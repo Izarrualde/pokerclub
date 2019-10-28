@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\ExpensesInvalidException;
 use Solcre\Pokerclub\Exception\ExpenditureNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class ExpensesSessionService extends BaseService
@@ -30,7 +31,7 @@ class ExpensesSessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
@@ -47,7 +48,7 @@ class ExpensesSessionService extends BaseService
         return $expenditure;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -73,7 +74,7 @@ class ExpensesSessionService extends BaseService
         return $expenditure;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $expenditure    = parent::fetch($id);

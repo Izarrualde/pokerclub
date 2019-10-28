@@ -1,12 +1,14 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
+use Solcre\SolcreFramework2\Service\BaseService;
 use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\SessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\ClassNotExistingException;
 use Solcre\Pokerclub\Exception\InvalidRakebackClassException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class SessionService extends BaseService
@@ -37,7 +39,7 @@ class SessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
@@ -56,7 +58,7 @@ class SessionService extends BaseService
         return $session;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -95,7 +97,7 @@ class SessionService extends BaseService
         return $session;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $session = parent::fetch($id);

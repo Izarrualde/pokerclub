@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\DealerTipInvalidException;
 use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class DealerTipSessionService extends BaseService
@@ -30,7 +31,7 @@ class DealerTipSessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
@@ -46,7 +47,7 @@ class DealerTipSessionService extends BaseService
         return $dealerTip;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -72,7 +73,7 @@ class DealerTipSessionService extends BaseService
         return $dealerTip;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $dealerTip    = parent::fetch($id);

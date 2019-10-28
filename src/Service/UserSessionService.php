@@ -9,6 +9,7 @@ use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class UserSessionService extends BaseService
@@ -31,7 +32,7 @@ class UserSessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
@@ -61,7 +62,7 @@ class UserSessionService extends BaseService
         return $userSession;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -98,7 +99,7 @@ class UserSessionService extends BaseService
         return $userSession;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $userSession    = parent::fetch($id);

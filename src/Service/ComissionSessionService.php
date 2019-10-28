@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\ComissionInvalidException;
 use Solcre\Pokerclub\Exception\ComissionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class ComissionSessionService extends BaseService
@@ -31,7 +32,7 @@ class ComissionSessionService extends BaseService
         }
     }
 
-    public function add($data, $strategies = null)
+    public function add($data)
     {
         $this->checkGenericInputData($data);
 
@@ -47,7 +48,7 @@ class ComissionSessionService extends BaseService
         return $comission;
     }
 
-    public function update($data, $strategies = null)
+    public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
@@ -72,7 +73,7 @@ class ComissionSessionService extends BaseService
         return $comission;
     }
 
-    public function delete($id, $entityObj = null)
+    public function delete($id, $entityObj = null): bool
     {
         try {
             $comission  = parent::fetch($id);
