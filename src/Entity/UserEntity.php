@@ -2,10 +2,11 @@
 namespace Solcre\Pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Embeddable
- * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\UserRepository")
  * @ORM\Table(name="users")
  */
 class UserEntity
@@ -22,6 +23,7 @@ class UserEntity
      * @ORM\Column(type="string")
      */
     protected $password;
+
 
     /**
      * @ORM\Column(type="string")
@@ -88,6 +90,38 @@ class UserEntity
      */
     protected $cashin;
 
+
+    /** @ORM\Column(type="string", name="avatar_hashed_filename")
+     *
+     */
+    protected $avatarHashedFilename;
+
+
+    /** @ORM\Column(type="string", name="avatar_visible_filename")
+     *
+     */
+    protected $avatarVisibleFilename;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Solcre\Pokerclub\Entity\AwardEntity", indexBy="id")
+     * @ORM\JoinTable(name="users_awards",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="award_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $awards;
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Solcre\Pokerclub\Entity\UserGroupEntity", indexBy="id")
+     * @ORM\JoinTable(name="usuarios_pertenece",
+     *      joinColumns={@ORM\JoinColumn(name="id_usuario", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="id_grupo", referencedColumnName="id")}
+     *      )
+     */
+    protected $groups;
+
+
     /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
@@ -119,6 +153,7 @@ class UserEntity
         $this->setSessions($sessions);
         $this->setResults($results);
         $this->setCashin($cashin);
+        $this->groups = new ArrayCollection();
     }
 
     // @codeCoverageIgnoreStart
@@ -265,6 +300,97 @@ class UserEntity
     {
         $this->cashin = $cashin;
         return $this;
+    }
+
+    public function addGroups($groups)
+    {
+        foreach ($groups as $group) {
+            if (!$this->groups->contains($group)) {
+                $this->groups->add($group);
+            }
+        }
+    }
+
+    public function removeGroups()
+    {
+        $groups = $this->getGroups();
+        foreach ($groups as $group) {
+            $this->groups->removeElement($group);
+        }
+    }
+
+    public function setGroups($groups)
+    {
+        foreach ($this->groups as $id => $group) {
+            if (!isset($groups[$id])) {
+                /* Remove from old because it doesn't exist in new */
+                $this->groups->remove($id);
+            } else {
+                /* The group already exists do not overwrite */
+                unset($groups[$id]);
+            }
+        }
+
+        /* Add groups that exist in new but not in old */
+        foreach ($groups as $id => $group) {
+            $this->groups[$id] = $group;
+        }
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatarHashedFilename()
+    {
+        return $this->avatarHashedFilename;
+    }
+
+    /**
+     * @param mixed $avatarHashedFilename
+     */
+    public function setAvatarHashedFilename($avatarHashedFilename)
+    {
+        $this->avatarHashedFilename = $avatarHashedFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatarVisibleFilename()
+    {
+        return $this->avatarVisibleFilename;
+    }
+
+    /**
+     * @param mixed $avatarVisibleFilename
+     */
+    public function setAvatarVisibleFilename($avatarVisibleFilename)
+    {
+        $this->avatarVisibleFilename = $avatarVisibleFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAwards()
+    {
+        return $this->awards;
+    }
+    
+    /**
+     * @param mixed $awards
+     */
+    public function setAwards($awards)
+    {
+        $this->awards = $awards;
     }
     
     // @codeCoverageIgnoreEnd
