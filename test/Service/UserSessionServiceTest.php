@@ -410,7 +410,6 @@ class UserSessionServiceTest extends TestCase
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $userSessionService = new UserSessionService($mockedEntityManager, $userService, []);
 
-
         $expectedUserSession    = new UserSessionEntity();
         $expectedUserSession->setId($data['id']);
         $expectedUserSession->setSession(new SessionEntity($data['idSession']));

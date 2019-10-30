@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Embeddable
- * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository")
  * @ORM\Table(name="session_service_tips")
  */
 class ServiceTipSessionEntity

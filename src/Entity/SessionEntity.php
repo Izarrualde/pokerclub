@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Solcre\Pokerclub\Rakeback\RakeBackAlgorithm;
 
 /**
- * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository")
  * @ORM\Table(name="sessions")
  */
 class SessionEntity
