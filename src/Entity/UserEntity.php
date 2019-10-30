@@ -92,7 +92,7 @@ class UserEntity
 
 
     /** @ORM\Column(type="string", name="avatar_hashed_filename")
-     * 
+     *
      */
     protected $avatarHashedFilename;
 
@@ -325,8 +325,7 @@ class UserEntity
             if (!isset($groups[$id])) {
                 /* Remove from old because it doesn't exist in new */
                 $this->groups->remove($id);
-            }
-            else {
+            } else {
                 /* The group already exists do not overwrite */
                 unset($groups[$id]);
             }
@@ -344,6 +343,54 @@ class UserEntity
     public function getGroups()
     {
         return $this->groups;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatarHashedFilename()
+    {
+        return $this->avatarHashedFilename;
+    }
+
+    /**
+     * @param mixed $avatarHashedFilename
+     */
+    public function setAvatarHashedFilename($avatarHashedFilename)
+    {
+        $this->avatarHashedFilename = $avatarHashedFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatarVisibleFilename()
+    {
+        return $this->avatarVisibleFilename;
+    }
+
+    /**
+     * @param mixed $avatarVisibleFilename
+     */
+    public function setAvatarVisibleFilename($avatarVisibleFilename)
+    {
+        $this->avatarVisibleFilename = $avatarVisibleFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAwards()
+    {
+        return $this->awards;
+    }
+    
+    /**
+     * @param mixed $awards
+     */
+    public function setAwards($awards)
+    {
+        $this->awards = $awards;
     }
     
     // @codeCoverageIgnoreEnd

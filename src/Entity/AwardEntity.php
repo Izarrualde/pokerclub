@@ -3,7 +3,6 @@ namespace Solcre\Pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository") @ORM\Table(name="awards")
  */
@@ -11,31 +10,31 @@ class AwardEntity
 {
 
     /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue
-     * 
+     *
      */
     protected $id;
 
 
     /** @ORM\Column(type="datetime", name="created_at")
-     * 
+     *
      */
     protected $createdAt;
 
 
     /** @ORM\Column(type="string")
-     * 
+     *
      */
     protected $name;
 
 
     /** @ORM\Column(type="string")
-     * 
+     *
      */
     protected $class;
 
 
     /** @ORM\Column(type="text")
-     * 
+     *
      */
     protected $description;
 

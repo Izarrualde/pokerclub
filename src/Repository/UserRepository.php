@@ -8,7 +8,8 @@ use Doctrine\DBAL\Connection;
 use Solcre\Pokerclub\Entity\UserEntity;
 use Solcre\SolcreFramework2\Common\BaseRepository;
 
-class UserRepository extends BaseRepository{
+class UserRepository extends BaseRepository
+{
 
     public function userExists($data, $id): bool
     {

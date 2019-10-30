@@ -3,7 +3,6 @@ namespace Solcre\Pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository")
  * @ORM\Table(name="grupos")
