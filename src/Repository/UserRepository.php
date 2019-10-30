@@ -5,7 +5,7 @@ namespace Solcre\Pokerclub\Repository;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use PDO;
 use Doctrine\DBAL\Connection;
-use Solcre\Lms\Entity\UserEntity;
+use Solcre\Pokerclub\Entity\UserEntity;
 use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class UserRepository extends BaseRepository{

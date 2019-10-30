@@ -2,6 +2,7 @@
 namespace Solcre\Pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Embeddable
@@ -343,22 +344,6 @@ class UserEntity
     public function getGroups()
     {
         return $this->groups;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-    
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
     
     // @codeCoverageIgnoreEnd
