@@ -30,7 +30,8 @@ return [
             ExpensesSessionService::class   => ExpensesSessionServiceFactory::class,
             SessionService::class           => SessionServiceFactory::class,
             UserSessionService::class       => UserSessionServiceFactory::class,
-            AwardService::class             => AwardServiceFactory::class
+            AwardService::class             => AwardServiceFactory::class,
+            UserGroupService::class         => UserGRoupServiceFactory::class
         ]
     ],
     'doctrine'        => [

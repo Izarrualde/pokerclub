@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Embeddable
- * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository")
  * @ORM\Table(name="sessions_users")
  */
 class UserSessionEntity

@@ -117,6 +117,7 @@ class UserService extends BaseService
             throw new Exception('Invalid email', 400);
         }
 
+        /*
         if ($data['avatar_file'] !== null) {
             $this->deleteAvatarFromServer($user);
             $avatar = $this->uploadAvatarToServer($data, true);
@@ -128,11 +129,14 @@ class UserService extends BaseService
             $user->setAvatarVisibleFilename(null);
             $user->setAvatarHashedFilename(null);
         }
+        */
 
+        /*
         if ($data['password'] !== null) {
             $password = $this->checkPasswords($data['password'], $data['password_confirm']);
             $user->setPassword($this->hashPassword($password));
         }
+        */
 
         $user->setName($data['name']);
         $user->setLastname($data['lastname']);
@@ -187,6 +191,7 @@ class UserService extends BaseService
         return Strings::bcryptPassword($password);
     }
 
+    /*
     private function uploadAvatarToServer(array $data, $isUploaded = false)
     {
         $name = $data[self::AVATAR_FILE_KEY]['name'];
@@ -203,6 +208,7 @@ class UserService extends BaseService
 
         return $file;
     }
+    */
 
     private function deleteAvatarFromServer(UserEntity $user)
     {
