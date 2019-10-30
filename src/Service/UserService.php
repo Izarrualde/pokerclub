@@ -9,6 +9,7 @@ use Solcre\Pokerclub\Exception\UserNotFoundException;
 use Solcre\Pokerclub\Exception\UserInvalidException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\SolcreFramework2\Service\BaseService;
+use Solcre\SolcreFramework2\Utility\Validators;
 use Exception;
 
 class UserService extends BaseService
@@ -85,7 +86,7 @@ class UserService extends BaseService
     {
         $this->checkGenericInputData($data);
 
-        if (!isset($data['id'])) {
+        if (!isset($data['id'], $data['password_confirm'], $data['avatar_file'], $data['logged_user_username'])) {
             throw new IncompleteDataException();
         }
 
@@ -96,6 +97,41 @@ class UserService extends BaseService
                 throw new UserNotFoundException();
             }
             throw $e;
+        }
+
+        $loggedUser = $this->fetchBy(
+            [
+                'username' => $data['logged_user_username']
+            ]);
+
+        if (!$loggedUser instanceof UserEntity || $loggedUser->getUsername() !== $user->getUsername()) {
+            throw new Exception('Method not allowed for current user', 400);
+        }
+
+ 
+        if ($this->userExists($data, $id)) {
+            throw new Exception('User already exists', 400);
+        }
+
+        if (!Validators::valid_email($data['email'])) {
+            throw new Exception('Invalid email', 400);
+        }
+
+        if ($data['avatar_file'] !== null) {
+            $this->deleteAvatarFromServer($user);
+            $avatar = $this->uploadAvatarToServer($data, true);
+            $user->setAvatarVisibleFilename($avatar['name']);
+            $user->setAvatarHashedFilename(File::fileNameExtract($avatar['tmp_name']));
+        }
+        elseif ($data['avatar_visible_filename'] === null) {
+            $this->deleteAvatarFromServer($user);
+            $user->setAvatarVisibleFilename(null);
+            $user->setAvatarHashedFilename(null);
+        }
+
+        if ($data['password'] !== null) {
+            $password = $this->checkPasswords($data['password'], $data['password_confirm']);
+            $user->setPassword($this->hashPassword($password));
         }
 
         $user->setName($data['name']);
@@ -131,58 +167,6 @@ class UserService extends BaseService
             throw $e;
         }
     }
-    /*
-    public function update($id, $data)
-    {
-        $user = $this->fetchBy(
-            [
-                'id' => $id
-            ]);
-        if (! $user instanceof UserEntity)
-        {
-            throw new Exception('User not found', 404);
-        }
-        $loggedUser = $this->fetchBy(
-            [
-                'cellphone' => $data['logged_user_cellphone']
-            ]);
-        if (! $loggedUser instanceof UserEntity || $loggedUser->getCellphone() !== $user->getCellphone())
-        {
-            throw new Exception('Method not allowed for current user', 400);
-        }
-        if ($this->userExists($data, $id))
-        {
-            throw new Exception('User already exists', 400);
-        }
-        if (! Validators::valid_email($data['email']))
-        {
-            throw new Exception('Invalid email', 400);
-        }
-        if ($data['avatar_file'] !== null)
-        {
-            $this->deleteAvatarFromServer($user);
-            $avatar = $this->uploadAvatarToServer($data, true);
-            $user->setAvatarVisibleFilename($avatar['name']);
-            $user->setAvatarHashedFilename(File::fileNameExtract($avatar['tmp_name']));
-        }
-        elseif ($data['avatar_visible_filename'] === null)
-        {
-            $this->deleteAvatarFromServer($user);
-            $user->setAvatarVisibleFilename(null);
-            $user->setAvatarHashedFilename(null);
-        }
-        if ($data['password'] !== null)
-        {
-            $password = $this->checkPasswords($data['password'], $data['password_confirm']);
-            $user->setPassword($this->hashPassword($password));
-        }
-        $user->setCellphone($data['cellphone']);
-        $user->setEmail($data['email']);
-        $user->setName($data['name']);
-        $user->setLastName($data['last_name']);
-        $this->entityManager->flush();
-        return $user;
-    }
 
     private function userExists($data, $id): bool
     {
@@ -191,14 +175,14 @@ class UserService extends BaseService
 
     private function checkPasswords($password, $passwordConfirm)
     {
-        if ($password !== $passwordConfirm)
-        {
+        if ($password !== $passwordConfirm) {
             throw new Exception('Passwords do not match', 400);
         }
+
         return $password;
     }
 
-    private function hashPassword($password)
+    private function hashPassword($password) 
     {
         return Strings::bcryptPassword($password);
     }
@@ -214,14 +198,15 @@ class UserService extends BaseService
                 'key'         => self::AVATAR_FILE_KEY,
                 'hash'        => true
             ]);
+
         $file['name'] = $name;
+
         return $file;
     }
 
     private function deleteAvatarFromServer(UserEntity $user)
     {
-        if ($user->getAvatarHashedFilename() !== null)
-        {
+        if ($user->getAvatarHashedFilename() !== null) {
             $fullPathOfAvatar = $this->getFullPathOfAvatar($user->getAvatarHashedFilename());
             if (file_exists($fullPathOfAvatar))
             {
@@ -239,5 +224,4 @@ class UserService extends BaseService
     {
         return $this->config['lms']['PATHS']['avatars'];
     }
-    */
 }

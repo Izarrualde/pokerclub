@@ -10,6 +10,7 @@ use Solcre\Pokerclub\Exception\UserNotFoundException;
 use Solcre\Pokerclub\Exception\UserInvalidException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\SolcreFramework2\Common\BaseRepository;
+use Solcre\Pokerclub\Repository\UserRepository;
 
 class UserServiceTest extends TestCase
 {
@@ -62,26 +63,30 @@ class UserServiceTest extends TestCase
     public function testUpdate()
     {
         $data = [
-            'id'         =>1,
-            'password'   => '123',
-            'name'  => 'Jhon',
-            'lastname'   => 'Doe',
-            'email'      => 'jhon@lmsuy.com',
-            'username'   => '12345',
-            'multiplier' => 0,
-            'active'     => 1,
-            'hours'      => 0,
-            'points'     => 0,
-            'sessions'   => 0,
-            'results'    => 0,
-            'cashin'     => 0
+            'id'                      =>1,
+            'password'                => '123',
+            'password_confirm'        => '123',
+            'name'                    => 'Jhon',
+            'lastname'                => 'Doe',
+            'email'                   => 'jhon@lmsuy.com',
+            'username'                => '12345',
+            'multiplier'              => 0,
+            'active'                  => 1,
+            'hours'                   => 0,
+            'points'                  => 0,
+            'sessions'                => 0,
+            'results'                 => 0,
+            'cashin'                  => 0,
+            'logged_user_username'    => '12345',
+            'avatar_file'             =>'file',
+            'avatar_visible_filename' => ''
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('flush')->willReturn(true);
 
-        $mockedRepository = $this->createMock(BaseRepository::class);
-        $mockedRepository->method('find')->willReturn(
+        $mockedUserRepository = $this->createMock(UserRepository::class);
+        $mockedUserRepository->method('find')->willReturn(
             new UserEntity(
                 1,
                 '123',
@@ -99,7 +104,27 @@ class UserServiceTest extends TestCase
             )
         );
 
-        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $mockedUserRepository->method('findOneBy')->willReturn(
+            new UserEntity(
+                1,
+                '123',
+                'origina@email.com',
+                'original lastname',
+                'original name',
+                'original username',
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0
+            )
+        );
+
+        $mockedUserRepository->method('userExists')->willReturn(false);
+     
+        $mockedEntityManager->method('getRepository')->willReturn($mockedUserRepository);
         $userService = new UserService($mockedEntityManager, []);
 
         $user = $userService->fetch($data['id']);
@@ -133,18 +158,22 @@ class UserServiceTest extends TestCase
     {
         // $data without id
         $data = [
-            'password'   => '123',
-            'name'  => 'Jhon',
-            'lastname'   => 'Doe',
-            'email'      => 'jhon@lmsuy.com',
-            'username'   => '12345',
-            'multiplier' => 0,
-            'active'     => 1,
-            'hours'      => 0,
-            'points'     => 0,
-            'sessions'   => 0,
-            'results'    => 0,
-            'cashin'     => 0
+            'password'                => '123',
+            'password_confirm'        => '123',
+            'name'                    => 'Jhon',
+            'lastname'                => 'Doe',
+            'email'                   => 'jhon@lmsuy.com',
+            'username'                => '12345',
+            'multiplier'              => 0,
+            'active'                  => 1,
+            'hours'                   => 0,
+            'points'                  => 0,
+            'sessions'                => 0,
+            'results'                 => 0,
+            'cashin'                  => 0,
+            'logged_user_username'    => '12345',
+            'avatar_file'             =>'file',
+            'avatar_visible_filename' => ''
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -161,64 +190,71 @@ class UserServiceTest extends TestCase
     {
         // $data without id
         $data = [
-            'id'         => 'an unexisting id',
-            'password'   => '123',
-            'name'       => 'Jhon',
-            'lastname'   => 'Doe',
-            'email'      => 'jhon@lmsuy.com',
-            'username'   => '12345',
-            'multiplier' => 0,
-            'active'     => 1,
-            'hours'      => 0,
-            'points'     => 0,
-            'sessions'   => 0,
-            'results'    => 0,
-            'cashin'     => 0
+            'id'                      =>'an unexisting id',
+            'password'                => '123',
+            'password_confirm'        => '123',
+            'name'                    => 'Jhon',
+            'lastname'                => 'Doe',
+            'email'                   => 'jhon@lmsuy.com',
+            'username'                => '12345',
+            'multiplier'              => 0,
+            'active'                  => 1,
+            'hours'                   => 0,
+            'points'                  => 0,
+            'sessions'                => 0,
+            'results'                 => 0,
+            'cashin'                  => 0,
+            'logged_user_username'    => '12345',
+            'avatar_file'             =>'file',
+            'avatar_visible_filename' => ''
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('flush')->willReturn(true);
 
-        $mockedRepository = $this->createMock(BaseRepository::class);
-        $mockedRepository->method('find')->will($this->throwException(
+        $mockedUserRepository = $this->createMock(UserRepository::class);
+        $mockedUserRepository->method('find')->will($this->throwException(
           new UserNotFoundException())
         );
 
-        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedUserRepository);
         $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(UserNotFoundException::class);
         $userService->update($data['id'], $data);
     }
 
-    public function testUpdateWitException()
+    public function testUpdateWithException()
     {
         // $data without id
         $data = [
-            'id'         => 'an unexisting id',
-            'password'   => '123',
-            'name'       => 'Jhon',
-            'lastname'   => 'Doe',
-            'email'      => 'jhon@lmsuy.com',
-            'username'   => '12345',
-            'multiplier' => 0,
-            'active'     => 1,
-            'hours'      => 0,
-            'points'     => 0,
-            'sessions'   => 0,
-            'results'    => 0,
-            'cashin'     => 0
+            'id'                      =>'an unexisting id',
+            'password'                => '123',
+            'password_confirm'        => '123',
+            'name'                    => 'Jhon',
+            'lastname'                => 'Doe',
+            'email'                   => 'jhon@lmsuy.com',
+            'username'                => '12345',
+            'multiplier'              => 0,
+            'active'                  => 1,
+            'hours'                   => 0,
+            'points'                  => 0,
+            'sessions'                => 0,
+            'results'                 => 0,
+            'cashin'                  => 0,
+            'logged_user_username'    => '12345',
+            'avatar_file'             =>'file',
+            'avatar_visible_filename' => ''
         ];
-
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('flush')->willReturn(true);
 
-        $mockedRepository = $this->createMock(BaseRepository::class);
-        $mockedRepository->method('find')->will($this->throwException(
+        $mockedUserRepository = $this->createMock(UserRepository::class);
+        $mockedUserRepository->method('find')->will($this->throwException(
           new \Exception('Solcre\Pokerclub\Entity\UserEntity' . " Entity not found", 404))
         );
 
-        $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
+        $mockedEntityManager->method('getRepository')->willReturn($mockedUserRepository);
         $userService = new UserService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
