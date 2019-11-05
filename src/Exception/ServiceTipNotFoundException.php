@@ -9,6 +9,6 @@ class ServiceTipNotFoundException extends \Exception
 
     public function __construct()
     {
-        parent::__construct("Resource not found.");
+        parent::__construct("Resource not found.", 404);
     }
 }

@@ -9,6 +9,6 @@ class ClassNotExistingException extends \Exception
 
     public function __construct()
     {
-        parent::__construct("La clase no existe");
+        parent::__construct("La clase no existe", 404);
     }
 }

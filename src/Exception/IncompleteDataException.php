@@ -9,6 +9,6 @@ class IncompleteDataException extends \Exception
 
     public function __construct()
     {
-        parent::__construct("Incomplete data.");
+        parent::__construct("Incomplete data.", 400);
     }
 }

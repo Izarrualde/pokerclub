@@ -9,6 +9,6 @@ class UserInvalidException extends \Exception
 
     public function __construct()
     {
-        parent::__construct("Usuario no válido.");
+        parent::__construct("Usuario no válido.", 400);
     }
 }

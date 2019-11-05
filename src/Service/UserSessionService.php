@@ -9,6 +9,7 @@ use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
+use Solcre\Pokerclub\Exception\InsufficientAvailableSeatsException;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
@@ -31,7 +32,7 @@ class UserSessionService extends BaseService
     public function checkGenericInputData($data)
     {
         // does not include id
-        if (!isset($data['idSession'], $data['idUser'], $data['isApproved'], $data['points'])) {
+        if (!isset($data['idSession'], $data['isApproved'], $data['points'])) {
             throw new IncompleteDataException();
         }
     }
@@ -40,42 +41,57 @@ class UserSessionService extends BaseService
     {
         $this->checkGenericInputData($data);
 
-        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
-        $user    = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $data['idUser']);
-
-        if (in_array($data['idUser'], $session->getActivePlayers())) {
-            throw new UserSessionAlreadyAddedException();
+        if (!isset($data['users_id'])) {
+            throw new IncompleteDataException();
         }
-        /*
-        if (!$session->hasSeatAvailable()) {
+
+        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
+
+        $seatedPlayers = $session->getSeatedPlayers();
+
+        if ($session->getSeats() == count($seatedPlayers)) {
             throw new TableIsFullException();
         }
-        */
-        
-        $userSession   = new UserSessionEntity(null, $session);
 
-        // $userSession->setSession($session);
-        $userSession->setIdUser($data['idUser']);
-        $userSession->setIsApproved($data['isApproved']);
-        $userSession->setAccumulatedPoints((int)$data['points']);
-        $userSession->setUser($user);
+        if ($session->getSeats() - count($seatedPlayers)) < count($data['users_id']) {
+            throw new InsuficcientAvailableSeats();
+        }
 
-        $this->entityManager->persist($userSession);
-        $this->entityManager->flush($userSession);
+        if in_array($data['users_id'], $seatedPlayers) {
+                throw new UserSessionAlreadyAddedException();
+        }
 
-        return $userSession;
+        $usersSessionsAdded = [];
+
+        foreach ($data['users_id'] as $user_id) {
+            $user = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $user_id);
+            $userSession = new UserSessionEntity(null, $session);
+
+            $userSession->setIdUser($data['user_id']);
+            $userSession->setIsApproved($data['isApproved']);
+            $userSession->setAccumulatedPoints((int)$data['points']);
+            $userSession->setUser($user);
+
+            $usersSessionsAdded[] = $userSession;
+
+            $this->entityManager->persist($userSession);
+        }
+
+        $this->entityManager->flush();
+
+        return $usersSessionsAdded;
     }
 
     public function update($id, $data)
     {
         $this->checkGenericInputData($data);
 
-        if (!isset($data['id'])) {
+        if (!isset($id)) {
             throw new IncompleteDataException();
         }
 
         try {
-            $userSession = parent::fetch($data['id']);
+            $userSession = parent::fetch($id);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
                 throw new UserSessionNotFoundException();
