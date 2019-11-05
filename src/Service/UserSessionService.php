@@ -46,9 +46,13 @@ class UserSessionService extends BaseService
 
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
 
-        $user    = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $data['idUser']);
+        foreach ($data['users_id'] as $user_id) {
+            
+        }
+        
+        $user    = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $user_id);
 
-        if (in_array($data['idUser'], $session->getActivePlayers())) {
+        if (in_array($user_id, $session->getActivePlayers())) {
             throw new UserSessionAlreadyAddedException();
         }
         /*
