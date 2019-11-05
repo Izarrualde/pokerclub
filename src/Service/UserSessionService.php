@@ -61,6 +61,8 @@ class UserSessionService extends BaseService
                 throw new UserSessionAlreadyAddedException();
         }
 
+        $usersSessionsAdded = [];
+
         foreach ($data['users_id'] as $user_id) {
             $user = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $user_id);
             $userSession = new UserSessionEntity(null, $session);
@@ -70,12 +72,14 @@ class UserSessionService extends BaseService
             $userSession->setAccumulatedPoints((int)$data['points']);
             $userSession->setUser($user);
 
+            $usersSessionsAdded[] = $userSession;
+
             $this->entityManager->persist($userSession);
         }
-        
+
         $this->entityManager->flush();
 
-        return $userSession;
+        return $usersSessionsAdded;
     }
 
     public function update($id, $data)
