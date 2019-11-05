@@ -53,11 +53,11 @@ class UserSessionService extends BaseService
             throw new TableIsFullException();
         }
 
-        if ($session->getSeats() - count($seatedPlayers)) < count($data['users_id']) {
+        if (($session->getSeats() - count($seatedPlayers)) < (count($data['users_id']))) {
             throw new InsuficcientAvailableSeats();
         }
 
-        if in_array($data['users_id'], $seatedPlayers) {
+        if (in_array($data['users_id'], $seatedPlayers)) {
                 throw new UserSessionAlreadyAddedException();
         }
 
