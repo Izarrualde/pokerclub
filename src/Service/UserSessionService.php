@@ -31,7 +31,7 @@ class UserSessionService extends BaseService
     public function checkGenericInputData($data)
     {
         // does not include id
-        if (!isset($data['idSession'], $data['idUser'], $data['isApproved'], $data['points'])) {
+        if (!isset($data['idSession'], $data['isApproved'], $data['points'])) {
             throw new IncompleteDataException();
         }
     }
@@ -40,7 +40,12 @@ class UserSessionService extends BaseService
     {
         $this->checkGenericInputData($data);
 
+        if (!isset($data['users_id'])) {
+            throw new IncompleteDataException();
+        }
+
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
+
         $user    = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $data['idUser']);
 
         if (in_array($data['idUser'], $session->getActivePlayers())) {
@@ -70,12 +75,12 @@ class UserSessionService extends BaseService
     {
         $this->checkGenericInputData($data);
 
-        if (!isset($data['id'])) {
+        if (!isset($id)) {
             throw new IncompleteDataException();
         }
 
         try {
-            $userSession = parent::fetch($data['id']);
+            $userSession = parent::fetch($id);
         } catch (Exception $e) {
             if ($e->getCode() == self::STATUS_CODE_404) {
                 throw new UserSessionNotFoundException();
