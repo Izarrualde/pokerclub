@@ -9,6 +9,6 @@ class TableIsFullException extends \Exception
 
     public function __construct()
     {
-        parent::__construct("Mesa llena.");
+        parent::__construct("Mesa llena.", 400);
     }
 }

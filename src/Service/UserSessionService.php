@@ -9,6 +9,7 @@ use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
+use Solcre\Pokerclub\Exception\InsufficientAvailableSeatsException;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
@@ -46,31 +47,33 @@ class UserSessionService extends BaseService
 
         $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
 
-        foreach ($data['users_id'] as $user_id) {
-            
-        }
-        
-        $user    = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $user_id);
+        $seatedPlayers = $session->getSeatedPlayers();
 
-        if (in_array($user_id, $session->getActivePlayers())) {
-            throw new UserSessionAlreadyAddedException();
-        }
-        /*
-        if (!$session->hasSeatAvailable()) {
+        if ($session->getSeats() == count($seatedPlayers)) {
             throw new TableIsFullException();
         }
-        */
+
+        if ($session->getSeats() - count($seatedPlayers)) < count($data['users_id']) {
+            throw new InsuficcientAvailableSeats();
+        }
+
+        if in_array($data['users_id'], $seatedPlayers) {
+                throw new UserSessionAlreadyAddedException();
+        }
+
+        foreach ($data['users_id'] as $user_id) {
+            $user = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $user_id);
+            $userSession = new UserSessionEntity(null, $session);
+
+            $userSession->setIdUser($data['user_id']);
+            $userSession->setIsApproved($data['isApproved']);
+            $userSession->setAccumulatedPoints((int)$data['points']);
+            $userSession->setUser($user);
+
+            $this->entityManager->persist($userSession);
+        }
         
-        $userSession   = new UserSessionEntity(null, $session);
-
-        // $userSession->setSession($session);
-        $userSession->setIdUser($data['idUser']);
-        $userSession->setIsApproved($data['isApproved']);
-        $userSession->setAccumulatedPoints((int)$data['points']);
-        $userSession->setUser($user);
-
-        $this->entityManager->persist($userSession);
-        $this->entityManager->flush($userSession);
+        $this->entityManager->flush();
 
         return $userSession;
     }
