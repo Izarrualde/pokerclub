@@ -10,6 +10,7 @@ use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Exception\TableIsFullException;
 use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
 use Solcre\Pokerclub\Exception\InsufficientAvailableSeatsException;
+use Solcre\Pokerclub\Exception\UserNotFoundException;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
@@ -65,9 +66,14 @@ class UserSessionService extends BaseService
 
         foreach ($data['users_id'] as $user_id) {
             $user = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $user_id);
+
+            if (! $user instanceof UserEntity) {
+                throw new UserNotFoundException();
+            }
+
             $userSession = new UserSessionEntity(null, $session);
 
-            $userSession->setIdUser($data['user_id']);
+            $userSession->setIdUser($user_id);
             $userSession->setIsApproved($data['isApproved']);
             $userSession->setAccumulatedPoints((int)$data['points']);
             $userSession->setUser($user);
