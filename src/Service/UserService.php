@@ -100,9 +100,8 @@ class UserService extends BaseService
         }
 
         $loggedUser = $this->fetchBy(
-            [
-                'username' => $data['logged_user_username']
-            ]);
+            ['username' => $data['logged_user_username']
+        ]);
 
         if (!$loggedUser instanceof UserEntity || $loggedUser->getUsername() !== $user->getUsername()) {
             throw new Exception('Method not allowed for current user', 400);
@@ -186,7 +185,7 @@ class UserService extends BaseService
         return $password;
     }
 
-    private function hashPassword($password) 
+    private function hashPassword($password)
     {
         return Strings::bcryptPassword($password);
     }
@@ -214,8 +213,7 @@ class UserService extends BaseService
     {
         if ($user->getAvatarHashedFilename() !== null) {
             $fullPathOfAvatar = $this->getFullPathOfAvatar($user->getAvatarHashedFilename());
-            if (file_exists($fullPathOfAvatar))
-            {
+            if (file_exists($fullPathOfAvatar)) {
                 unlink($fullPathOfAvatar);
             }
         }
