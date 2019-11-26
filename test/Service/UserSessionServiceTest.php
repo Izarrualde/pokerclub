@@ -15,7 +15,7 @@ use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class UserSessionServiceTest extends TestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $data = [
           'idSession'  => 3,
@@ -110,7 +110,7 @@ class UserSessionServiceTest extends TestCase
  }
 */
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $data = [
             'id'              => 1,
@@ -177,7 +177,7 @@ class UserSessionServiceTest extends TestCase
         // y que se llame metodo flush con anythig
     }
 
-    public function testUpdateWithIncompleteDataException()
+    public function testUpdateWithIncompleteDataException(): void
     {
         // $data without id
         $data = [
@@ -202,7 +202,7 @@ class UserSessionServiceTest extends TestCase
         $userSessionService->update($fakeIdForTesting, $data);
     }
 
-    public function testUpdateWithUserSessionNotFoundException()
+    public function testUpdateWithUserSessionNotFoundException(): void
     {
         $data = [
             'id'              => 'an unexisting id',
@@ -233,7 +233,7 @@ class UserSessionServiceTest extends TestCase
         $userSessionService->update($data['id'], $data);
     }
 
-    public function testUpdateWithException()
+    public function testUpdateWithException(): void
     {
         $data = [
             'id'              => 'an unexisting id',
@@ -252,7 +252,7 @@ class UserSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new \Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404))
+          new \Exception('Solcre\Pokerclub\Entity\CommissionSessionEntity' . " Entity not found", 404))
         );
 
         $userService        = $this->createMock(UserService::class);
@@ -263,7 +263,7 @@ class UserSessionServiceTest extends TestCase
         $userSessionService->update($data['id'], $data);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $data = [
           'id' => 1
@@ -289,7 +289,7 @@ class UserSessionServiceTest extends TestCase
         $userSessionService->delete($data['id']);
     }
 
-    public function testDeleteWithUserSessionNotFoundException()
+    public function testDeleteWithUserSessionNotFoundException(): void
     {
         $data = [
             'id'           => 'an unexisting id',
@@ -319,7 +319,7 @@ class UserSessionServiceTest extends TestCase
         $userSessionService->delete($data);
     }
 
-    public function testDeleteWithException()
+    public function testDeleteWithException(): void
     {
         $data = [
             'id'           => 'an unexisting id',
@@ -349,7 +349,7 @@ class UserSessionServiceTest extends TestCase
         $userSessionService->delete($data);
     }
 
-    public function testCheckGenericInputDataWithIncompleteDataException()
+    public function testCheckGenericInputDataWithIncompleteDataException(): void
     {
         // $data without idSession
          $data = [
@@ -370,7 +370,7 @@ class UserSessionServiceTest extends TestCase
         $userSessionService->checkGenericInputData($data);
     }
 
-    public function testClose()
+    public function testClose(): void
     {
         $data = [
             'id'              => 1,

@@ -21,6 +21,7 @@ class UserRepository extends BaseRepository
                 ->setParameter('email', $data['email'])
                 ->setParameter('id', $id);
         $user = $qb->getQuery()->getOneOrNullResult();
+
         return $user instanceof UserEntity;
     }
 }

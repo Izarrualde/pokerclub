@@ -98,7 +98,7 @@ class AwardEntity
     /**
      * @param mixed $class
      */
-    public function setClass($class)
+    public function setClass($class): void
     {
         $this->class = $class;
     }

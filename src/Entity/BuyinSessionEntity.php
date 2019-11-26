@@ -17,6 +17,7 @@ class BuyinSessionEntity
      */
     protected $id;
 
+
     /**
      * @ORM\Column(type="integer", name="amount_of_cash_money")
      */
@@ -78,13 +79,13 @@ class BuyinSessionEntity
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): self
     {
         $this->id = $id;
         return $this;
     }
 
-    public function getIdSession()
+    public function getIdSession(): ?int
     {
         $userSession = $this->getUserSession();
 
@@ -99,7 +100,7 @@ class BuyinSessionEntity
         null;
     }
 
-    public function getSessionUserId()
+    public function getSessionUserId(): ?int
     {
         $userSession = $this->getUserSession();
 
@@ -113,7 +114,7 @@ class BuyinSessionEntity
         return $this->amountCash;
     }
 
-    public function setAmountCash($amountCash)
+    public function setAmountCash($amountCash): self
     {
         $this->amountCash = $amountCash;
         return $this;
@@ -124,7 +125,7 @@ class BuyinSessionEntity
         return $this->amountCredit;
     }
 
-    public function setAmountCredit($amountCredit)
+    public function setAmountCredit($amountCredit): self
     {
         $this->amountCredit = $amountCredit;
         return $this;
@@ -135,7 +136,7 @@ class BuyinSessionEntity
         return $this->currency;
     }
 
-    public function setCurrency($currency)
+    public function setCurrency($currency): self
     {
         $this->currency = $currency;
         return $this;
@@ -146,7 +147,7 @@ class BuyinSessionEntity
         return $this->hour;
     }
 
-    public function setHour($hour)
+    public function setHour($hour): self
     {
         $this->hour = $hour;
         return $this;
@@ -157,29 +158,29 @@ class BuyinSessionEntity
         return $this->isApproved;
     }
 
-    public function setIsApproved($isApproved)
+    public function setIsApproved($isApproved): self
     {
         $this->isApproved = $isApproved;
         return $this;
     }
 
-    public function getSession()
+    public function getSession(): SessionEntity
     {
         return $this->getUserSession()->getSession();
     }
 
-    public function getUserSession()
+    public function getUserSession(): UserSessionEntity
     {
         return $this->userSession;
     }
 
-    public function setUserSession(UserSessionEntity $userSession = null)
+    public function setUserSession(UserSessionEntity $userSession = null): self
     {
         $this->userSession = $userSession;
         return $this;
     }
     // @codeCoverageIgnoreEnd
-    public function toArray()
+    public function toArray(): array
     {
         $ret = [
         'id'           => $this->getId(),

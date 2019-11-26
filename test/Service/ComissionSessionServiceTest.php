@@ -1,46 +1,46 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Solcre\Pokerclub\Entity\ComissionSessionEntity;
+use Solcre\Pokerclub\Entity\CommissionSessionEntity;
 use Solcre\Pokerclub\Entity\SessionEntity;
-use Solcre\Pokerclub\Service\ComissionSessionService;
+use Solcre\Pokerclub\Service\CommissionSessionService;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\ComissionInvalidException;
-use Solcre\Pokerclub\Exception\ComissionNotFoundException;
+use Solcre\Pokerclub\Exception\CommissionInvalidException;
+use Solcre\Pokerclub\Exception\CommissionNotFoundException;
 use Solcre\Pokerclub\Exception\IncompleteDataException;
 use Solcre\Pokerclub\Service\BaseService;
 use Solcre\SolcreFramework2\Common\BaseRepository;
 
-class ComissionSessionServiceTest extends TestCase
+class CommissionSessionServiceTest extends TestCase
 {
     public function testAdd()
     {
         $data = [
-          'id'        => 1, 
-          'hour'      => '2019-07-04T19:00', 
-          'comission' => 100,
-          'idSession' => 3
+            'id'         => 1,
+            'hour'       => '2019-07-04T19:00',
+            'commission' => 100,
+            'idSession'  => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('persist')->willReturn(true);
         $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3));
 
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
-        $expectedComission    = new ComissionSessionEntity();
-        $expectedComission->setHour(new \DateTime($data['hour']));
-        $expectedComission->setComission($data['comission']);
+        $expectedCommission    = new CommissionSessionEntity();
+        $expectedCommission->setHour(new \DateTime($data['hour']));
+        $expectedCommission->setCommission($data['commission']);
         $session = new SessionEntity(3);
-        $expectedComission->setSession($session);
+        $expectedCommission->setSession($session);
 
         $mockedEntityManager->expects($this->once())
         ->method('persist')
         ->with(
-           $this->equalTo($expectedComission)
+           $this->equalTo($expectedCommission)
         )/*->willReturn('anything')*/;
 
-        $comissionSessionService->add($data);
+        $commissionSessionService->add($data);
         // y que se llame metodo flush con anythig
 
     }
@@ -50,7 +50,7 @@ class ComissionSessionServiceTest extends TestCase
         $data = [
           'id'        => 1, 
           'hour'      => '2019-07-04T19:00', 
-          'comission' => 100,
+          'commission' => 100,
           'idSession' => 3
         ];
 
@@ -59,7 +59,7 @@ class ComissionSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->willReturn(
-            new ComissionSessionEntity(
+            new CommissionSessionEntity(
               1,
               new \DateTime('2019-07-04T12:00'),
               80,
@@ -68,50 +68,50 @@ class ComissionSessionServiceTest extends TestCase
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
-        $expectedComission    = new ComissionSessionEntity();
-        $expectedComission->setId(1);
-        $expectedComission->setHour(new \DateTime($data['hour']));
-        $expectedComission->setComission($data['comission']);
+        $expectedCommmission    = new CommissionSessionEntity();
+        $expectedCommission->setId(1);
+        $expectedCommission->setHour(new \DateTime($data['hour']));
+        $expectedCommission->setCommission($data['commission']);
         $session = new SessionEntity(3);
-        $expectedComission->setSession($session);
+        $expectedCommission->setSession($session);
 
         $mockedEntityManager->expects($this->once())
         ->method('flush')
         ->with(
-           $this->equalTo($expectedComission)
+           $this->equalTo($expectedCommission)
         );
 
-        $comissionSessionService->update($data['id'], $data);
+        $commissionSessionService->update($data['id'], $data);
         // y que se llame metodo flush con anythig
     }
 
-    public function testUpdateWithIncompleteDataException()
+    public function testUpdateWithIncompleteDataException(): void
     {
         // $data without id
         $data = [
           'hour'      => '2019-07-04T19:00', 
-          'comission' => 100,
+          'commission' => 100,
           'idSession' => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
 
         $fakeIdForTesting = 1111;
-        $comissionSessionService->update($fakeIdForTesting, $data);
+        $commissionSessionService->update($fakeIdForTesting, $data);
     }
 
-    public function testUpdateWithComissionNotFoundException()
+    public function testUpdateWithCommissionNotFoundException()
     {
         $data = [
             'id'        => 'an unexisting id',
             'hour'      => '2019-07-04T19:00', 
-            'comission' => 100,
+            'commission' => 100,
             'idSession' => 3
         ];
 
@@ -120,14 +120,14 @@ class ComissionSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new ComissionNotFoundException())
+          new CommissionNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
-        $this->expectException(ComissionNotFoundException::class);
-        $comissionSessionService->update($data['id'], $data);
+        $this->expectException(CommissionNotFoundException::class);
+        $commissionSessionService->update($data['id'], $data);
     }
 
     public function testUpdateWithException()
@@ -135,7 +135,7 @@ class ComissionSessionServiceTest extends TestCase
         $data = [
             'id'        => 'an unexisting id',
             'hour'      => '2019-07-04T19:00', 
-            'comission' => 100,
+            'commission' => 100,
             'idSession' => 3
         ];
 
@@ -144,14 +144,14 @@ class ComissionSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new \Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404))
+          new \Exception('Solcre\Pokerclub\Entity\CommissionSessionEntity' . " Entity not found", 404))
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
-        $comissionSessionService->update($data['id'], $data);
+        $commissionSessionService->update($data['id'], $data);
     }
 
     public function testDelete()
@@ -163,29 +163,29 @@ class ComissionSessionServiceTest extends TestCase
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('remove')->willReturn(true);
         $mockedRepository = $this->createMock(BaseRepository::class);
-        $mockedRepository->method('find')->willReturn(new ComissionSessionEntity(1));
+        $mockedRepository->method('find')->willReturn(new CommissionSessionEntity(1));
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
-        $expectedComission = new ComissionSessionEntity($data['id']);
+        $expectedCommission = new CommissionSessionEntity($data['id']);
 
         $mockedEntityManager->expects($this->once())
         ->method('remove')
         ->with(
-            $this->equalTo($expectedComission)
+            $this->equalTo($expectedCommission)
         )/*->willReturn('anything')*/;
 
-        $comissionSessionService->delete($data['id']);
+        $commissionSessionService->delete($data['id']);
     }
 
-    public function testDeleteWithComissionNotFoundException()
+    public function testDeleteWithCommissionNotFoundException(): void
     {
         $data = [
-            'id'        => 'an unexisting id',
-            'hour'      => '2019-07-04T19:00', 
-            'comission' => 100,
-            'idSession' => 3
+            'id'         => 'an unexisting id',
+            'hour'       => '2019-07-04T19:00',
+            'commission' => 100,
+            'idSession'  => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -193,24 +193,24 @@ class ComissionSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new ComissionNotFoundException())
+          new CommissionNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
-        $this->expectException(ComissionNotFoundException::class);
-        $comissionSessionService->delete($data);
+        $this->expectException(CommissionNotFoundException::class);
+        $commissionSessionService->delete($data);
     }
 
-    public function testDeleteWithException()
+    public function testDeleteWithException(): void
     {
         // $data without id
         $data = [
-            'id'        => 'an unexisting id',
-            'hour'      => '2019-07-04T19:00', 
-            'comission' => 100,
-            'idSession' => 3
+            'id'         => 'an unexisting id',
+            'hour'       => '2019-07-04T19:00',
+            'commission' => 100,
+            'idSession'  => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -218,14 +218,14 @@ class ComissionSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new \Exception('Solcre\Pokerclub\Entity\ComissionSessionEntity' . " Entity not found", 404))
+          new \Exception('Solcre\Pokerclub\Entity\CommissionSessionEntity' . " Entity not found", 404))
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
-        $comissionSessionService->delete($data);
+        $commissionSessionService->delete($data);
     }
 
     public function testCheckGenericInputDataWithIncompleteDataException()
@@ -233,45 +233,45 @@ class ComissionSessionServiceTest extends TestCase
         // $data without idSession
         $data = [
           'hour'      => '2019-07-04T19:00', 
-          'comission' => 100,
+          'commission' => 100,
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
         $this->expectException(IncompleteDataException::class);
-        $comissionSessionService->checkGenericInputData($data);
+        $commissionSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithComissionNonNumeric()
+    public function testCheckGenericInputDataWithCommissionNonNumeric(): void
     {
-        // $data with non numeric comission
+        // $data with non numeric commission
         $data = [
           'hour'      => '2019-07-04T19:00', 
-          'comission' => 'a non numeric value',
+          'commission' => 'a non numeric value',
           'idSession' => 1
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
-        $this->expectException(ComissionInvalidException::class);
-        $comissionSessionService->checkGenericInputData($data);
+        $this->expectException(CommissionInvalidException::class);
+        $commissionSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithComissionNegativeValue()
+    public function testCheckGenericInputDataWithCommissionNegativeValue(): void
     {
-        // $data with negative comission
+        // $data with negative commission
         $data = [
           'hour'      => '2019-07-04T19:00', 
-          'comission' => -50,
+          'commission' => -50,
           'idSession' => 1
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
-        $comissionSessionService = new ComissionSessionService($mockedEntityManager, []);
+        $commissionSessionService = new CommissionSessionService($mockedEntityManager, []);
 
-        $this->expectException(ComissionInvalidException::class);
-        $comissionSessionService->checkGenericInputData($data);
+        $this->expectException(CommissionInvalidException::class);
+        $commissionSessionService->checkGenericInputData($data);
     }
 }

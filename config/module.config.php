@@ -6,8 +6,8 @@ use Solcre\Pokerclub\Service\UserService;
 use Solcre\Pokerclub\Service\Factory\UserServiceFactory;
 use Solcre\Pokerclub\Service\BuyinSessionService;
 use Solcre\Pokerclub\Service\Factory\BuyinSessionServiceFactory;
-use Solcre\Pokerclub\Service\ComissionSessionService;
-use Solcre\Pokerclub\Service\Factory\ComissionSessionServiceFactory;
+use Solcre\Pokerclub\Service\CommissionSessionService;
+use Solcre\Pokerclub\Service\Factory\CommissionSessionServiceFactory;
 use Solcre\Pokerclub\Service\DealerTipSessionService;
 use Solcre\Pokerclub\Service\Factory\DealerTipSessionServiceFactory;
 use Solcre\Pokerclub\Service\ServiceTipSessionService;
@@ -18,20 +18,22 @@ use Solcre\Pokerclub\Service\SessionService;
 use Solcre\Pokerclub\Service\Factory\SessionServiceFactory;
 use Solcre\Pokerclub\Service\UserSessionService;
 use Solcre\Pokerclub\Service\Factory\UserSessionServiceFactory;
+use Solcre\Pokerclub\Service\UserGroupService;
+use Solcre\Pokerclub\Service\Factory\UserGroupServiceFactory;
 
 return [
     'service_manager' => [
         'factories' => [
             UserService::class              => UserServiceFactory::class,
             BuyinSessionService::class      => BuyinSessionServiceFactory::class,
-            ComissionSessionService::class  => ComissionSessionServiceFactory::class,
+            CommissionSessionService::class => CommissionSessionServiceFactory::class,
             DealerTipSessionService::class  => DealerTipSessionServiceFactory::class,
             ServiceTipSessionService::class => ServiceTipSessionServiceFactory::class,
             ExpensesSessionService::class   => ExpensesSessionServiceFactory::class,
             SessionService::class           => SessionServiceFactory::class,
             UserSessionService::class       => UserSessionServiceFactory::class,
             AwardService::class             => AwardServiceFactory::class,
-            UserGroupService::class         => UserGRoupServiceFactory::class
+            UserGroupService::class         => UserGroupServiceFactory::class
         ]
     ],
     'doctrine'        => [

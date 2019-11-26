@@ -14,6 +14,7 @@ class UserServiceFactory implements FactoryInterface
     {
         $entityManager = $container->get(EntityManager::class);
         $config        = $container->get('config');
+
         return new UserService($entityManager, $config);
     }
 }

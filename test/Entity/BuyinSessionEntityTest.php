@@ -8,7 +8,7 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 
 class BuyinSessionEntityTest extends TestCase
 {
-  public function testCreateWithParams()
+  public function testCreateWithParams(): void
   {    
     $id = 5;
     $amountCash = 500;
@@ -37,7 +37,7 @@ class BuyinSessionEntityTest extends TestCase
     $this->assertSame($userSession, $buyin->getUserSession());
   }
 
-  public function testToArray()
+  public function testToArray(): void
   {
 
     $session = new SessionEntity();

@@ -7,21 +7,21 @@ use Solcre\Pokerclub\Entity\UserEntity;
 class UserEntityTest extends TestCase
 {
 
-  public function testCreateWithParams()
+  public function testCreateWithParams(): void
   {
-    $id = 1;
-    $password = '1234';
-    $email = 'user@lmsuy.com';
-    $lastname = 'Rod';
-    $name = 'Diego';
-    $username = '1234';
-    $multiplier = 1;
-    $isActive = 0;
-    $hours = 0;
-    $points = 0;
-    $sessions = 0;
-    $results = 0;
-    $cashin = 0;
+      $id         = 1;
+      $password   = '1234';
+      $email      = 'user@lmsuy.com';
+      $lastname   = 'Rod';
+      $name       = 'Diego';
+      $username   = '1234';
+      $multiplier = 1;
+      $isActive   = 0;
+      $hours      = 0;
+      $points     = 0;
+      $sessions   = 0;
+      $results    = 0;
+      $cashin     = 0;
 
     $user = new UserEntity(
       $id,
@@ -54,7 +54,7 @@ class UserEntityTest extends TestCase
     $this->assertEquals($cashin, $user->getCashin());
   }
 
-  public function testToArray()
+  public function testToArray(): void
   {
     $user = new UserEntity();
     $user->setId(1);

@@ -15,9 +15,9 @@ use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class SessionServiceTest extends TestCase
 {
-  const SESSION_POINTS_10 = 10;
+  public const SESSION_POINTS_10 = 10;
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $data = [
           'date'                         => '2019-07-04',
@@ -49,10 +49,9 @@ class SessionServiceTest extends TestCase
         )/*->willReturn('anything')*/;
 
         $sessionService->add($data);
-        // y que se llame metodo flush con anythig
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $data = [
             'id'                           => 1, 
@@ -109,10 +108,9 @@ class SessionServiceTest extends TestCase
         )/*->willReturn('anything')*/;
 
         $sessionService->update($data['id'], $data);
-        // y que se llame metodo flush con anythig
     }
 
-    public function testUpdateWithIncompleteDataException()
+    public function testUpdateWithIncompleteDataException(): void
     {
         // $data without id
         $data = [
@@ -137,7 +135,7 @@ class SessionServiceTest extends TestCase
         $sessionService->update($fakeIdForTesting, $data);
     }
 
-    public function testUpdateWithSessionNotFoundException()
+    public function testUpdateWithSessionNotFoundException(): void
     {
         $data = [
             'id'                           => 'an unexisting id',
@@ -167,7 +165,7 @@ class SessionServiceTest extends TestCase
         $sessionService->update($data['id'], $data);
     }
 
-    public function testUpdateWithException()
+    public function testUpdateWithException(): void
     {
         $data = [
             'id'                           => 'an unexisting id',
@@ -197,7 +195,7 @@ class SessionServiceTest extends TestCase
         $sessionService->update($data['id'], $data);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $data = [
           'id'        => 1
@@ -222,7 +220,7 @@ class SessionServiceTest extends TestCase
         $sessionService->delete($data['id']);
     }
 
-    public function testDeleteWithSessionNotFoundException()
+    public function testDeleteWithSessionNotFoundException(): void
     {
         $data = [
           'id' => 'an unexisting id'
@@ -242,7 +240,7 @@ class SessionServiceTest extends TestCase
         $sessionService->delete($data['id']);
     }
 
-    public function testDeleteWithException()
+    public function testDeleteWithException(): void
     {
         $data = [
           'id' => 'an unexisting id'
@@ -262,7 +260,7 @@ class SessionServiceTest extends TestCase
         $sessionService->delete($data['id']);
     }
 
-    public function testCheckGenericInputDataWithIncompleteDataException()
+    public function testCheckGenericInputDataWithIncompleteDataException(): void
     {
         // $data without rakebackClass
         $data = [
@@ -299,7 +297,7 @@ class SessionServiceTest extends TestCase
     }
 */
 
-    public function testCalculateRakeback()
+    public function testCalculateRakeback(): void
     {
 
         $data = [

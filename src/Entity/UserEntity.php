@@ -102,6 +102,7 @@ class UserEntity
      */
     protected $avatarVisibleFilename;
 
+
     /**
      * @ORM\ManyToMany(targetEntity="Solcre\Pokerclub\Entity\AwardEntity", indexBy="id")
      * @ORM\JoinTable(name="users_awards",
@@ -124,6 +125,19 @@ class UserEntity
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @param null $id
+     * @param null $password
+     * @param null $email
+     * @param null $lastname
+     * @param null $name
+     * @param null $username
+     * @param int $multiplier
+     * @param int $isActive
+     * @param int $hours
+     * @param int $points
+     * @param int $sessions
+     * @param int $results
+     * @param int $cashin
      */
     public function __construct(
         $id = null,
@@ -162,7 +176,7 @@ class UserEntity
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): self
     {
         $this->id = $id;
         return $this;
@@ -173,7 +187,7 @@ class UserEntity
         return $this->password;
     }
 
-    public function setPassword($password)
+    public function setPassword($password): self
     {
         $this->password = $password;
         return $this;
@@ -184,8 +198,7 @@ class UserEntity
         return $this->email;
     }
 
-
-    public function setEmail($email)
+    public function setEmail($email): self
     {
         $this->email = $email;
         return $this;
@@ -196,7 +209,7 @@ class UserEntity
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName($name): self
     {
         $this->name = $name;
         return $this;
@@ -207,7 +220,7 @@ class UserEntity
         return $this->lastname;
     }
 
-    public function setLastname($lastname)
+    public function setLastname($lastname): self
     {
         $this->lastname = $lastname;
         return $this;
@@ -218,7 +231,7 @@ class UserEntity
         return $this->username;
     }
 
-    public function setUsername($username)
+    public function setUsername($username): self
     {
         $this->username = $username;
         return $this;
@@ -229,7 +242,7 @@ class UserEntity
         return $this->multiplier;
     }
 
-    public function setMultiplier($multiplier)
+    public function setMultiplier($multiplier): self
     {
         $this->multiplier = $multiplier;
         return $this;
@@ -240,7 +253,7 @@ class UserEntity
         return $this->isActive;
     }
 
-    public function setIsActive($isActive)
+    public function setIsActive($isActive): self
     {
         $this->isActive = $isActive;
         return $this;
@@ -251,7 +264,7 @@ class UserEntity
         return $this->hours;
     }
 
-    public function setHours($hours)
+    public function setHours($hours): self
     {
         $this->hours = $hours;
         return $this;
@@ -262,7 +275,7 @@ class UserEntity
         return $this->points;
     }
 
-    public function setPoints($points)
+    public function setPoints($points): self
     {
         $this->points = $points;
         return $this;
@@ -273,7 +286,7 @@ class UserEntity
         return $this->sessions;
     }
 
-    public function setSessions($sessions)
+    public function setSessions($sessions): self
     {
         $this->sessions = $sessions;
         return $this;
@@ -284,7 +297,7 @@ class UserEntity
         return $this->results;
     }
 
-    public function setResults($results)
+    public function setResults($results): self
     {
         $this->results = $results;
         return $this;
@@ -296,13 +309,13 @@ class UserEntity
         return $this->cashin;
     }
 
-    public function setCashin($cashin)
+    public function setCashin($cashin): self
     {
         $this->cashin = $cashin;
         return $this;
     }
 
-    public function addGroups($groups)
+    public function addGroups($groups): void
     {
         foreach ($groups as $group) {
             if (!$this->groups->contains($group)) {
@@ -311,15 +324,16 @@ class UserEntity
         }
     }
 
-    public function removeGroups()
+    public function removeGroups(): void
     {
         $groups = $this->getGroups();
+
         foreach ($groups as $group) {
             $this->groups->removeElement($group);
         }
     }
 
-    public function setGroups($groups)
+    public function setGroups($groups): void
     {
         foreach ($this->groups as $id => $group) {
             if (!isset($groups[$id])) {
@@ -340,7 +354,7 @@ class UserEntity
     /**
      * @return ArrayCollection
      */
-    public function getGroups()
+    public function getGroups(): ArrayCollection
     {
         return $this->groups;
     }
@@ -356,7 +370,7 @@ class UserEntity
     /**
      * @param mixed $avatarHashedFilename
      */
-    public function setAvatarHashedFilename($avatarHashedFilename)
+    public function setAvatarHashedFilename($avatarHashedFilename): void
     {
         $this->avatarHashedFilename = $avatarHashedFilename;
     }
@@ -372,7 +386,7 @@ class UserEntity
     /**
      * @param mixed $avatarVisibleFilename
      */
-    public function setAvatarVisibleFilename($avatarVisibleFilename)
+    public function setAvatarVisibleFilename($avatarVisibleFilename): void
     {
         $this->avatarVisibleFilename = $avatarVisibleFilename;
     }
@@ -388,13 +402,13 @@ class UserEntity
     /**
      * @param mixed $awards
      */
-    public function setAwards($awards)
+    public function setAwards($awards): void
     {
         $this->awards = $awards;
     }
     
     // @codeCoverageIgnoreEnd
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id'         => $this->getId(),

@@ -55,18 +55,18 @@ class ExpensesSessionEntity
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): self
     {
         $this->id = $id;
         return $this;
     }
 
-    public function getSession()
+    public function getSession(): SessionEntity
     {
         return $this->session;
     }
 
-    public function setSession($session)
+    public function setSession($session): self
     {
         $this->session = $session;
         return $this;
@@ -77,7 +77,7 @@ class ExpensesSessionEntity
         return $this->description;
     }
 
-    public function setDescription($description)
+    public function setDescription($description): self
     {
         $this->description = $description;
         return $this;
@@ -88,14 +88,14 @@ class ExpensesSessionEntity
         return $this->amount;
     }
 
-    public function setAmount($amount)
+    public function setAmount($amount): self
     {
         $this->amount = $amount;
         return $this;
     }
     
     // @codeCoverageIgnoreEnd
-    public function toArray()
+    public function toArray(): array
     {
         return  [
         'id'          => $this->getId(),

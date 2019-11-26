@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Embeddable
  * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository")
- * @ORM\Table(name="session_comissions")
+ * @ORM\Table(name="session_commissions")
  */
-class ComissionSessionEntity
+class CommissionSessionEntity
 {
 
     /**
@@ -20,7 +20,7 @@ class ComissionSessionEntity
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\SessionEntity", inversedBy="sessionComissions")
+     * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\SessionEntity", inversedBy="sessionCommissions")
      * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
      */
     protected $session;
@@ -34,31 +34,31 @@ class ComissionSessionEntity
     /**
      * @ORM\Column(type="integer")
      */
-    protected $comission;
+    protected $commission;
 
 
     public function __construct(
         $id = null,
         $hour = null,
-        $comission = null,
+        $commission = null,
         $session = null
     ) {
         $this->setId($id);
         $this->setSession($session);
         $this->setHour($hour);
-        $this->setComission($comission);
+        $this->setCommission($commission);
     }
  
     // @codeCoverageIgnoreStart
-
     public function getId()
     {
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -72,14 +72,15 @@ class ComissionSessionEntity
         null;
     }
 
-    public function getSession()
+    public function getSession(): SessionEntity
     {
         return $this->session;
     }
 
-    public function setSession($session)
+    public function setSession($session): self
     {
         $this->session = $session;
+
         return $this;
     }
 
@@ -88,31 +89,33 @@ class ComissionSessionEntity
         return $this->hour;
     }
 
-    public function setHour($hour)
+    public function setHour($hour): self
     {
         $this->hour = $hour;
+
         return $this;
     }
 
-    public function getComission()
+    public function getCommission()
     {
-        return $this->comission;
+        return $this->commission;
     }
 
-    public function setComission($comission)
+    public function setCommission($commission): self
     {
-        $this->comission = $comission;
+        $this->commission = $commission;
+
         return $this;
     }
 
     // @codeCoverageIgnoreEnd
-    public function toArray()
+    public function toArray(): array
     {
         return  [
         'id'        => $this->getId(),
         'idSession' => $this->getSession()->getId(),
         'hour'      => $this->getHour(),
-        'comission' => $this->getComission()
+        'commission' => $this->getCommission()
         ];
     }
 }

@@ -15,8 +15,8 @@ use Exception;
 class UserService extends BaseService
 {
     
-    const STATUS_CODE_404 = 404;
-    const AVATAR_FILE_KEY = 'avatar_file';
+    public const STATUS_CODE_404 = 404;
+    public const AVATAR_FILE_KEY = 'avatar_file';
 
     private $config;
 
@@ -27,7 +27,7 @@ class UserService extends BaseService
     }
 
 
-    public function checkGenericInputData($data)
+    public function checkGenericInputData($data): void
     {
         // does not include id
         if (!isset(
@@ -100,8 +100,10 @@ class UserService extends BaseService
         }
 
         $loggedUser = $this->fetchBy(
-            ['username' => $data['logged_user_username']
-        ]);
+            [
+                'username' => $data['logged_user_username']
+            ]
+        );
 
         if (!$loggedUser instanceof UserEntity || $loggedUser->getUsername() !== $user->getUsername()) {
             throw new Exception('Method not allowed for current user', 400);
@@ -112,7 +114,7 @@ class UserService extends BaseService
             throw new Exception('User already exists', 400);
         }
 
-        if (!Validators::valid_email($data['email'])) {
+        if (! Validators::valid_email($data['email'])) {
             throw new Exception('Invalid email', 400);
         }
 
@@ -157,14 +159,14 @@ class UserService extends BaseService
     public function delete($id, $entityObj = null): bool
     {
         try {
-            $user = parent::fetch($id);
+            $user = $this->fetch($id);
 
             $this->entityManager->remove($user);
             $this->entityManager->flush();
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
+            if ($e->getCode() === self::STATUS_CODE_404) {
                 throw new UserNotFoundException();
             }
             throw $e;
@@ -185,10 +187,12 @@ class UserService extends BaseService
         return $password;
     }
 
+    /*
     private function hashPassword($password)
     {
         return Strings::bcryptPassword($password);
     }
+    */
 
     /*
     private function uploadAvatarToServer(array $data, $isUploaded = false)
@@ -208,7 +212,7 @@ class UserService extends BaseService
         return $file;
     }
     */
-
+    /*
     private function deleteAvatarFromServer(UserEntity $user)
     {
         if ($user->getAvatarHashedFilename() !== null) {
@@ -218,7 +222,7 @@ class UserService extends BaseService
             }
         }
     }
-
+    */
     public function getFullPathOfAvatar($avatar): string
     {
         return $this->getPathOfAvatars() . $avatar;

@@ -39,7 +39,7 @@ class ServiceTipSessionEntity
 
     public function __construct(
         $id = null,
-        $hour = "",
+        $hour = '',
         $tip = null,
         $session = null
     ) {
@@ -55,7 +55,7 @@ class ServiceTipSessionEntity
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): self
     {
         $this->id = $id;
         return $this;
@@ -67,12 +67,12 @@ class ServiceTipSessionEntity
     }
 
 
-    public function getSession()
+    public function getSession(): SessionEntity
     {
         return $this->session;
     }
 
-    public function setSession($session)
+    public function setSession($session): self
     {
         $this->session = $session;
         return $this;
@@ -83,7 +83,7 @@ class ServiceTipSessionEntity
         return $this->hour;
     }
 
-    public function setHour($hour)
+    public function setHour($hour): self
     {
         $this->hour = $hour;
         return $this;
@@ -94,14 +94,14 @@ class ServiceTipSessionEntity
         return $this->serviceTip;
     }
 
-    public function setServiceTip($tip)
+    public function setServiceTip($tip): self
     {
         $this->serviceTip = $tip;
         return $this;
     }
     
     // @codeCoverageIgnoreEnd
-    public function toArray()
+    public function toArray(): array
     {
         return  [
         'id'         => $this->getId(),
