@@ -55,7 +55,7 @@ class UserSessionService extends BaseService
         }
 
         if (($session->getSeats() - count($seatedPlayers)) < (count($data['users_id']))) {
-            throw new InsuficcientAvailableSeats();
+            throw new InsufficientAvailableSeatsException();
         }
 
         if (in_array($data['users_id'], $seatedPlayers)) {

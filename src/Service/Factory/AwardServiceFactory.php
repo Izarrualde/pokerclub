@@ -3,8 +3,8 @@ namespace Solcre\Pokerclub\Service\Factory;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Solcre\Lms\Service\AwardService;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use Solcre\Pokerclub\Service\AwardService;
 
 class AwardServiceFactory implements FactoryInterface
 {

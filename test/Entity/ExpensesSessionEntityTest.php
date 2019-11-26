@@ -8,10 +8,10 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 class ExpensesSessionEntityTest extends TestCase
 {
 
-  public function testCreateWithParams()
+  public function testCreateWithParams(): void
   {
     $id = 1;
-    $description = 'comida';
+    $description = 'dinner';
     $amount = 25;
     $session = new SessionEntity();
 
@@ -28,7 +28,7 @@ class ExpensesSessionEntityTest extends TestCase
     $this->assertEquals($amount, $expenditure->getAmount());
   }
 
-  public function testToArray()
+  public function testToArray(): void
   {
 
     $session = new SessionEntity();
@@ -37,14 +37,14 @@ class ExpensesSessionEntityTest extends TestCase
     $expenditure = new ExpensesSessionEntity();
     $expenditure->setId(1);
     $expenditure->setSession($session);
-    $expenditure->setDescription('comida');
+    $expenditure->setDescription('dinner');
     $expenditure->setAmount(100);
 
 
     $expectedArray = [
       'id'          => 1,
       'idSession'   => 2,
-      'description' => 'comida',
+      'description' => 'dinner',
       'amount'      => 100
     ];  
 

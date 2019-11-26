@@ -17,6 +17,7 @@ class DealerTipSessionServiceFactory implements FactoryInterface
     ): DealerTipSessionService {
         $entityManager = $container->get(EntityManager::class);
         $config        = $container->get('config');
+
         return new DealerTipSessionService($entityManager, $config);
     }
 }

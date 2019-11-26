@@ -8,7 +8,7 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 class ServiceTipSessionEntityTest extends TestCase
 {
 
-  public function testCreateWithParams()
+  public function testCreateWithParams(): void
   {
     $id = 1;
     $hour = date_create('2019-06-26 19:00:00');
@@ -28,7 +28,7 @@ class ServiceTipSessionEntityTest extends TestCase
     $this->assertSame($session, $serviceTip->getSession());
   }
 
-  public function testToArray()
+  public function testToArray(): void
   {
 
     $session = new SessionEntity();
@@ -50,4 +50,4 @@ class ServiceTipSessionEntityTest extends TestCase
 
     $this->assertEquals($expectedArray, $serviceTip->toArray());
   }
-} 
+}

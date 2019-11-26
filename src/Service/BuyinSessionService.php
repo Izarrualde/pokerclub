@@ -13,8 +13,8 @@ use Exception;
 class BuyinSessionService extends BaseService
 {
 
-    const STATUS_CODE_404 = 404;
-    const AVATAR_FILE_KEY = 'avatar_file';
+    public const STATUS_CODE_404 = 404;
+    public const AVATAR_FILE_KEY = 'avatar_file';
 
     private $config;
     protected $userSessionService;
@@ -34,7 +34,7 @@ class BuyinSessionService extends BaseService
         return $this->repository->fetchAll($sessionId);
     }
 
-    public function checkGenericInputData($data)
+    public function checkGenericInputData($data): void
     {
         // does not include id
 
@@ -72,7 +72,7 @@ class BuyinSessionService extends BaseService
         try {
             $userSession = $this->userSessionService->fetch($data['idUserSession']);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
+            if ($e->getCode() === self::STATUS_CODE_404) {
                 throw new UserSessionNotFoundException();
             }
             throw $e;

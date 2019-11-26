@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class UserSessionEntity
 {
-    const PERCENTAGE_100 = 100;
+    public const PERCENTAGE_100 = 100;
 
     /**
      * @ORM\Id
@@ -67,7 +67,6 @@ class UserSessionEntity
     protected $minimumMinutes;
 
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Solcre\Pokerclub\Entity\UserEntity", inversedBy="sessionUsers")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -114,20 +113,21 @@ class UserSessionEntity
         return $this->id;
     }
     
-    public function setId($id)
+    public function setId($id): self
     {
         $this->id = $id;
         return $this;
     }
     
-    public function getSession()
+    public function getSession(): SessionEntity
     {
         return $this->session;
     }
     
-    public function setSession(SessionEntity $session = null)
+    public function setSession(SessionEntity $session = null): self
     {
-        return $this->session = $session;
+        $this->session = $session;
+        return $this;
     }
 
     public function getIdUser()
@@ -135,7 +135,7 @@ class UserSessionEntity
         return ($this->user instanceof UserEntity ? $this->getUser()->getId() : null);
     }
     
-    public function setIdUser($idUser)
+    public function setIdUser($idUser): self
     {
         $this->idUser = $idUser;
         return $this;
@@ -146,7 +146,7 @@ class UserSessionEntity
         return $this->isApproved;
     }
     
-    public function setIsApproved($isApproved)
+    public function setIsApproved($isApproved): self
     {
         $this->isApproved = $isApproved;
         return $this;
@@ -157,7 +157,7 @@ class UserSessionEntity
         return $this->accumulatedPoints;
     }
     
-    public function setAccumulatedPoints($accumulatedPoints)
+    public function setAccumulatedPoints($accumulatedPoints): self
     {
         $this->accumulatedPoints = $accumulatedPoints;
         return $this;
@@ -168,7 +168,7 @@ class UserSessionEntity
         return $this->cashout;
     }
     
-    public function setCashout($cashout)
+    public function setCashout($cashout): self
     {
         $this->cashout = $cashout;
         return $this;
@@ -179,7 +179,7 @@ class UserSessionEntity
         return $this->start;
     }
     
-    public function setStart($start)
+    public function setStart($start): self
     {
         $this->start = $start;
         return $this;
@@ -190,7 +190,7 @@ class UserSessionEntity
         return $this->end;
     }
     
-    public function setEnd($end)
+    public function setEnd($end): self
     {
         $this->end = $end;
         return $this;
@@ -201,9 +201,9 @@ class UserSessionEntity
         return $this->minimumMinutes;
     }
     
-    public function setMinimumMinutes($minimumMinutes = null)
+    public function setMinimumMinutes($minimumMinutes = null): self
     {
-        if ($minimumMinutes != null) {
+        if ($minimumMinutes !== null) {
             $this->minimumMinutes = $minimumMinutes;
         } else {
             $this->session instanceof SessionEntity ?
@@ -214,23 +214,23 @@ class UserSessionEntity
         return $this;
     }
 
-    public function getUser()
+    public function getUser(): UserEntity
     {
         return $this->user;
     }
     
-    public function setUser(UserEntity $user = null)
+    public function setUser(UserEntity $user = null): self
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getBuyins()
+    public function getBuyins(): ArrayCollection
     {
         return $this->buyins;
     }
     
-    public function setBuyins($buyins)
+    public function setBuyins($buyins): self
     {
         $this->buyins = $buyins;
         return $this;
@@ -242,6 +242,7 @@ class UserSessionEntity
         $cashin = 0;
             $buyins = $this->getBuyins()->toArray();
 
+        /** @var BuyinSessionEntity $buyin */
         foreach ($buyins as $buyin) {
                 $cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
         }
@@ -249,25 +250,29 @@ class UserSessionEntity
         return $cashin;
     }
 
-    public function getTotalCredit()
+    public function getTotalCredit(): int
     {
         $credit = 0;
         $buyins = $this->getBuyins()->toArray();
 
+        /** @var BuyinSessionEntity $buyin */
         foreach ($buyins as $buyin) {
             $credit += $buyin->getAmountCredit();
         }
+
         return $credit;
     }
 
-    public function getTotalCash()
+    public function getTotalCash(): int
     {
         $cash = 0;
         $buyins = $this->getBuyins()->toArray();
 
+        /** @var BuyinSessionEntity $buyin */
         foreach ($buyins as $buyin) {
             $cash += $buyin->getAmountCash();
         }
+
         return $cash;
     }
 
@@ -285,9 +290,11 @@ class UserSessionEntity
         $roundedMinutes = floor((($minutes/60)/.25))*.25;
         $hours          = date_diff($date1, $date2)->format('%h') + $roundedMinutes;
         $days = date_diff($date1, $date2)->format('%d');
+
         if ((int)$days > 0) {
             $hours += (int)$days * 24;
         }
+
         return $hours;
     }
 
@@ -334,12 +341,12 @@ class UserSessionEntity
             // Inside start and end
                 $fraction = $this->inMinutes($end, $start);
             }
-            
+
             return ($fraction * 100) / $sample;
         }
     }
     
-    public function toArray()
+    public function toArray(): array
     {
         $ret =  [
             'id'             => $this->getId(),

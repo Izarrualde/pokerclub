@@ -8,14 +8,14 @@ use Solcre\Pokerclub\Entity\UserEntity;
 use Solcre\Pokerclub\Entity\DealerTipSessionEntity;
 use Solcre\Pokerclub\Entity\ServiceTipSessionEntity;
 use Solcre\Pokerclub\Entity\ExpensesSessionEntity;
-use Solcre\Pokerclub\Entity\ComissionSessionEntity;
+use Solcre\Pokerclub\Entity\CommissionSessionEntity;
 use Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class SessionEntityTest extends TestCase
 {
 
-    public function testCreateWithParams()
+    public function testCreateWithParams(): void
     {
         $id = 1;
         $date = date_create('2019-06-26 15:00:00');
@@ -50,7 +50,8 @@ class SessionEntityTest extends TestCase
         $this->assertEquals($endTime, $session->getEndTime());
     }
 
-    public function testGetTotalCashout(){
+    public function testGetTotalCashout(): void
+    {
         $session = new SessionEntity();
         $userSession1 = new userSessionEntity();
         $userSession1->setCashout(500);
@@ -66,7 +67,7 @@ class SessionEntityTest extends TestCase
         $this->assertEquals(1100, $session->getTotalCashout());
     }
 
-    public function testGetDealerTipTotal()
+    public function testGetDealerTipTotal(): void
     {
         $session = new SessionEntity();
         $dealerTip1 = new DealerTipSessionEntity();
@@ -84,7 +85,8 @@ class SessionEntityTest extends TestCase
     }
 
 
-    public function testGetServiceTipTotal(){
+    public function testGetServiceTipTotal(): void
+    {
         $session = new SessionEntity();
         $serviceTip1 = new ServiceTipSessionEntity();
         $serviceTip1->setServiceTip(50);
@@ -100,7 +102,7 @@ class SessionEntityTest extends TestCase
         $this->assertEquals(110, $session->getServiceTipTotal());
     }
 
-    public function testGetExpensesTotal()
+    public function testGetExpensesTotal(): void
     {
         $session = new SessionEntity();
         $expenditure1 = new ExpensesSessionEntity();
@@ -117,24 +119,24 @@ class SessionEntityTest extends TestCase
         $this->assertEquals(110, $session->getExpensesTotal());
     }
 
-    public function testGetComissionTotal()
+    public function testGetCommissionTotal()
     {
         $session = new SessionEntity();
-        $comission1 = new ComissionSessionEntity();
-        $comission1->setComission(50);
-        $comission2 = new ComissionSessionEntity();
-        $comission2->setComission(60);
+        $commission1 = new CommissionSessionEntity();
+        $commission1->setCommission(50);
+        $commission2 = new CommissionSessionEntity();
+        $commission2->setCommission(60);
 
-        $sessionComissions = new ArrayCollection();
-        $sessionComissions[] = $comission1;
-        $sessionComissions[] = $comission2;
+        $sessionCommissions = new ArrayCollection();
+        $sessionCommissions[] = $commission1;
+        $sessionCommissions[] = $commission2;
 
-        $session->setSessionComissions($sessionComissions);
+        $session->setSessionCommissions($sessionCommissions);
 
-        $this->assertEquals(110, $session->getComissionTotal());
+        $this->assertEquals(110, $session->getCommissionTotal());
     }
 
-    public function testGetBuyins()
+    public function testGetBuyins(): void
     {
         $session = new SessionEntity();
         
@@ -164,7 +166,7 @@ class SessionEntityTest extends TestCase
         }
     }
 
-    public function testGetBuyinsWithoutBuyins()
+    public function testGetBuyinsWithoutBuyins(): void
     {
         $session = new SessionEntity();
         
@@ -188,7 +190,7 @@ class SessionEntityTest extends TestCase
         $this->assertEquals($session->getBuyins(), []);
 
     }
-    public function testGetTotalPlayed() 
+    public function testGetTotalPlayed(): void
     {
         $session = new SessionEntity();
         
@@ -214,19 +216,19 @@ class SessionEntityTest extends TestCase
         $this->assertEquals($expectedBuyins, $session->getTotalPlayed()); 
     }
 
-    public function testGetValidExpectedTrue()
+    public function testGetValidExpectedTrue(): void
     {
         $session = new SessionEntity();
 
-        $comission1 = new ComissionSessionEntity();
-        $comission1->setComission(50);
-        $comission2 = new ComissionSessionEntity();
-        $comission2->setComission(60);
-        $sessionComissions = new ArrayCollection();
-        $sessionComissions[] = $comission1;
-        $sessionComissions[] = $comission2;
+        $commission1 = new CommissionSessionEntity();
+        $commission1->setCommission(50);
+        $commission2 = new CommissionSessionEntity();
+        $commission2->setCommission(60);
+        $sessionCommissions = new ArrayCollection();
+        $sessionCommissions[] = $commission1;
+        $sessionCommissions[] = $commission2;
 
-        $session->setSessionComissions($sessionComissions);
+        $session->setSessionCommissions($sessionCommissions);
 
         $userSession1 = new userSessionEntity();
         $buyin1 = new BuyinSessionEntity(1, 1000, 0, $userSession1);
@@ -268,26 +270,26 @@ class SessionEntityTest extends TestCase
         $session->setSessionServiceTips($sessionServiceTips);
         /*
         $total = $session->getTotalCashout() +
-        $session->getComissionTotal() +
+        $session->getCommissionTotal() +
         $session->getDealerTipTotal()+
         $session-> getServiceTipTotal();*/
 
         $this->assertTrue($session->getValid());
     }
 
-    public function testGetValidExpectedFalse()
+    public function testGetValidExpectedFalse(): void
     {
         $session = new SessionEntity();
 
-        $comission1 = new ComissionSessionEntity();
-        $comission1->setComission(50);
-        $comission2 = new ComissionSessionEntity();
-        $comission2->setComission(60);
-        $sessionComissions = new ArrayCollection();
-        $sessionComissions[] = $comission1;
-        $sessionComissions[] = $comission2;
+        $commission1 = new CommissionSessionEntity();
+        $commission1->setCommission(50);
+        $commission2 = new CommissionSessionEntity();
+        $commission2->setCommission(60);
+        $sessionCommissions = new ArrayCollection();
+        $sessionCommissions[] = $commission1;
+        $sessionCommissions[] = $commission2;
 
-        $session->setSessionComissions($sessionComissions);
+        $session->setSessionCommissions($sessionCommissions);
 
         $userSession1 = new userSessionEntity();
         $buyin1 = new BuyinSessionEntity(1, 1000, 0, $userSession1);
@@ -331,19 +333,19 @@ class SessionEntityTest extends TestCase
         $this->assertFalse($session->getValid());
     }
 
-    public function testGetValidWithouBuyins()
+    public function testGetValidWithouBuyins(): void
     {
         $session = new SessionEntity();
 
-        $comission1 = new ComissionSessionEntity();
-        $comission1->setComission(50);
-        $comission2 = new ComissionSessionEntity();
-        $comission2->setComission(60);
-        $sessionComissions = new ArrayCollection();
-        $sessionComissions[] = $comission1;
-        $sessionComissions[] = $comission2;
+        $commission1 = new CommissionSessionEntity();
+        $commission1->setCommission(50);
+        $commission2 = new CommissionSessionEntity();
+        $commission2->setCommission(60);
+        $sessionCommissions = new ArrayCollection();
+        $sessionCommissions[] = $commission1;
+        $sessionCommissions[] = $commission2;
 
-        $session->setSessionComissions($sessionComissions);
+        $session->setSessionCommissions($sessionCommissions);
 
         $userSession1 = new userSessionEntity();
         // $buyin1 = new BuyinSessionEntity(1, 1000, 0, $userSession1);
@@ -385,14 +387,14 @@ class SessionEntityTest extends TestCase
         $session->setSessionServiceTips($sessionServiceTips);
         /*
         $total = $session->getTotalCashout() +
-        $session->getComissionTotal() +
+        $session->getCommissionTotal() +
         $session->getDealerTipTotal()+
         $session-> getServiceTipTotal();*/
 
         $this->assertFalse($session->getValid());
     }
 
-    public function testGetActivePlayersWithoutActives()
+    public function testGetActivePlayersWithoutActives(): void
     {
         $session = new SessionEntity();
         $userSession1 = new userSessionEntity();
@@ -428,7 +430,7 @@ class SessionEntityTest extends TestCase
         $this->assertEquals(0, count($session->getActivePlayers()));
     }
  
-    public function testGetActivePlayersWithActives()
+    public function testGetActivePlayersWithActives(): void
     {
         $session = new SessionEntity();
         $userSession1 = new userSessionEntity();
@@ -460,12 +462,12 @@ class SessionEntityTest extends TestCase
 
         $session->setSessionUsers($sessionUsers);
 
-        $this->assertEquals(2, count($session->getActivePlayers()));
+        $this->assertCount(2, $session->getActivePlayers());
         
         $this->assertEquals($expectedActivePlayers, $session->getActivePlayers());
     }
 
-    public function testGetDistinctPlayersWithoutEquals()
+    public function testGetDistinctPlayersWithoutEquals(): void
     {
         $session = new SessionEntity();
         $userSession1 = new userSessionEntity();
@@ -501,7 +503,7 @@ class SessionEntityTest extends TestCase
         $this->assertEquals($expectedDistinctPlayers, $session->getDistinctPlayers());
     }
 
-    public function testGetDistinctPlayersWithEquals()
+    public function testGetDistinctPlayersWithEquals(): void
     {
         $session = new SessionEntity();
         $userSession1 = new userSessionEntity();
@@ -536,7 +538,7 @@ class SessionEntityTest extends TestCase
         $this->assertEquals($expectedDistinctPlayers, $session->getDistinctPlayers());
     }
 
-    public function testGetAveragePlayersInPerdiod()
+    public function testGetAveragePlayersInPerdiod(): void
     {
         $session = new SessionEntity();
         $userSession1 = new userSessionEntity(1);
@@ -592,7 +594,7 @@ class SessionEntityTest extends TestCase
         $this->assertEquals(2, $session->getAveragePlayersInPerdiod($from, $to));
     }
 */
-    public function testToArrayWithBuyins()
+    public function testToArrayWithBuyins(): void
     {
         $session = new SessionEntity();
         $userSession1 = new userSessionEntity();
@@ -625,16 +627,16 @@ class SessionEntityTest extends TestCase
         $expectedActivePlayers[] = $userSession1->getUser()->getId();
         $expectedActivePlayers[] = $userSession2->getUser()->getId();
 
-        $comission1 = new ComissionSessionEntity();
-        $comission1->setComission(50);
-        $comission2 = new ComissionSessionEntity();
-        $comission2->setComission(50);
+        $commission1 = new CommissionSessionEntity();
+        $commission1->setCommission(50);
+        $commission2 = new CommissionSessionEntity();
+        $commission2->setCommission(50);
 
-        $sessionComissions = new ArrayCollection();
-        $sessionComissions[] = $comission1;
-        $sessionComissions[] = $comission2;
+        $sessionCommissions = new ArrayCollection();
+        $sessionCommissions[] = $commission1;
+        $sessionCommissions[] = $commission2;
 
-        $session->setSessionComissions($sessionComissions);
+        $session->setSessionCommissions($sessionCommissions);
 
         $session->setId(1);
         $session->setDate(date_create('2019-06-26 18:00:00'));
@@ -683,7 +685,7 @@ class SessionEntityTest extends TestCase
             'id'                        => 1,
             'created_at'                => date_create('2019-06-26 18:00:00'),
             'title'                     => 'Mesa Mixta',
-            'description'               => 'miercoles',
+            'description'               => 'miércoles',
             'startTime'                 => date_create('2019-06-26 19:00:00'),
             'startTimeReal'             => date_create('2019-06-26 19:00:00'),
             'countActivePlayers'        => 2,
@@ -692,7 +694,7 @@ class SessionEntityTest extends TestCase
             'countSeatedPlayers'        => 3,
             'seats'                     => 9,
             'endTime'                   => date_create('2019-06-26 23:00:00'),
-            'comissionTotal'            => 100,
+            'commissionTotal'           => 100,
             'expensesTotal'             => 110,
             'dealerTipTotal'            => 120,
             'serviceTipTotal'           => 130,

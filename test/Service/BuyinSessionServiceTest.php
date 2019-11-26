@@ -15,7 +15,7 @@ use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class BuyinSessionServiceTest extends TestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $data = [
             'id'            =>  1,
@@ -54,7 +54,7 @@ class BuyinSessionServiceTest extends TestCase
         // y que se llame metodo flush con anythig
     }
 
-    public function testAddWithUserSessionNotFoundException()
+    public function testAddWithUserSessionNotFoundException(): void
     {
         $data = [
             'id'            =>  'a non existing userSession',
@@ -80,7 +80,7 @@ class BuyinSessionServiceTest extends TestCase
         // y que se llame metodo flush con anythig
     }
 
-    public function testAddWithException()
+    public function testAddWithException(): void
     {
         $data = [
             'id'            =>  'a non existing userSession',
@@ -106,7 +106,7 @@ class BuyinSessionServiceTest extends TestCase
         // y que se llame metodo flush con anythig
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $data = [
             'id'            =>  1,
@@ -160,7 +160,7 @@ class BuyinSessionServiceTest extends TestCase
        // y que se llame metodo flush con anythig
     }
 
-    public function testUpdateWithIncompleteDataException()
+    public function testUpdateWithIncompleteDataException(): void
     {
         // $data without id
         $data = [
@@ -182,7 +182,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->update($fakeIdForTesting, $data);
     }
 
-    public function testUpdateWithBuyinNotFoundException()
+    public function testUpdateWithBuyinNotFoundException(): void
     {
         // $data without id
         $data = [
@@ -211,7 +211,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->update($fakeIdForTesting, $data);
     }
 
-    public function testUpdateWithException()
+    public function testUpdateWithException(): void
     {
         // $data without id
         $data = [
@@ -240,7 +240,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->update($fakeIdForTesting, $data);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $data = [
           'id' => 1
@@ -268,7 +268,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->delete($data['id']);
     }
 
-    public function testDeleteWithBuyinNotFoundException()
+    public function testDeleteWithBuyinNotFoundException(): void
     {
         $data = [
           'id' => 'an existing id'
@@ -291,7 +291,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->delete($data);
     }
 
-    public function testDeleteWithException()
+    public function testDeleteWithException(): void
     {
         $data = [
           'id' => 'an existing id'
@@ -314,7 +314,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->delete($data);
     }
 
-    public function testCheckGenericInputDataWithIncompleteDataException()
+    public function testCheckGenericInputDataWithIncompleteDataException(): void
     {
         // $data without idUserSession
         $data = [
@@ -334,7 +334,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithNonNumericAmountCash()
+    public function testCheckGenericInputDataWithNonNumericAmountCash(): void
     {
         // $data without idUserSession
         $data = [
@@ -355,7 +355,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithNonNumericAmountCredit()
+    public function testCheckGenericInputDataWithNonNumericAmountCredit(): void
     {
         // $data without idUserSession
         $data = [
@@ -376,7 +376,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithNegativeAmountCash()
+    public function testCheckGenericInputDataWithNegativeAmountCash(): void
     {
         // $data without idUserSession
         $data = [
@@ -397,7 +397,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithNegativeAmountCredit()
+    public function testCheckGenericInputDataWithNegativeAmountCredit(): void
     {
         // $data without idUserSession
         $data = [

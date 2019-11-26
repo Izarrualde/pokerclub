@@ -15,7 +15,6 @@ class BuyinSessionRepository extends BaseRepository
 
     public function fetchAll($sessionId)
     {
-
           $qb = $this->_em->createQueryBuilder();
           $qb->select('b');
           $qb->from($this->_entityName, 'b');

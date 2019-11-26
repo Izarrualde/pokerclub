@@ -17,6 +17,7 @@ class ExpensesSessionServiceFactory implements FactoryInterface
     ): ExpensesSessionService {
         $entityManager = $container->get(EntityManager::class);
         $config        = $container->get('config');
+
         return new ExpensesSessionService($entityManager, $config);
     }
 }

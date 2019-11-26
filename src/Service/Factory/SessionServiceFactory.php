@@ -14,6 +14,7 @@ class SessionServiceFactory implements FactoryInterface
     {
         $entityManager = $container->get(EntityManager::class);
         $config        = $container->get('config');
+
         return new SessionService($entityManager, $config);
     }
 }

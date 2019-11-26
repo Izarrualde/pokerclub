@@ -17,6 +17,7 @@ class ServiceTipSessionServiceFactory implements FactoryInterface
     ): ServiceTipSessionService {
         $entityManager = $container->get(EntityManager::class);
         $config        = $container->get('config');
+
         return new ServiceTipSessionService($entityManager, $config);
     }
 }

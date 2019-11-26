@@ -5,18 +5,18 @@ namespace Solcre\Pokerclub\Service\Factory;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Solcre\Pokerclub\Service\ComissionSessionService;
+use Solcre\Pokerclub\Service\CommissionSessionService;
 
-class ComissionSessionServiceFactory implements FactoryInterface
+class CommissionSessionServiceFactory implements FactoryInterface
 {
   
     public function __invoke(
         ContainerInterface $container,
         $requestedName,
         array $options = null
-    ): ComissionSessionService {
+    ): CommissionSessionService {
         $entityManager = $container->get(EntityManager::class);
         $config        = $container->get('config');
-        return new ComissionSessionService($entityManager, $config);
+        return new CommissionSessionService($entityManager, $config);
     }
 }

@@ -55,7 +55,7 @@ class DealerTipSessionEntity
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): self
     {
         $this->id = $id;
         return $this;
@@ -67,12 +67,12 @@ class DealerTipSessionEntity
     }
 
 
-    public function getSession()
+    public function getSession(): SessionEntity
     {
         return $this->session;
     }
 
-    public function setSession($session)
+    public function setSession($session): self
     {
         $this->session = $session;
         return $this;
@@ -83,7 +83,7 @@ class DealerTipSessionEntity
         return $this->hour;
     }
 
-    public function setHour($hour)
+    public function setHour($hour): self
     {
         $this->hour = $hour;
         return $this;
@@ -94,14 +94,15 @@ class DealerTipSessionEntity
         return $this->dealerTip;
     }
 
-    public function setDealerTip($tip)
+    public function setDealerTip($tip): self
     {
         $this->dealerTip = $tip;
+
         return $this;
     }
 
     // @codeCoverageIgnoreEnd
-    public function toArray()
+    public function toArray(): array
     {
         return  [
         'id'        => $this->getId(),
