@@ -15,4 +15,9 @@ class UserExceptions extends BaseException
     {
         return new self('Resource not found.', 400);
     }
+
+    public static function userAlreadyExistException(): self
+    {
+        return new self('Usuario ya existente.', 400);
+    }
 }

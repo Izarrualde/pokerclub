@@ -5,9 +5,8 @@ use Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
 use Solcre\Pokerclub\Exception\UserHadActionException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
-use Solcre\Pokerclub\Exception\UserNotFoundException;
-use Solcre\Pokerclub\Exception\UserInvalidException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\UserExceptions;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Solcre\SolcreFramework2\Utility\Validators;
 use Exception;
@@ -25,7 +24,6 @@ class UserService extends BaseService
         parent::__construct($entityManager);
         $this->config = $config;
     }
-
 
     public function checkGenericInputData($data): void
     {
@@ -45,16 +43,16 @@ class UserService extends BaseService
             $data['cashin']
         )
         ) {
-            throw new IncompleteDataException();
+            throw BaseException::incompleteDataException();
         }
 
-        if (!is_numeric($data['multiplier']) ||
-            (!is_numeric($data['hours']) || $data['hours'] < 0) ||
-            (!is_numeric($data['points']) || $data['points'] < 0) ||
-            (!is_numeric($data['sessions']) || $data['sessions'] < 0)||
-            !is_numeric($data['results']) ||
-            (!is_numeric($data['cashin']) || $data['cashin'] < 0)) {
-            throw new UserInvalidException();
+        if (! is_numeric($data['multiplier']) ||
+            (! is_numeric($data['hours']) || $data['hours'] < 0) ||
+            (! is_numeric($data['points']) || $data['points'] < 0) ||
+            (! is_numeric($data['sessions']) || $data['sessions'] < 0) ||
+            (! is_numeric($data['results'])) ||
+            (! is_numeric($data['cashin']) || $data['cashin'] < 0)) {
+            throw UserExceptions::userInvalidException();
         }
     }
 
@@ -86,17 +84,22 @@ class UserService extends BaseService
     {
         $this->checkGenericInputData($data);
 
-        if (!isset($data['id'], $data['password_confirm'], $data['avatar_file'], $data['logged_user_username'])) {
-            throw new IncompleteDataException();
+        if (! isset($data['id'], $data['password_confirm'], $data['avatar_file'], $data['logged_user_username'])) {
+            throw BaseException::incompleteDataException();
         }
 
         try {
-            $user = parent::fetch($data['id']);
+            $user = $this->fetch($data['id']);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new UserNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw UserExceptions::userNotFoundException();
             }
+
             throw $e;
+        }
+
+        if (! $user instanceof UserEntity) {
+            throw UserExceptions::userNotFoundException();
         }
 
         $loggedUser = $this->fetchBy(
@@ -105,14 +108,15 @@ class UserService extends BaseService
             ]
         );
 
-        if (!$loggedUser instanceof UserEntity || $loggedUser->getUsername() !== $user->getUsername()) {
+        if (! $loggedUser instanceof UserEntity || $loggedUser->getUsername() !== $user->getUsername()) {
             throw new Exception('Method not allowed for current user', 400);
         }
 
- 
+        /*
         if ($this->userExists($data, $id)) {
-            throw new Exception('User already exists', 400);
+            throw UserExceptions::userAlreadyExistException();
         }
+        */
 
         if (! Validators::valid_email($data['email'])) {
             throw new Exception('Invalid email', 400);
@@ -167,8 +171,9 @@ class UserService extends BaseService
             return true;
         } catch (\Exception $e) {
             if ($e->getCode() === self::STATUS_CODE_404) {
-                throw new UserNotFoundException();
+                throw UserExceptions::userNotFoundException();
             }
+
             throw $e;
         }
     }
@@ -223,6 +228,7 @@ class UserService extends BaseService
         }
     }
     */
+
     public function getFullPathOfAvatar($avatar): string
     {
         return $this->getPathOfAvatars() . $avatar;

@@ -1,4 +1,5 @@
 <?php
+/*
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Factory\AppFactory;
@@ -23,3 +24,4 @@ $afterMiddleware = function ($request, $handler) {
 
 $app->add($beforeMiddleware);
 $app->add($afterMiddleware);
+*/

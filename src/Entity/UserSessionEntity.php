@@ -214,7 +214,7 @@ class UserSessionEntity
         return $this;
     }
 
-    public function getUser(): UserEntity
+    public function getUser(): ?UserEntity
     {
         return $this->user;
     }

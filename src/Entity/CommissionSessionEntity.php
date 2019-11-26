@@ -72,7 +72,7 @@ class CommissionSessionEntity
         null;
     }
 
-    public function getSession(): SessionEntity
+    public function getSession(): ?SessionEntity
     {
         return $this->session;
     }

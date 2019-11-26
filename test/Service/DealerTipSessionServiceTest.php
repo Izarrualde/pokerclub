@@ -5,14 +5,14 @@ use Solcre\Pokerclub\Entity\DealerTipSessionEntity;
 use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Service\DealerTipSessionService;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\DealerTipInvalidException;
-use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\DealerTipExceptions;
+use Solcre\Pokerclub\Exception\SessionExceptions;
 use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class DealerTipSessionServiceTest extends TestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $data = [
             'id'        => 1, 
@@ -40,10 +40,9 @@ class DealerTipSessionServiceTest extends TestCase
         )/*->willReturn('anything')*/;
 
         $dealerTipSessionService->add($data);
-        // y que se llame metodo flush con anythig
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
 
         $data = [
@@ -82,10 +81,9 @@ class DealerTipSessionServiceTest extends TestCase
         );
 
         $dealerTipSessionService->update($data['id'], $data);
-        // y que se llame metodo flush con anythig
     }
 
-    public function testUpdateWithIncompleteDataException()
+    public function testUpdateWithIncompleteDataException(): void
     {
         // $data without id
         $data = [
@@ -94,17 +92,19 @@ class DealerTipSessionServiceTest extends TestCase
             'idSession' => 3
         ];
 
+        $idNull = null;
+
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
         $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager, []);
 
-        $this->expectException(IncompleteDataException::class);
+        $this->expectException(BaseException::class);
 
         $fakeIdForTesting = 1111;
-        $dealerTipSessionService->update($fakeIdForTesting, $data);
+        $dealerTipSessionService->update($idNull, $data);
     }
 
-    public function testUpdateWithDealerTipNotFoundException()
+    public function testUpdateWithDealerTipNotFoundException(): void
     {
         $data = [
             'id'        => 'an unexisting id',
@@ -118,17 +118,17 @@ class DealerTipSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new DealerTipNotFoundException())
+          DealerTipExceptions::dealerTipNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager, []);
 
-        $this->expectException(DealerTipNotFoundException::class);
+        $this->expectException(DealerTipExceptions::class);
         $dealerTipSessionService->update($data['id'], $data);
     }
 
-    public function testUpdateWithException()
+    public function testUpdateWithException(): void
     {
         $data = [
             'id'        => 'an unexisting id',
@@ -152,7 +152,7 @@ class DealerTipSessionServiceTest extends TestCase
         $dealerTipSessionService->update($data['id'], $data);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $data = [
           'id' => 1
@@ -180,7 +180,7 @@ class DealerTipSessionServiceTest extends TestCase
         $dealerTipSessionService->delete($data['id']);
     }
 
-    public function testDeleteWithDealerTipNotFoundException()
+    public function testDeleteWithDealerTipNotFoundException(): void
     {
         $data = [
             'id'        => 'an unexisting id',
@@ -194,17 +194,17 @@ class DealerTipSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new DealerTipNotFoundException())
+          DealerTipExceptions::dealerTipNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager, []);
 
-        $this->expectException(DealerTipNotFoundException::class);
+        $this->expectException(DealerTipExceptions::class);
         $dealerTipSessionService->delete($data);
     }
 
-    public function testDeleteWithException()
+    public function testDeleteWithException(): void
     {
         $data = [
             'id'        => 'an unexisting id',
@@ -228,7 +228,7 @@ class DealerTipSessionServiceTest extends TestCase
         $dealerTipSessionService->delete($data);
     }
 
-    public function testCheckGenericInputDataWithIncompleteDataException()
+    public function testCheckGenericInputDataWithIncompleteDataException(): void
     {
         // $data without idSession
           $data = [
@@ -239,11 +239,11 @@ class DealerTipSessionServiceTest extends TestCase
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager, []);
 
-        $this->expectException(IncompleteDataException::class);
+        $this->expectException(BaseException::class);
         $dealerTipSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithDealerTipNonNumeric()
+    public function testCheckGenericInputDataWithDealerTipNonNumeric(): void
     {
         $data = [
             'hour'      => '2019-07-04T19:00', 
@@ -254,11 +254,11 @@ class DealerTipSessionServiceTest extends TestCase
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager, []);
 
-        $this->expectException(DealerTipInvalidException::class);
+        $this->expectException(DealerTipExceptions::class);
         $dealerTipSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithDealearTipNegativeValue()
+    public function testCheckGenericInputDataWithDealearTipNegativeValue(): void
     {
         $data = [
             'hour'      => '2019-07-04T19:00', 
@@ -269,7 +269,7 @@ class DealerTipSessionServiceTest extends TestCase
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $dealerTipSessionService = new DealerTipSessionService($mockedEntityManager, []);
 
-        $this->expectException(DealerTipInvalidException::class);
+        $this->expectException(DealerTipExceptions::class);
         $dealerTipSessionService->checkGenericInputData($data);
     }
 }

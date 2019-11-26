@@ -27,7 +27,7 @@ class BaseException extends Exception
         return new self('La clase no existe.', 400);
     }
 
-    public static function incompleteDatatException(): self
+    public static function incompleteDataException(): self
     {
         return new self('Incomplete data.', 400);
     }

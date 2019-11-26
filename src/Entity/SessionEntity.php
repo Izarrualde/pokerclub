@@ -352,7 +352,7 @@ class SessionEntity
         );
     }
 
-    public function getTotalCashout(): ?array
+    public function getTotalCashout(): ?int
     {
         return array_reduce(
             $this->sessionUsers->toArray(),
@@ -363,7 +363,7 @@ class SessionEntity
         );
     }
 
-    public function getDealerTipTotal(): ?array
+    public function getDealerTipTotal(): ?int
     {
         return array_reduce(
             $this->sessionDealerTips->toArray(),
@@ -374,7 +374,7 @@ class SessionEntity
         );
     }
 
-    public function getExpensesTotal(): ?array
+    public function getExpensesTotal(): ?int
     {
         return array_reduce(
             $this->sessionExpenses->toArray(),
@@ -385,7 +385,7 @@ class SessionEntity
         );
     }
 
-    public function getServiceTipTotal(): ?array
+    public function getServiceTipTotal(): ?int
     {
         return array_reduce(
             $this->sessionServiceTips->toArray(),
@@ -396,7 +396,7 @@ class SessionEntity
         );
     }
 
-    public function getCommissionTotal(): ?array
+    public function getCommissionTotal(): ?int
     {
         return array_reduce(
             $this->sessionCommissions->toArray(),
@@ -407,7 +407,7 @@ class SessionEntity
         );
     }
 
-    public function getTotalPlayed(): ?array
+    public function getTotalPlayed(): ?int
     {
         return array_reduce(
             $this->getBuyins(),
@@ -511,7 +511,7 @@ class SessionEntity
         return $players/100;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         $ret = [
             'id'                        => $this->getId(),

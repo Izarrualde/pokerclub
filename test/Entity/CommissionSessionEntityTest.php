@@ -6,7 +6,7 @@ use Solcre\Pokerclub\Entity\CommissionSessionEntity;
 use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Service\BaseService;
 
-class CommisisonSessionEntityTest extends TestCase
+class CommissionSessionEntityTest extends TestCase
 {
 
   public function testCreateWithParams(): void
