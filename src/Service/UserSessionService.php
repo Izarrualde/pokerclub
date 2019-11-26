@@ -1,40 +1,39 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
+use Doctrine\ORM\ORMException;
 use Solcre\Pokerclub\Entity\UserSessionEntity;
 use Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\UserSessionAlreadyAddedException;
-use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
-use Solcre\Pokerclub\Exception\TableIsFullException;
-use Solcre\Pokerclub\Exception\InsufficientUserSessionTimeException;
-use Solcre\Pokerclub\Exception\InsufficientAvailableSeatsException;
-use Solcre\Pokerclub\Exception\UserNotFoundException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\UserExceptions;
+use Solcre\Pokerclub\Exception\UserSessionExceptions;
+use Solcre\Pokerclub\Exception\SessionExceptions;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
+use Solcre\Pokerclub\Entity\SessionEntity;
 
 class UserSessionService extends BaseService
 {
 
-    const STATUS_CODE_404 = 404;
-    const AVATAR_FILE_KEY = 'avatar_file';
+    public const STATUS_CODE_404 = 404;
+    public const AVATAR_FILE_KEY = 'avatar_file';
 
     protected $userService;
-    private $config;
+    private   $config;
 
-    public function __construct(EntityManager $em, $userService, array $config)
+    public function __construct(EntityManager $em, UserService $userService, array $config)
     {
         parent::__construct($em);
         $this->userService = $userService;
         $this->config      = $config;
     }
 
-    public function checkGenericInputData($data)
+    public function checkGenericInputData($data): void
     {
         // does not include id
         if (!isset($data['idSession'], $data['isApproved'], $data['points'])) {
-            throw new IncompleteDataException();
+            throw BaseException::incompleteDataException();
         }
     }
 
@@ -42,33 +41,41 @@ class UserSessionService extends BaseService
     {
         $this->checkGenericInputData($data);
 
-        if (!isset($data['users_id'])) {
-            throw new IncompleteDataException();
+        if (! isset($data['users_id'])) {
+            throw BaseException::incompleteDataException();
         }
 
-        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
+        try {
+            $session = $this->entityManager->getReference(SessionEntity::class, $data['idSession']);
+        } catch (ORMException $e) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
+
+        if (! $session instanceOf SessionEntity) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
 
         $seatedPlayers = $session->getSeatedPlayers();
 
-        if ($session->getSeats() == count($seatedPlayers)) {
-            throw new TableIsFullException();
+        if ($session->getSeats() === count($seatedPlayers)) {
+            throw SessionExceptions::tableIsFullException();
         }
 
         if (($session->getSeats() - count($seatedPlayers)) < (count($data['users_id']))) {
-            throw new InsufficientAvailableSeatsException();
+            throw SessionExceptions::insufficientAvailableSeatsException();
         }
 
-        if (in_array($data['users_id'], $seatedPlayers)) {
-                throw new UserSessionAlreadyAddedException();
+        if (in_array($data['users_id'], $seatedPlayers, true)) {
+                throw UserSessionExceptions::userSessionAlreadyAddedException();
         }
 
         $usersSessionsAdded = [];
 
         foreach ($data['users_id'] as $user_id) {
-            $user = $this->entityManager->getReference('Solcre\Pokerclub\Entity\UserEntity', $user_id);
+            $user = $this->entityManager->getReference(UserEntity::class, $user_id);
 
             if (! $user instanceof UserEntity) {
-                throw new UserNotFoundException();
+                throw UserExceptions::userNotFoundException();
             }
 
             $userSession = new UserSessionEntity(null, $session);
@@ -92,19 +99,24 @@ class UserSessionService extends BaseService
     {
         $this->checkGenericInputData($data);
 
-        if (!isset($id)) {
-            throw new IncompleteDataException();
+        if (! isset($id)) {
+            throw BaseException::incompleteDataException();
         }
 
         try {
-            $userSession = parent::fetch($id);
+            $userSession = $this->fetch($id);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new UserSessionNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw UserSessionExceptions::userSessionNotFoundException();
             }
+
             throw $e;
         }
-        
+
+        if (! $userSession instanceof UserSessionEntity) {
+            throw UserSessionExceptions::userSessionNotFoundException();
+        }
+
         $userSession->setAccumulatedPoints($data['points']);
 
         if (isset($data['minimum_minutes'])) {
@@ -117,7 +129,17 @@ class UserSessionService extends BaseService
 
         $userSession->setStart(new \DateTime($data['start']));
         $userSession->setIsApproved($data['isApproved']);
-        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
+
+        try {
+            $session = $this->entityManager->getReference(SessionEntity::class, $data['idSession']);
+        } catch (ORMException $e) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
+
+        if (! $session instanceOf SessionEntity) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
+
         $userSession->setSession($session);
 
         $this->entityManager->flush($userSession);
@@ -128,55 +150,61 @@ class UserSessionService extends BaseService
     public function delete($id, $entityObj = null): bool
     {
         try {
-            $userSession    = parent::fetch($id);
+            $userSession = $this->fetch($id);
 
             $this->entityManager->remove($userSession);
             $this->entityManager->flush();
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new UserSessionNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw UserSessionExceptions::userSessionNotFoundException();
             }
+
             throw $e;
         }
     }
 
-    public function close($data, $strategies = null)
+    public function close($data, $strategies = null): void
     {
         $this->checkGenericInputData($data);
 
         if (!isset($data['id'])) {
-            throw new IncompleteDataException();
+            throw BaseException::incompleteDataException();
         }
 
         try {
-            $userSession = parent::fetch($data['id']);
+            $userSession = $this->fetch($data['id']);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new UserSessionNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw UserSessionExceptions::userSessionNotFoundException();
             }
+
             throw $e;
+        }
+
+        if (! $userSession instanceof UserSessionEntity) {
+            throw UserSessionExceptions::userSessionNotFoundException();
         }
 
         $startSession      = $userSession->getStart();
         $attemptEndSession = new \DateTime();
         $requiredTime      =  $userSession->getMinimumMinutes();
+
         if ($userSession->inMinutes($startSession, $attemptEndSession) < $requiredTime) {
-            throw new InsufficientUserSessionTimeException();
+            throw UserSessionExceptions::insufficientUserSessionTimeException();
         }
 
         $userSession->setEnd(new \DateTime($data['end']));
         $userSession->setCashout($data['cashout']);
-        
-        if ($this->userService instanceof UserService) {
-            $user = $this->userService->fetch($data['idUser']);
-            $user->setHours($user->getHours()+$userSession->getDuration());
 
-            $this->entityManager->persist($user);
-        }
-        
-            $this->entityManager->persist($userSession);
-            $this->entityManager->flush();
+        $user = $this->userService->fetch($data['idUser']);
+
+        /** @var UserEntity $user */
+        $user->setHours($user->getHours()+$userSession->getDuration());
+
+        $this->entityManager->persist($user);
+        $this->entityManager->persist($userSession);
+        $this->entityManager->flush();
     }
 }

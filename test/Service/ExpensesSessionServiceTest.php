@@ -5,20 +5,20 @@ use Solcre\Pokerclub\Entity\ExpensesSessionEntity;
 use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Service\ExpensesSessionService;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\ExpensesInvalidException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
-use Solcre\Pokerclub\Exception\ExpenditureNotFoundException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\ExpensesExceptions;
+use Solcre\Pokerclub\Exception\SessionExceptions;
 use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class ExpensesSessionServiceTest extends TestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $data = [
-          'id'          => 1, 
-          'description' => 'gasto de sesion', 
-          'amount'      => 100,
-          'idSession'   => 3
+            'id'          => 1,
+            'description' => 'gasto de sesión',
+            'amount'      => 100,
+            'idSession'   => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -37,19 +37,18 @@ class ExpensesSessionServiceTest extends TestCase
         ->method('persist')
         ->with(
             $this->equalTo($expectedExpenditure)
-        )/*->willReturn('anything')*/;
+        );
 
         $expensesSessionService->add($data);
-        // y que se llame metodo flush con anythig
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $data = [
-          'id'          => 1, 
-          'description' => 'gasto de sesion', 
-          'amount'      => 100,
-          'idSession'   => 3
+            'id'          => 1,
+            'description' => 'gasto de sesión',
+            'amount'      => 100,
+            'idSession'   => 3
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -58,10 +57,10 @@ class ExpensesSessionServiceTest extends TestCase
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->willReturn(
             new ExpensesSessionEntity(
-              1,
-              new SessionEntity(3),
-              'gasto de sesion',
-              100
+                1,
+                new SessionEntity(3),
+                'gasto de sesión',
+                100
             )
         );
 
@@ -81,10 +80,9 @@ class ExpensesSessionServiceTest extends TestCase
         );
 
         $expensesSessionService->update($data['id'], $data);
-        // y que se llame metodo flush con anythig
     }
 
-    public function testUpdateWithIncompleteDataException()
+    public function testUpdateWithIncompleteDataException(): void
     {
         // $data without id
         $data = [
@@ -93,17 +91,18 @@ class ExpensesSessionServiceTest extends TestCase
             'idSession'   => 3
         ];
 
+        $idNull = null;
+
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
         $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
-        $this->expectException(IncompleteDataException::class);
+        $this->expectException(BaseException::class);
 
-        $fakeIdForTesting = 1111;
-        $expensesSessionService->update($fakeIdForTesting, $data);
+        $expensesSessionService->update($idNull, $data);
     }
 
-    public function testUpdateWithExpenditureNotFoundException()
+    public function testUpdateWithExpenditureNotFoundException(): void
     {
         $data = [
             'id'          => 'an unexisting id',
@@ -117,17 +116,18 @@ class ExpensesSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new ExpenditureNotFoundException())
+          ExpensesExceptions::expenditureNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
-        $this->expectException(ExpenditureNotFoundException::class);
+        $this->expectException(ExpensesExceptions::class);
+
         $expensesSessionService->update($data['id'], $data);
     }
 
-    public function testUpdateWithException()
+    public function testUpdateWithException(): void
     {
         $data = [
             'id'          => 'an unexisting id',
@@ -141,7 +141,7 @@ class ExpensesSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new \Exception('Solcre\Pokerclub\Entity\ExpenditureSessionEntity' . " Entity not found", 404))
+            new \Exception('Solcre\Pokerclub\Entity\ExpenditureSessionEntity' . " Entity not found", 404))
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
@@ -151,10 +151,10 @@ class ExpensesSessionServiceTest extends TestCase
         $expensesSessionService->update($data['id'], $data);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $data = [
-          'id' => 1
+            'id' => 1
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -171,12 +171,12 @@ class ExpensesSessionServiceTest extends TestCase
         ->method('remove')
         ->with(
             $this->equalTo($expectedExpenditure)
-        )/*->willReturn('anything')*/;
+        );
 
         $expensesSessionService->delete($data['id']);
     }
 
-    public function testDeleteWithExpenditureNotFoundException()
+    public function testDeleteWithExpenditureNotFoundException(): void
     {
         $data = [
             'id'          => 'an unexisting id',
@@ -190,17 +190,18 @@ class ExpensesSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new ExpenditureNotFoundException())
+          ExpensesExceptions::expenditureNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
-        $this->expectException(ExpenditureNotFoundException::class);
+        $this->expectException(ExpensesExceptions::class);
+
         $expensesSessionService->delete($data);
     }
 
-    public function testDeleteWithException()
+    public function testDeleteWithException(): void
     {
         $data = [
             'id'          => 'an unexisting id',
@@ -221,25 +222,27 @@ class ExpensesSessionServiceTest extends TestCase
         $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
+
         $expensesSessionService->delete($data);
     }
 
-    public function testCheckGenericInputDataWithIncompleteDataException()
+    public function testCheckGenericInputDataWithIncompleteDataException(): void
     {
         // $data without idSession
-          $data = [
-            'description' => 'description', 
+        $data = [
+            'description' => 'description',
             'amount'      => 100,
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
-        $this->expectException(IncompleteDataException::class);
+        $this->expectException(BaseException::class);
+
         $expensesSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithDealerTipNonNumeric()
+    public function testCheckGenericInputDataWithDealerTipNonNumeric(): void
     {
         $data = [
             'description' => 'description', 
@@ -250,11 +253,12 @@ class ExpensesSessionServiceTest extends TestCase
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
-        $this->expectException(ExpensesInvalidException::class);
+        $this->expectException(ExpensesExceptions::class);
+
         $expensesSessionService->checkGenericInputData($data);
     }
 
-    public function testCheckGenericInputDataWithDealearTipNegativeValue()
+    public function testCheckGenericInputDataWithDealearTipNegativeValue(): void
     {
         $data = [
             'description' => 'description', 
@@ -265,7 +269,8 @@ class ExpensesSessionServiceTest extends TestCase
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $expensesSessionService = new ExpensesSessionService($mockedEntityManager, []);
 
-        $this->expectException(ExpensesInvalidException::class);
+        $this->expectException(ExpensesExceptions::class);
+
         $expensesSessionService->checkGenericInputData($data);
     }
 }

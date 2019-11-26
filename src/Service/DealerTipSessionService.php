@@ -1,19 +1,21 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
+use Doctrine\ORM\ORMException;
 use Solcre\Pokerclub\Entity\DealerTipSessionEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\DealerTipInvalidException;
-use Solcre\Pokerclub\Exception\DealerTipNotFoundException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\DealerTipExceptions;
+use Solcre\Pokerclub\Exception\SessionExceptions;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
+use Solcre\Pokerclub\Entity\SessionEntity;
 
 class DealerTipSessionService extends BaseService
 {
 
-    const STATUS_CODE_404 = 404;
-    const AVATAR_FILE_KEY = 'avatar_file';
+    public const STATUS_CODE_404 = 404;
+    public const AVATAR_FILE_KEY = 'avatar_file';
 
     private $config;
 
@@ -23,16 +25,15 @@ class DealerTipSessionService extends BaseService
         $this->config = $config;
     }
     
-    public function checkGenericInputData($data)
+    public function checkGenericInputData($data): void
     {
         // does not include id
-
-        if (!isset($data['idSession'], $data['hour'], $data['dealerTip'])) {
-            throw new IncompleteDataException();
+        if (! isset($data['idSession'], $data['hour'], $data['dealerTip'])) {
+            throw BaseException::incompleteDataException();
         }
 
         if (!is_numeric($data['dealerTip']) || $data['dealerTip'] < 0) {
-            throw new DealerTipInvalidException();
+            throw DealerTipExceptions::dealerTipInvalidException();
         }
     }
 
@@ -41,10 +42,16 @@ class DealerTipSessionService extends BaseService
         $this->checkGenericInputData($data);
 
         $dealerTip    = new DealerTipSessionEntity();
-        $dealerTip->setHour(new \DateTime($data['hour']));
-        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
+
+        try {
+            $session = $this->entityManager->getReference(SessionEntity::class, $data['idSession']);
+        } catch (ORMException $e) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
+
         $dealerTip->setSession($session);
         $dealerTip->setDealerTip($data['dealerTip']);
+        $dealerTip->setHour(new \DateTime($data['hour']));
 
         $this->entityManager->persist($dealerTip);
         $this->entityManager->flush($dealerTip);
@@ -57,14 +64,14 @@ class DealerTipSessionService extends BaseService
         $this->checkGenericInputData($data);
 
         if (!isset($data['id'])) {
-            throw new IncompleteDataException();
+            throw BaseException::incompleteDataException();
         }
 
         try {
-            $dealerTip    = parent::fetch($data['id']);
+            $dealerTip    = $this->fetch($data['id']);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new DealerTipNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw DealerTipExceptions::dealerTipNotFoundException();
             }
 
             throw $e;
@@ -81,16 +88,17 @@ class DealerTipSessionService extends BaseService
     public function delete($id, $entityObj = null): bool
     {
         try {
-            $dealerTip    = parent::fetch($id);
+            $dealerTip = $this->fetch($id);
 
             $this->entityManager->remove($dealerTip);
             $this->entityManager->flush();
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new DealerTipNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw DealerTipExceptions::dealerTipNotFoundException();
             }
+
             throw $e;
         }
     }

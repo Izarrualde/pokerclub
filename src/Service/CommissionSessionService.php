@@ -1,14 +1,15 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
+use Doctrine\ORM\ORMException;
 use Solcre\Pokerclub\Entity\CommissionSessionEntity;
-use Solcre\Pokerclub\Entity\SessionEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\CommissionInvalidException;
-use Solcre\Pokerclub\Exception\CommissionNotFoundException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\CommissionExceptions;
+use Solcre\Pokerclub\Exception\SessionExceptions;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
+use Solcre\Pokerclub\Entity\SessionEntity;
 
 class CommissionSessionService extends BaseService
 {
@@ -26,13 +27,12 @@ class CommissionSessionService extends BaseService
     public function checkGenericInputData($data): void
     {
         // don't include id
-
         if (!isset($data['idSession'], $data['hour'], $data['commission'])) {
-            throw new IncompleteDataException();
+            throw BaseException::IncompleteDataException();
         }
 
         if (!is_numeric($data['commission']) || $data['commission'] < 0) {
-            throw new CommissionInvalidException();
+            throw CommissionExceptions::commissionInvalidException();
         }
     }
 
@@ -41,10 +41,21 @@ class CommissionSessionService extends BaseService
         $this->checkGenericInputData($data);
 
         $commission  = new CommissionSessionEntity();
+
+
+        try {
+            $session = $this->entityManager->getReference(SessionEntity::class, $data['idSession']);
+        } catch (ORMException $e) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
+
+        if (! $session instanceOf SessionEntity) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
+
+        $commission->setSession($session);
         $commission->setHour(new \DateTime($data['hour']));
         $commission->setCommission($data['commission']);
-        $session = $this->entityManager->getReference('Solcre\Pokerclub\Entity\SessionEntity', $data['idSession']);
-        $commission->setSession($session);
 
         $this->entityManager->persist($commission);
         $this->entityManager->flush($commission);
@@ -56,19 +67,24 @@ class CommissionSessionService extends BaseService
     {
         $this->checkGenericInputData($data);
 
-        if (!isset($data['id'])) {
-            throw new IncompleteDataException();
+        if (! isset($id)) {
+            throw BaseException::incompleteDataException();
         }
 
         try {
-            $commission = parent::fetch($data['id']);
+            $commission = $this->fetch($data['id']);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new CommissionNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw CommissionExceptions::commissionNotFoundException();
             }
+
             throw $e;
         }
-        
+
+        if (! $commission instanceof CommissionSessionEntity) {
+            throw CommissionExceptions::commissionNotFoundException();
+        }
+
         $commission->setHour(new \DateTime($data['hour']));
         $commission->setCommission($data['commission']);
 
@@ -88,8 +104,9 @@ class CommissionSessionService extends BaseService
             return true;
         } catch (\Exception $e) {
             if ($e->getCode() === self::STATUS_CODE_404) {
-                throw new CommissionNotFoundException();
+                throw CommissionExceptions::commissionNotFoundException();
             }
+
             throw $e;
         }
     }

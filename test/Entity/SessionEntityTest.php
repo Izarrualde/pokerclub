@@ -563,7 +563,7 @@ class SessionEntityTest extends TestCase
         $from = new \DateTime('2019-06-26T20:00:00');
         $to = new \DateTime('2019-06-26T23:00:00');
 
-        $this->assertEquals(2, $session->getAveragePlayersInPerdiod($from, $to));
+        $this->assertEquals(2, $session->getAveragePlayersInPeriod($from, $to));
     }
 /*
     public function testGetAveragePlayersInPerdiodFraction()
@@ -641,7 +641,7 @@ class SessionEntityTest extends TestCase
         $session->setId(1);
         $session->setDate(date_create('2019-06-26 18:00:00'));
         $session->setTitle('Mesa Mixta');
-        $session->setDescription('miercoles');
+        $session->setDescription('miércoles');
         $session->setStartTime(date_create('2019-06-26 19:00:00'));
         $session->setStartTimeReal(date_create('2019-06-26 19:00:00'));
         $session->setSeats(9);
