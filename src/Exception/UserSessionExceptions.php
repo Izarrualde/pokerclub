@@ -25,4 +25,9 @@ class UserSessionExceptions extends BaseException
     {
         return new self('Resource not found.', 400);
     }
+
+    public static function invalidDuration(): self
+    {
+        return new self('Duration no pudo ser calculada', 400);
+    }
 }

@@ -354,7 +354,7 @@ class UserEntity
     /**
      * @return ArrayCollection
      */
-    public function getGroups(): ArrayCollection
+    public function getGroups()
     {
         return $this->groups;
     }

@@ -3,6 +3,7 @@ namespace Solcre\Pokerclub\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Solcre\Pokerclub\Exception\UserSessionExceptions;
 
 /**
  * @ORM\Embeddable
@@ -11,7 +12,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class UserSessionEntity
 {
-    public const PERCENTAGE_100 = 100;
+    public const PERCENTAGE_100      = 100;
+    public const HOURS_DAY           = 24;
+    public const MINUTES_OF_ONE_HOUR = 60;
+    public const ROUNDING_INTERVAL   = .25;
 
     /**
      * @ORM\Id
@@ -61,7 +65,7 @@ class UserSessionEntity
     protected $duration;
 
 
-    protected $percentagePlayed;
+    // protected $percentagePlayed;
 
 
     /**
@@ -122,24 +126,24 @@ class UserSessionEntity
         $this->setMinimumMinutes($minimumMinutes);
         $this->buyins = new ArrayCollection();
     }
-    
+
     // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
     }
-    
+
     public function setId($id): self
     {
         $this->id = $id;
         return $this;
     }
-    
+
     public function getSession(): SessionEntity
     {
         return $this->session;
     }
-    
+
     public function setSession(SessionEntity $session = null): self
     {
         $this->session = $session;
@@ -150,62 +154,62 @@ class UserSessionEntity
     {
         return ($this->user instanceof UserEntity ? $this->getUser()->getId() : null);
     }
-    
+
     public function setIdUser($idUser): self
     {
         $this->idUser = $idUser;
         return $this;
     }
-    
+
     public function getIsApproved()
     {
         return $this->isApproved;
     }
-    
+
     public function setIsApproved($isApproved): self
     {
         $this->isApproved = $isApproved;
         return $this;
     }
-    
+
     public function getAccumulatedPoints()
     {
         return $this->accumulatedPoints;
     }
-    
+
     public function setAccumulatedPoints($accumulatedPoints): self
     {
         $this->accumulatedPoints = $accumulatedPoints;
         return $this;
     }
-    
+
     public function getCashout()
     {
         return $this->cashout;
     }
-    
+
     public function setCashout($cashout): self
     {
         $this->cashout = $cashout;
         return $this;
     }
-    
+
     public function getStart()
     {
         return $this->start;
     }
-    
+
     public function setStart($start): self
     {
         $this->start = $start;
         return $this;
     }
-    
+
     public function getEnd()
     {
         return $this->end;
     }
-    
+
     public function setEnd($end): self
     {
         $this->end = $end;
@@ -216,15 +220,15 @@ class UserSessionEntity
     {
         return $this->minimumMinutes;
     }
-    
+
     public function setMinimumMinutes($minimumMinutes = null): self
     {
         if ($minimumMinutes !== null) {
             $this->minimumMinutes = $minimumMinutes;
         } else {
             $this->session instanceof SessionEntity ?
-            $this->minimumMinutes = $this->getSession()->getMinimumUserSessionMinutes() :
-            null;
+                $this->minimumMinutes = $this->getSession()->getMinimumUserSessionMinutes() :
+                null;
         }
 
         return $this;
@@ -234,18 +238,18 @@ class UserSessionEntity
     {
         return $this->user;
     }
-    
+
     public function setUser(UserEntity $user = null): self
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getBuyins(): ArrayCollection
+    public function getBuyins()
     {
         return $this->buyins;
     }
-    
+
     public function setBuyins($buyins): self
     {
         $this->buyins = $buyins;
@@ -260,9 +264,9 @@ class UserSessionEntity
 
         /** @var BuyinSessionEntity $buyin */
         foreach ($buyins as $buyin) {
-                $cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
+            $cashin += $buyin->getAmountCash() + $buyin->getAmountCredit();
         }
-       
+
         return $cashin;
     }
 
@@ -299,16 +303,27 @@ class UserSessionEntity
 
     public function getDuration()
     {
-        $date1          = $this->getStart();
-        $date2          = $this->getEnd();
-        $minutes        = date_diff($date1, $date2)->format('%i');
-        
-        $roundedMinutes = floor((($minutes/60)/.25))*.25;
-        $hours          = date_diff($date1, $date2)->format('%h') + $roundedMinutes;
-        $days = date_diff($date1, $date2)->format('%d');
+        $date1 = $this->getStart();
+
+        if (is_null($date1)) {
+            return 0;
+        }
+
+        $date2    = is_null($this->getEnd()) ? new \DateTime() : $this->getEnd();
+        $interval = date_diff($date1, $date2);
+
+        if (! $interval instanceof \DateInterval) {
+            throw UserSessionExceptions::InvalidDuration();
+        }
+
+        $minutes  = $interval->format('%i');
+        $roundedMinutes = floor((($minutes / self::MINUTES_OF_ONE_HOUR) / self::ROUNDING_INTERVAL))
+            * self::ROUNDING_INTERVAL;
+        $hours          = $interval->format('%h') + $roundedMinutes;
+        $days           = $interval->format('%d');
 
         if ((int)$days > 0) {
-            $hours += (int)$days * 24;
+            $hours += (int)$days * self::HOURS_DAY;
         }
 
         return $hours;
@@ -340,28 +355,28 @@ class UserSessionEntity
         if ((($from < $start) && ($to < $start)) || ($from > $end)) {
             return 0;
         } elseif (($from >= $start) && ($to <= $end)) {
-        //case 100% - enclosing & enclosing %% touching
+            //case 100% - enclosing & enclosing %% touching
             return self::PERCENTAGE_100;
         } else {
-        // other cases
+            // other cases
             $sample = $this->inMinutes($from, $to);
             // $sample represent 100%
 
             if (($from <= $start) && ($to <= $end)) {
-            // start is inside & start is inside && end touching
+                // start is inside & start is inside && end touching
                 $fraction = $this->inMinutes($to, $start);
             } elseif (($from >= $start) && ($to > $end)) {
-            // end is inside & end is inside && start touching
+                // end is inside & end is inside && start touching
                 $fraction = $this->inMinutes($from, $end); //from end
             } elseif (($from < $start) && ($to > $end)) {
-            // Inside start and end
+                // Inside start and end
                 $fraction = $this->inMinutes($end, $start);
             }
 
             return ($fraction * 100) / $sample;
         }
     }
-    
+
     public function toArray(): array
     {
         $ret =  [
@@ -378,17 +393,17 @@ class UserSessionEntity
             'points'         => (float)$this->getAccumulatedPoints(),
             'minimumMinutes' => (int)$this->getMinimumMinutes()
         ];
-        
+
         $user = $this->getUser();
         if ($user instanceof UserEntity) {
             $ret['user'] = $user->toArray();
         }
         $session = $this->getSession();
-        
+
         if ($session instanceof SessionEntity) {
             $ret['session'] = $session->toArray();
         }
-        
+
         return $ret;
     }
 }
