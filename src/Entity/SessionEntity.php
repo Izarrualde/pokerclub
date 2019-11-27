@@ -278,7 +278,7 @@ class SessionEntity
         return $this;
     }
 
-    public function getSessionDealerTips(): ArrayCollection
+    public function getSessionDealerTips()
     {
         return $this->sessionDealerTips;
     }
@@ -289,7 +289,7 @@ class SessionEntity
         return $this;
     }
 
-    public function getSessionServiceTips(): ArrayCollection
+    public function getSessionServiceTips()
     {
         return $this->sessionServiceTips;
     }
@@ -300,7 +300,7 @@ class SessionEntity
         return $this;
     }
 
-    public function getSessionUsers(): ArrayCollection
+    public function getSessionUsers()
     {
         return $this->sessionUsers;
     }
@@ -311,7 +311,7 @@ class SessionEntity
         return $this;
     }
 
-    public function getSessionCommissions(): ArrayCollection
+    public function getSessionCommissions()
     {
         return $this->sessionCommissions;
     }
@@ -323,7 +323,7 @@ class SessionEntity
         return $this;
     }
 
-    public function getSessionExpenses(): ArrayCollection
+    public function getSessionExpenses()
     {
         return $this->sessionExpenses;
     }
