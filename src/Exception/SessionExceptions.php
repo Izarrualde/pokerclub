@@ -30,4 +30,9 @@ class SessionExceptions extends BaseException
     {
         return new self('Mesa llena.', 400);
     }
+
+    public static function invalidPointsException(): self
+    {
+        return new self('Type error: calculate method must return a valid number.', 400);
+    }
 }

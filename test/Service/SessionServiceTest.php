@@ -7,9 +7,8 @@ use Solcre\Pokerclub\Entity\UserSessionEntity;
 use Solcre\Pokerclub\Service\SessionService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\ArrayCollection;
-use Solcre\Pokerclub\Exception\SessionNotFoundException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
-use Solcre\Pokerclub\Exception\UserInvalidException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\SessionExceptions;
 use Solcre\Pokerclub\Rakeback\rakebackAlgorithm;
 use Solcre\SolcreFramework2\Common\BaseRepository;
 
@@ -20,19 +19,20 @@ class SessionServiceTest extends TestCase
     public function testAdd(): void
     {
         $data = [
-          'date'                         => '2019-07-04',
-          'start_at'                     => '2019-07-04T19:00',
-          'title'                        => 'mesa mixta',
-          'description'                  => 'lunes',
-          'seats'                        => 9,
-          'rakeback_class'               => 'Solcre\Pokerclub\Rakeback\SimpleRakeback',
-          'minimum_user_session_minutes' => 240
+            'date'                         => '2019-07-04',
+            'start_at'                     => '2019-07-04T19:00',
+            'title'                        => 'mesa mixta',
+            'description'                  => 'lunes',
+            'seats'                        => 9,
+            'rakeback_class'               => 'Solcre\Pokerclub\Rakeback\SimpleRakeback',
+            'minimum_user_session_minutes' => 240
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('persist')->willReturn(true);
 
         $sessionService  = new SessionService($mockedEntityManager, []);
+
         $expectedSession = new SessionEntity();
         $expectedSession->setDate(new \DateTime($data['date']));
         $expectedSession->setStartTime(new \DateTime($data['start_at']));
@@ -46,7 +46,7 @@ class SessionServiceTest extends TestCase
         ->method('persist')
         ->with(
            $this->equalTo($expectedSession)
-        )/*->willReturn('anything')*/;
+        );
 
         $sessionService->add($data);
     }
@@ -125,14 +125,15 @@ class SessionServiceTest extends TestCase
             'minimum_user_session_minutes' => 240
         ];
 
+        $idNull = null;
+
         $mockedEntityManager = $this->createMock(EntityManager::class);
 
         $sessionService = new SessionService($mockedEntityManager, []);
 
-        $this->expectException(IncompleteDataException::class);
+        $this->expectException(BaseException::class);
 
-        $fakeIdForTesting = 1111;
-        $sessionService->update($fakeIdForTesting, $data);
+        $sessionService->update($idNull, $data);
     }
 
     public function testUpdateWithSessionNotFoundException(): void
@@ -155,13 +156,14 @@ class SessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new SessionNotFoundException())
+          SessionExceptions::sessionNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $sessionService = new SessionService($mockedEntityManager, []);
 
-        $this->expectException(SessionNotFoundException::class);
+        $this->expectException(SessionExceptions::class);
+
         $sessionService->update($data['id'], $data);
     }
 
@@ -192,13 +194,14 @@ class SessionServiceTest extends TestCase
         $sessionService = new SessionService($mockedEntityManager, []);
 
         $this->expectException(\Exception::class);
+
         $sessionService->update($data['id'], $data);
     }
 
     public function testDelete(): void
     {
         $data = [
-          'id'        => 1
+            'id' => 1
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -215,7 +218,7 @@ class SessionServiceTest extends TestCase
         ->method('remove')
         ->with(
             $this->equalTo($expectedSession)
-        )/*->willReturn('anything')*/;
+        );
      
         $sessionService->delete($data['id']);
     }
@@ -223,27 +226,28 @@ class SessionServiceTest extends TestCase
     public function testDeleteWithSessionNotFoundException(): void
     {
         $data = [
-          'id' => 'an unexisting id'
+          'id' => 'a non-existent id'
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedEntityManager->method('remove')->willReturn(true);
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new SessionNotFoundException())
+          SessionExceptions::sessionNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $sessionService = new SessionService($mockedEntityManager, []);
 
-        $this->expectException(SessionNotFoundException::class);     
+        $this->expectException(SessionExceptions::class);
+
         $sessionService->delete($data['id']);
     }
 
     public function testDeleteWithException(): void
     {
         $data = [
-          'id' => 'an unexisting id'
+          'id' => 'a non-existent id'
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -256,7 +260,8 @@ class SessionServiceTest extends TestCase
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $sessionService = new SessionService($mockedEntityManager, []);
 
-        $this->expectException(\Exception::class);    
+        $this->expectException(\Exception::class);
+
         $sessionService->delete($data['id']);
     }
 
@@ -278,7 +283,8 @@ class SessionServiceTest extends TestCase
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $sessionService = new SessionService($mockedEntityManager, []);
 
-        $this->expectException(IncompleteDataException::class);
+        $this->expectException(BaseException::class);
+
         $sessionService->checkGenericInputData($data);
     }
 

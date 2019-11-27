@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DealerTipSessionEntity
 {
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

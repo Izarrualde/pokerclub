@@ -7,10 +7,9 @@ use Solcre\Pokerclub\Service\BuyinSessionService;
 use Solcre\Pokerclub\Service\UserSessionService;
 use Solcre\Pokerclub\Service\UserService;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\BuyinInvalidException;
-use Solcre\Pokerclub\Exception\BuyinNotFoundException;
-use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\BuyinExceptions;
+use Solcre\Pokerclub\Exception\UserSessionExceptions;
 use Solcre\SolcreFramework2\Common\BaseRepository;
 
 class BuyinSessionServiceTest extends TestCase
@@ -34,7 +33,7 @@ class BuyinSessionServiceTest extends TestCase
 
         $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $expectedBuyin    = new BuyinSessionEntity();
+        $expectedBuyin = new BuyinSessionEntity();
         $expectedBuyin->setHour(new \DateTime($data['hour']));
         $expectedBuyin->setAmountCash($data['amountCash']);
         $expectedBuyin->setAmountCredit($data['amountCredit']);
@@ -48,10 +47,9 @@ class BuyinSessionServiceTest extends TestCase
         ->method('persist')
         ->with(
            $this->equalTo($expectedBuyin)
-        )/*->willReturn('anything')*/;
+        );
 
         $buyinSessionService->add($data);
-        // y que se llame metodo flush con anythig
     }
 
     public function testAddWithUserSessionNotFoundException(): void
@@ -70,14 +68,14 @@ class BuyinSessionServiceTest extends TestCase
         $mockedEntityManager->method('persist')->willReturn(true);
         $mockedUserSessionService = $this->createMock(UserSessionService::class);
         $mockedUserSessionService->method('fetch')->will($this->throwException(
-          new UserSessionNotFoundException())
+          UserSessionExceptions::userSessionNotFoundException())
         );
 
         $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $this->expectException(UserSessionNotFoundException::class);
+        $this->expectException(UserSessionExceptions::class);
+
         $buyinSessionService->add($data);
-        // y que se llame metodo flush con anythig
     }
 
     public function testAddWithException(): void
@@ -103,7 +101,6 @@ class BuyinSessionServiceTest extends TestCase
 
         $this->expectException(\Exception::class);
         $buyinSessionService->add($data);
-        // y que se llame metodo flush con anythig
     }
 
     public function testUpdate(): void
@@ -154,10 +151,9 @@ class BuyinSessionServiceTest extends TestCase
         ->method('flush')
         ->with(
            $this->equalTo($expectedBuyin)
-        )/*->willReturn('anything')*/;
+        );
 
        $buyinSessionService->update($data['id'], $data);
-       // y que se llame metodo flush con anythig
     }
 
     public function testUpdateWithIncompleteDataException(): void
@@ -172,14 +168,15 @@ class BuyinSessionServiceTest extends TestCase
             'approved'      => 1
         ];
 
+        $idNull = null;
+
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedUserSessionService = $this->createMock(UserSessionService::class);
         $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
         
-        $this->expectException(IncompleteDataException::class);
+        $this->expectException(BaseException::class);
 
-        $fakeIdForTesting = 1111;
-        $buyinSessionService->update($fakeIdForTesting, $data);
+        $buyinSessionService->update($idNull, $data);
     }
 
     public function testUpdateWithBuyinNotFoundException(): void
@@ -195,20 +192,21 @@ class BuyinSessionServiceTest extends TestCase
             'approved'      => 1
         ];
 
+        $idNUll = null;
+
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedUserSessionService = $this->createMock(UserSessionService::class);
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new BuyinNotFoundException())
+          BuyinExceptions::buyinNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
         $buyinSessionService = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $this->expectException(BuyinNotFoundException::class);
+        $this->expectException(BuyinExceptions::class);
 
-        $fakeIdForTesting = 1111;
-        $buyinSessionService->update($fakeIdForTesting, $data);
+        $buyinSessionService->update($idNUll, $data);
     }
 
     public function testUpdateWithException(): void
@@ -224,6 +222,8 @@ class BuyinSessionServiceTest extends TestCase
             'approved'      => 1
         ];
 
+        $idNull = null;
+
         $mockedEntityManager = $this->createMock(EntityManager::class);
         $mockedUserSessionService = $this->createMock(UserSessionService::class);
         $mockedRepository = $this->createMock(BaseRepository::class);
@@ -236,14 +236,13 @@ class BuyinSessionServiceTest extends TestCase
         
         $this->expectException(\Exception::class);
 
-        $fakeIdForTesting = 1111;
-        $buyinSessionService->update($fakeIdForTesting, $data);
+        $buyinSessionService->update($idNull, $data);
     }
 
     public function testDelete(): void
     {
         $data = [
-          'id' => 1
+            'id' => 1
         ];
 
         $mockedEntityManager = $this->createMock(EntityManager::class);
@@ -263,7 +262,7 @@ class BuyinSessionServiceTest extends TestCase
         ->method('remove')
         ->with(
            $this->equalTo($expectedBuyin)
-        )/*->willReturn('anything')*/;
+        );
 
         $buyinSessionService->delete($data['id']);
     }
@@ -278,7 +277,7 @@ class BuyinSessionServiceTest extends TestCase
 
         $mockedRepository = $this->createMock(BaseRepository::class);
         $mockedRepository->method('find')->will($this->throwException(
-          new BuyinNotFoundException())
+          BuyinExceptions::buyinNotFoundException())
         );
 
         $mockedEntityManager->method('getRepository')->willReturn($mockedRepository);
@@ -287,7 +286,8 @@ class BuyinSessionServiceTest extends TestCase
         $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService, []);
         $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $this->expectException(BuyinNotFoundException::class);
+        $this->expectException(BuyinExceptions::class);
+
         $buyinSessionService->delete($data);
     }
 
@@ -311,6 +311,7 @@ class BuyinSessionServiceTest extends TestCase
         $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
         $this->expectException(\Exception::class);
+
         $buyinSessionService->delete($data);
     }
 
@@ -330,7 +331,7 @@ class BuyinSessionServiceTest extends TestCase
         $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService, []);
         $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $this->expectException(IncompleteDataException::class);
+        $this->expectException(BaseException::class);
         $buyinSessionService->checkGenericInputData($data);
     }
 
@@ -338,12 +339,12 @@ class BuyinSessionServiceTest extends TestCase
     {
         // $data without idUserSession
         $data = [
-          'hour'          => '2019-07-04T19:00', 
-          'amountCash'    => 'a non numeric value',
-          'amountCredit'  => 100,
-          'currency'      => 1,
-          'approved'      => 2,
-          'idUserSession' => 1
+            'hour'          => '2019-07-04T19:00',
+            'amountCash'    => 'a non numeric value',
+            'amountCredit'  => 100,
+            'currency'      => 1,
+            'approved'      => 2,
+            'idUserSession' => 1
         ];
 
         $mockedEntityManager      = $this->createMock(EntityManager::class);
@@ -351,7 +352,7 @@ class BuyinSessionServiceTest extends TestCase
         $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService, []);
         $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $this->expectException(BuyinInvalidException::class);
+        $this->expectException(BuyinExceptions::class);
         $buyinSessionService->checkGenericInputData($data);
     }
 
@@ -372,7 +373,8 @@ class BuyinSessionServiceTest extends TestCase
         $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService, []);
         $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $this->expectException(BuyinInvalidException::class);
+        $this->expectException(BuyinExceptions::class);
+
         $buyinSessionService->checkGenericInputData($data);
     }
 
@@ -380,12 +382,12 @@ class BuyinSessionServiceTest extends TestCase
     {
         // $data without idUserSession
         $data = [
-          'hour'          => '2019-07-04T19:00', 
-          'amountCash'    => -100,
-          'amountCredit'  => 100,
-          'currency'      => 1,
-          'approved'      => 2,
-          'idUserSession' => 1
+            'hour'          => '2019-07-04T19:00',
+            'amountCash'    => -100,
+            'amountCredit'  => 100,
+            'currency'      => 1,
+            'approved'      => 2,
+            'idUserSession' => 1
         ];
 
         $mockedEntityManager      = $this->createMock(EntityManager::class);
@@ -393,7 +395,8 @@ class BuyinSessionServiceTest extends TestCase
         $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService, []);
         $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $this->expectException(BuyinInvalidException::class);
+        $this->expectException(BuyinExceptions::class);
+
         $buyinSessionService->checkGenericInputData($data);
     }
 
@@ -401,12 +404,12 @@ class BuyinSessionServiceTest extends TestCase
     {
         // $data without idUserSession
         $data = [
-          'hour'          => '2019-07-04T19:00', 
-          'amountCash'    => 100,
-          'amountCredit'  => -100,
-          'currency'      => 1,
-          'approved'      => 2,
-          'idUserSession' => 1
+            'hour'          => '2019-07-04T19:00',
+            'amountCash'    => 100,
+            'amountCredit'  => -100,
+            'currency'      => 1,
+            'approved'      => 2,
+            'idUserSession' => 1
         ];
 
         $mockedEntityManager      = $this->createMock(EntityManager::class);
@@ -414,7 +417,8 @@ class BuyinSessionServiceTest extends TestCase
         $mockedUserSessionService = new UserSessionService($mockedEntityManager, $mockedUserService, []);
         $buyinSessionService      = new BuyinSessionService($mockedEntityManager, $mockedUserSessionService, []);
 
-        $this->expectException(BuyinInvalidException::class);
+        $this->expectException(BuyinExceptions::class);
+
         $buyinSessionService->checkGenericInputData($data);
     }
 

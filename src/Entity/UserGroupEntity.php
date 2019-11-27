@@ -22,7 +22,7 @@ class UserGroupEntity
      */
     private $name;
 
-
+    // @codeCoverageIgnoreStart
     public function getId()
     {
         return $this->id;
@@ -42,4 +42,5 @@ class UserGroupEntity
     {
         $this->name = $name;
     }
+    // @codeCoverageIgnoreEnd
 }

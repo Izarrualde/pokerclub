@@ -3,16 +3,15 @@ namespace Solcre\Pokerclub\Service;
 
 use Solcre\Pokerclub\Entity\BuyinSessionEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\BuyinInvalidException;
-use Solcre\Pokerclub\Exception\BuyinNotFoundException;
-use Solcre\Pokerclub\Exception\UserSessionNotFoundException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\BuyinExceptions;
+use Solcre\Pokerclub\Exception\UserSessionExceptions;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class BuyinSessionService extends BaseService
 {
-
     public const STATUS_CODE_404 = 404;
     public const AVATAR_FILE_KEY = 'avatar_file';
 
@@ -37,7 +36,6 @@ class BuyinSessionService extends BaseService
     public function checkGenericInputData($data): void
     {
         // does not include id
-
         if (!isset(
             $data['hour'],
             $data['amountCash'],
@@ -47,14 +45,14 @@ class BuyinSessionService extends BaseService
             $data['idUserSession']
         )
         ) {
-            throw new IncompleteDataException();
+            throw BaseException::incompleteDataException();
         }
 
         if (!is_numeric($data['amountCash']) ||
             !is_numeric($data['amountCredit']) ||
             ($data['amountCash'] < 0) ||
             ($data['amountCredit'] < 0)) {
-            throw new BuyinInvalidException();
+            throw BuyinExceptions::buyinInvalidException();
         }
     }
 
@@ -73,11 +71,16 @@ class BuyinSessionService extends BaseService
             $userSession = $this->userSessionService->fetch($data['idUserSession']);
         } catch (Exception $e) {
             if ($e->getCode() === self::STATUS_CODE_404) {
-                throw new UserSessionNotFoundException();
+                throw UserSessionExceptions::userSessionNotFoundException();
             }
+
             throw $e;
         }
-        
+
+        if (! $userSession instanceof UserSessionEntity) {
+            throw UserSessionExceptions::userSessionNotFoundException();
+        }
+
         if ($userSession->getBuyins()->isEmpty()) {
             $userSession->setStart(new \DateTime($data['hour']));
         }
@@ -95,16 +98,21 @@ class BuyinSessionService extends BaseService
         $this->checkGenericInputData($data);
 
         if (!isset($data['id'])) {
-            throw new IncompleteDataException();
+            throw BaseException::incompleteDataException();
         }
 
         try {
-            $buyin = parent::fetch($data['id']);
+            $buyin = $this->fetch($data['id']);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new BuyinNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw BuyinExceptions::buyinNotFoundException();
             }
+
             throw $e;
+        }
+
+        if (! $buyin instanceof BuyinSessionEntity) {
+            throw BuyinExceptions::buyinNotFoundException();
         }
 
         $buyin->setHour(new \DateTime($data['hour']));
@@ -119,16 +127,17 @@ class BuyinSessionService extends BaseService
     public function delete($id, $entityObj = null): bool
     {
         try {
-            $buyin    = parent::fetch($id);
+            $buyin = $this->fetch($id);
 
             $this->entityManager->remove($buyin);
             $this->entityManager->flush();
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new BuyinNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw BuyinExceptions::buyinNotFoundException();
             }
+
             throw $e;
         }
     }

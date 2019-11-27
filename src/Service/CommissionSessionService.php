@@ -49,7 +49,7 @@ class CommissionSessionService extends BaseService
             throw SessionExceptions::sessionNotFoundException();
         }
 
-        if (! $session instanceOf SessionEntity) {
+        if (! $session instanceof SessionEntity) {
             throw SessionExceptions::sessionNotFoundException();
         }
 
