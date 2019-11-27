@@ -64,23 +64,33 @@ class SessionEntity
 
     // protected $countActivePlayers;
 
+
     protected $activePlayers;
+
 
     protected $distincPlayers;
 
+
     protected $seatedPlayers;
+
 
     protected $commissionTotal;
 
+
     protected $expensesTotal;
+
 
     protected $dealerTipTotal;
 
+
     protected $serviceTipTotal;
+
 
     protected $totalCashout;
 
+
     protected $totalPlayed;
+
 
     protected $valid;
 

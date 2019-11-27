@@ -2,19 +2,18 @@
 namespace Solcre\Pokerclub\Service;
 
 use Solcre\Pokerclub\Entity\SessionEntity;
+use Solcre\Pokerclub\Entity\UserSessionEntity;
+use Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\SessionNotFoundException;
-use Solcre\Pokerclub\Exception\IncompleteDataException;
-use Solcre\Pokerclub\Exception\ClassNotExistingException;
-use Solcre\Pokerclub\Exception\InvalidRakebackClassException;
+use Solcre\Pokerclub\Exception\BaseException;
+use Solcre\Pokerclub\Exception\SessionExceptions;
 use Solcre\SolcreFramework2\Service\BaseService;
 use Exception;
 
 class SessionService extends BaseService
 {
-    // ult
-    const STATUS_CODE_404 = 404;
-    const AVATAR_FILE_KEY = 'avatar_file';
+    public const STATUS_CODE_404 = 404;
+    public const AVATAR_FILE_KEY = 'avatar_file';
 
     private $config;
 
@@ -24,7 +23,7 @@ class SessionService extends BaseService
         $this->config = $config;
     }
 
-    public function checkGenericInputData($data)
+    public function checkGenericInputData($data): void
     {
         // don't include id
         if (!isset(
@@ -37,8 +36,7 @@ class SessionService extends BaseService
             $data['minimum_user_session_minutes']
         )
         ) {
-            // check with: will->throwException
-            throw new IncompleteDataException();
+            throw BaseException::incompleteDataException();
         }
     }
 
@@ -66,16 +64,21 @@ class SessionService extends BaseService
         $this->checkGenericInputData($data);
 
         if (!isset($data['id'])) {
-            throw new IncompleteDataException();
+            throw BaseException::incompleteDataException();
         }
 
         try {
-            $session = parent::fetch($data['id']);
+            $session = $this->fetch($data['id']);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new SessionNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw SessionExceptions::sessionNotFoundException();
             }
+
             throw $e;
+        }
+
+        if (! $session instanceof SessionEntity) {
+            throw SessionExceptions::sessionNotFoundException();
         }
 
         $session->setDate(new \DateTime($data['date']));
@@ -103,67 +106,84 @@ class SessionService extends BaseService
     public function delete($id, $entityObj = null): bool
     {
         try {
-            $session = parent::fetch($id);
+            $session = $this->fetch($id);
 
             $this->entityManager->remove($session);
             $this->entityManager->flush();
 
             return true;
         } catch (\Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new SessionNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw SessionExceptions::sessionNotFoundException();
             }
+
             throw $e;
         }
     }
 
     public function createRakebackAlgorithm($classname)
     {
-        // checkear si existe la clase (class exist)
         if (class_exists($classname)) {
             return new $classname();
         }
 
-        throw new ClassNotExistingException();
+        throw BaseException::classNonExistentException();
     }
     
-    public function calculateRakeback($idSession)
+    public function calculateRakeback($idSession): bool
     {
-        $session = parent::fetch($idSession);
+        $session = $this->fetch($idSession);
 
-        $rakebackAlgorithm = $this->createRakebackAlgorithm($session->getRakebackClass());
-        
+        if (! $session instanceof SessionEntity) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
+
+        try {
+            $rakebackAlgorithm = $this->createRakebackAlgorithm($session->getRakebackClass());
+        } catch (BaseException $e) {
+            throw BaseException::classNonExistentException();
+        }
+
         $usersSession = $session->getSessionUsers();
-        
+
+        /** @var UserSessionEntity $userSession */
         foreach ($usersSession as $userSession) {
             $sessionPointsOld = (int)$userSession->getAccumulatedPoints();
 
             $sessionPoints = $rakebackAlgorithm->calculate($userSession);
             
-            if (!is_numeric($sessionPoints)) {
-                throw new InvalidRakebackClassException("Type error: calculate method must return a valid number", 1);
+            if (! is_numeric($sessionPoints)) {
+                throw SessionExceptions::invalidPointsException();
             }
 
             $userSession->setAccumulatedPoints($sessionPoints);
 
             $user = $userSession->getUser();
 
-            $user->setPoints($user->getPoints()+$sessionPoints-$sessionPointsOld);
+            if ($user instanceof UserEntity) {
+                $user->setPoints($user->getPoints()+$sessionPoints-$sessionPointsOld);
+            }
         }
 
         $this->entityManager->flush();
+
         return true;
     }
 
     public function play($idSession)
     {
         try {
-            $session = parent::fetch($idSession);
+            $session = $this->fetch($idSession);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new SessionNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw SessionExceptions::sessionNotFoundException();
             }
+
             throw $e;
+        }
+
+        if (! $session instanceof SessionEntity) {
+            throw SessionExceptions::sessionNotFoundException();
         }
 
         $session->setStartTimeReal(new \DateTime());
@@ -176,12 +196,17 @@ class SessionService extends BaseService
     public function stop($idSession)
     {
         try {
-            $session = parent::fetch($idSession);
+            $session = $this->fetch($idSession);
         } catch (Exception $e) {
-            if ($e->getCode() == self::STATUS_CODE_404) {
-                throw new SessionNotFoundException();
+            if ($e->getCode() === self::STATUS_CODE_404) {
+                throw SessionExceptions::sessionNotFoundException();
             }
+
             throw $e;
+        }
+
+        if (! $session instanceof SessionEntity) {
+            throw SessionExceptions::sessionNotFoundException();
         }
 
         $session->setEndTime(new \DateTime());

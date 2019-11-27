@@ -15,12 +15,11 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 
 class UserSessionService extends BaseService
 {
-
     public const STATUS_CODE_404 = 404;
     public const AVATAR_FILE_KEY = 'avatar_file';
 
     protected $userService;
-    private   $config;
+    private $config;
 
     public function __construct(EntityManager $em, UserService $userService, array $config)
     {
@@ -51,7 +50,7 @@ class UserSessionService extends BaseService
             throw SessionExceptions::sessionNotFoundException();
         }
 
-        if (! $session instanceOf SessionEntity) {
+        if (! $session instanceof SessionEntity) {
             throw SessionExceptions::sessionNotFoundException();
         }
 
@@ -136,7 +135,7 @@ class UserSessionService extends BaseService
             throw SessionExceptions::sessionNotFoundException();
         }
 
-        if (! $session instanceOf SessionEntity) {
+        if (! $session instanceof SessionEntity) {
             throw SessionExceptions::sessionNotFoundException();
         }
 

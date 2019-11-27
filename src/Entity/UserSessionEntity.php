@@ -49,6 +49,21 @@ class UserSessionEntity
     protected $cashout;
 
 
+    protected $cashin;
+
+
+    protected $totalCredit;
+
+
+    protected $totalCash;
+
+
+    protected $duration;
+
+
+    protected $percentagePlayed;
+
+
     /**
      * @ORM\Column(type="datetime", name="start_at")
      */
@@ -80,6 +95,7 @@ class UserSessionEntity
      * @ORM\OneToMany(targetEntity="Solcre\Pokerclub\Entity\BuyinSessionEntity", mappedBy="userSession")
      */
     protected $buyins;
+
 
 
     public function __construct(
@@ -237,10 +253,10 @@ class UserSessionEntity
     }
     // @codeCoverageIgnoreEnd
 
-    public function getCashin()
+    public function getCashin(): int
     {
         $cashin = 0;
-            $buyins = $this->getBuyins()->toArray();
+        $buyins = $this->getBuyins()->toArray();
 
         /** @var BuyinSessionEntity $buyin */
         foreach ($buyins as $buyin) {
@@ -276,7 +292,7 @@ class UserSessionEntity
         return $cash;
     }
 
-    public function getResult()
+    public function getResult(): int
     {
         return $this->getCashout() - $this->getCashin();
     }

@@ -5,6 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository") @ORM\Table(name="awards")
+ * @codeCoverageIgnore
  */
 class AwardEntity
 {
