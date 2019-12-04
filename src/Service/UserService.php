@@ -219,9 +219,9 @@ class UserService extends BaseService
         }
     }
 
-    private function userExists($data, $id): bool
+    private function userExists($data): bool
     {
-        return $this->repository->userExists($data, $id);
+        return $this->repository->userExists($data);
     }
 
     private function checkPasswords($password, $passwordConfirm)
