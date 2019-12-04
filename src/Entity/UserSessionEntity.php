@@ -65,9 +65,6 @@ class UserSessionEntity
     protected $duration;
 
 
-    // protected $percentagePlayed;
-
-
     /**
      * @ORM\Column(type="datetime", name="start_at")
      */
@@ -305,11 +302,11 @@ class UserSessionEntity
     {
         $date1 = $this->getStart();
 
-        if (is_null($date1)) {
+        if ($date1 === null) {
             return 0;
         }
 
-        $date2    = is_null($this->getEnd()) ? new \DateTime() : $this->getEnd();
+        $date2    = $this->getEnd() ?? new \DateTime();
         $interval = date_diff($date1, $date2);
 
         if (! $interval instanceof \DateInterval) {

@@ -64,8 +64,10 @@ class UserSessionService extends BaseService
             throw SessionExceptions::insufficientAvailableSeatsException();
         }
 
-        if (in_array($data['users_id'], $seatedPlayers, true)) {
-                throw UserSessionExceptions::userSessionAlreadyAddedException();
+        $usersAlreadyAdded = array_intersect($data['users_id'], $seatedPlayers);
+
+        if (count($usersAlreadyAdded) > 0) {
+                throw UserSessionExceptions::userSessionAlreadyAddedException($usersAlreadyAdded);
         }
 
         $usersSessionsAdded = [];
@@ -166,9 +168,7 @@ class UserSessionService extends BaseService
 
     public function close($data, $strategies = null): void
     {
-        $this->checkGenericInputData($data);
-
-        if (!isset($data['id'])) {
+        if (! isset($data['id'], $data['idUser'], $data['cashout'], $data['end'])) {
             throw BaseException::incompleteDataException();
         }
 

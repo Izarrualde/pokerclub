@@ -1,9 +1,9 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
+use InvalidArgumentException;
 use Solcre\Pokerclub\Entity\UserEntity;
 use Doctrine\ORM\EntityManager;
-use Solcre\Pokerclub\Exception\UserHadActionException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Solcre\Pokerclub\Exception\BaseException;
 use Solcre\Pokerclub\Exception\UserExceptions;
@@ -13,7 +13,6 @@ use Exception;
 
 class UserService extends BaseService
 {
-    
     public const STATUS_CODE_404 = 404;
     public const AVATAR_FILE_KEY = 'avatar_file';
 
@@ -56,9 +55,45 @@ class UserService extends BaseService
         }
     }
 
+    private function validateCellphone($cellphone): void
+    {
+        // Check the lenght of number
+        if (strlen($cellphone) !== 9) {
+            throw new InvalidArgumentException('El número celular debe tener 9 dígitos', 422);
+        }
+
+        // Check that contains only numeric values
+        if (! preg_match('/^\d*$/', $cellphone)) {
+            throw new InvalidArgumentException('El número celular debe contener sólo dígitos', 422);
+        }
+
+        $cellphoneArray = str_split($cellphone);
+
+        // Check that first digit is equal to 0
+        if ((int)$cellphoneArray[0] !== 0) {
+            throw new InvalidArgumentException('El primer dígito del número celular debe ser 0', 422);
+        }
+
+        // Check that second digit is equal to 9
+        if ((int)$cellphoneArray[1] !== 9) {
+            throw new InvalidArgumentException('El segundo dígito del número celular debe ser 9', 422);
+        }
+
+        // Check that third digit is distinct to 0
+        if ((int)$cellphoneArray[2] === 0) {
+            throw new InvalidArgumentException('El tercer dígito del número celular debe ser distinto de 0', 422);
+        }
+    }
+
     public function add($data)
     {
         $this->checkGenericInputData($data);
+
+        $this->validateCellphone($data['username']);
+
+        if (! Validators::valid_email($data['email'])) {
+            throw UserExceptions::invalidEmailException();
+        };
 
         $user = new UserEntity();
         $user->setPassword($data['password']);
@@ -119,7 +154,7 @@ class UserService extends BaseService
         */
 
         if (! Validators::valid_email($data['email'])) {
-            throw new Exception('Invalid email', 400);
+            throw UserExceptions::invalidEmailException();
         }
 
         /*
@@ -217,6 +252,7 @@ class UserService extends BaseService
         return $file;
     }
     */
+
     /*
     private function deleteAvatarFromServer(UserEntity $user)
     {

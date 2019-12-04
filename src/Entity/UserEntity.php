@@ -336,16 +336,16 @@ class UserEntity
     public function setGroups($groups): void
     {
         foreach ($this->groups as $id => $group) {
-            if (!isset($groups[$id])) {
-                /* Remove from old because it doesn't exist in new */
+            if (! isset($groups[$id])) {
+                // Remove from old because it doesn't exist in new
                 $this->groups->remove($id);
             } else {
-                /* The group already exists do not overwrite */
+                // The group already exists do not overwrite
                 unset($groups[$id]);
             }
         }
 
-        /* Add groups that exist in new but not in old */
+        // Add groups that exist in new but not in old
         foreach ($groups as $id => $group) {
             $this->groups[$id] = $group;
         }

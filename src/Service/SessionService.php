@@ -170,7 +170,7 @@ class SessionService extends BaseService
         return true;
     }
 
-    public function play($idSession)
+    public function play($idSession): bool
     {
         try {
             $session = $this->fetch($idSession);
@@ -190,10 +190,10 @@ class SessionService extends BaseService
 
         $this->entityManager->flush($session);
 
-        return $session;
+        return true;
     }
 
-    public function stop($idSession)
+    public function stop($idSession): bool
     {
         try {
             $session = $this->fetch($idSession);
@@ -213,6 +213,6 @@ class SessionService extends BaseService
 
         $this->entityManager->flush($session);
 
-        return $session;
+        return true;
     }
 }

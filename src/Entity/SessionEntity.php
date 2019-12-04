@@ -347,7 +347,6 @@ class SessionEntity
         return $this;
     }
 
-
     public function getBuyins(): ?array
     {
         return array_reduce(
@@ -430,7 +429,6 @@ class SessionEntity
         );
     }
 
-
     public function getValid(): bool
     {
         $total = $this->getTotalCashout() +
@@ -440,17 +438,6 @@ class SessionEntity
 
         return $this->getTotalPlayed() === $total;
     }
-
-/*
-    public function validateSession($session)
-    {
-        $total = $session->getTotalCashout() +
-        $session->getCommissionTotal() +
-        $session->getDealerTipTotal()+
-        $session-> getServiceTipTotal();
-        return $session->getTotalPlayed() == $total;
-    }
-*/
 
     public function getActivePlayers(): array
     {
@@ -497,15 +484,6 @@ class SessionEntity
         return $distinctPlayers;
     }
 
-    /*
-    public function calculatePoints()
-    {
-        foreach ($this->sessionUsers as $userSession) {
-            $userSession->setAccumulatedPoints($this->rakebackAlgorithm->calculate($userSession));
-        }
-    }
-    */
-
     public function getAveragePlayersInPeriod(\DateTime $from, \DateTime $to)
     {
         $players = 0;
@@ -546,11 +524,14 @@ class SessionEntity
             'valid'                     => $this->getValid(),
             'minimumUserSessionMinutes' => (int)$this->getMinimumUserSessionMinutes()
         ];
-        /* foreach ($this->sessionUsers as $userSession) {
+
+        /*
+        foreach ($this->sessionUsers as $userSession) {
              if ($userSession instanceof UserSessionEntity) {
                  $ret['usersSession'][] = $userSession->toArray();
              }
-         };  */
+         };
+         */
 
         return $ret;
     }
