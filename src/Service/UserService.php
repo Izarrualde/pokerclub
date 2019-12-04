@@ -93,7 +93,11 @@ class UserService extends BaseService
 
         if (! Validators::valid_email($data['email'])) {
             throw UserExceptions::invalidEmailException();
-        };
+        }
+
+        if ($this->userExists($data)) {
+            throw UserExceptions::userAlreadyExistException();
+        }
 
         $user = new UserEntity();
         $user->setPassword($data['password']);
@@ -119,7 +123,7 @@ class UserService extends BaseService
     {
         $this->checkGenericInputData($data);
 
-        if (! isset($data['id'], $data['password_confirm'], $data['avatar_file'], $data['logged_user_username'])) {
+        if (! isset($data['id']/*, $data['password_confirm'], $data['avatar_file'], $data['logged_user_username']*/)) {
             throw BaseException::incompleteDataException();
         }
 
@@ -137,6 +141,7 @@ class UserService extends BaseService
             throw UserExceptions::userNotFoundException();
         }
 
+        /*
         $loggedUser = $this->fetchBy(
             [
                 'username' => $data['logged_user_username']
@@ -146,6 +151,7 @@ class UserService extends BaseService
         if (! $loggedUser instanceof UserEntity || $loggedUser->getUsername() !== $user->getUsername()) {
             throw new Exception('Method not allowed for current user', 400);
         }
+        */
 
         /*
         if ($this->userExists($data, $id)) {
