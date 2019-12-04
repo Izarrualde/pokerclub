@@ -20,4 +20,9 @@ class UserExceptions extends BaseException
     {
         return new self('Usuario ya existente.', 400);
     }
+
+    public static function invalidEmailException(): self
+    {
+        return new self('El email ingresado no es válido', 400);
+    }
 }

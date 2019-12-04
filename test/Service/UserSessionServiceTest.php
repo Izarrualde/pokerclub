@@ -57,59 +57,44 @@ class UserSessionServiceTest extends TestCase
         $userSessionService->add($data);
      }
 
-/*
- public function testAddAlreadyAddedException()
- {
-    $data = [
-      'idSession'  => 3,
-      'idUser'     => 1,
-      'isApproved' => 1,
-      'points'     => 0,
-      'start'      => '2019-07-04T19:00'
-    ];
+    /*
+    public function testAddAlreadyAddedException(): void
+    {
+        $data = [
+            'idSession'  => 3,
+            'idUser'     => 1,
+            'isApproved' => 1,
+            'points'     => 0,
+            'start'      => '2019-07-04T19:00'
+        ];
 
+        $mockedEntityManager = $this->createMock(EntityManager::class);
+        $mockedEntityManager->method('persist')->willReturn(true);
 
-   $mockedEntityManager = $this->createMock(EntityManager::class);
-   $mockedEntityManager->method('persist')->willReturn(true);
+        $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3))
 
-   $sessionWithThis = new SessionEntity(3);
-   $session->s
-   $mockedEntityManager->method('getReference')->willReturn(new SessionEntity(3))
+        $mockedSessionEntity = $this->createMock(SessionEntity::class);
+        $mockedSessionEntity->method('getActivePlayers')->willReturn(['1']);
 
-   
-   $mockedSessionEntity = $this->createMock(SessionEntity::class);
-   $mockedSessionEntity->method('getActivePlayers')->willReturn(['1']);
+        $session            = new SessionEntity(3);
+        $user               = new UserEntity(1);
+        $userSessionService = new UserService($mockedEntityManager, []);
 
+        $expectedUserSession = new UserSessionEntity();
+        $expectedUserSession->setSession($session);
+        $expectedUserSession->setUser($user);
+        $expectedUserSession->setIdUser($data['idUser']);
+        $expectedUserSession->setIsApproved($data['isApproved']);
+        $expectedUserSession->setAccumulatedPoints(new \DateTime($data['points']));
 
-    $session = new SessionEntity(3);
-    $user = new UserEntity(1);
-    $userSessionService = new UserService($mockedEntityManager);
+        $mockedEntityManager->expects($this->once())
+        ->method('persist')
+        ->with(
+           $this->contains([$exception->getMessage()]);
 
-    $expectedUserSession    = new UserEntity();
-    $expectedUserSession->setSession($session);
-    $expectedUserSession->setUser($user);
-    $expectedUserSession->setIdUser($data['idUser']);
-    $expectedUserSession->setIsApproved($data['isApproved']);
-    $expectedUserSession->setAccumulatedPoints(new \DateTime($data['points']));
-
-
-  //al llamar a userSessionService con esta $data, corroboro que se lanza UserSessionAlreadyAddedException 
-  // ver en siguientes lineas como verificar que userSessionService->add lanzo la expcepcion.  
-
-   $mockedEntityManager->expects($this->once())
-   ->method('persist')
-   ->with(
-       $this->contains([$exception->getMessage()])
-   )/*->willReturn('anything')*//*;
-
-   $userSessionService->add($data);
-
-
-
- // y que se llame metodo flush con anythig
-
- }
-*/
+        $userSessionService->add($data);
+    }
+    */
 
     public function testUpdate(): void
     {

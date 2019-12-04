@@ -51,7 +51,7 @@ class AwardEntity
     /**
      * @param mixed $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
@@ -67,7 +67,7 @@ class AwardEntity
     /**
      * @param mixed $createdAt
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt($createdAt): void
     {
         $this->createdAt = $createdAt;
     }
@@ -83,7 +83,7 @@ class AwardEntity
     /**
      * @param mixed $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -115,7 +115,7 @@ class AwardEntity
     /**
      * @param mixed $description
      */
-    public function setDescription($description)
+    public function setDescription($description): void
     {
         $this->description = $description;
     }

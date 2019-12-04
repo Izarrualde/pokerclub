@@ -6,9 +6,10 @@ namespace Solcre\Pokerclub\Exception;
  */
 class UserSessionExceptions extends BaseException
 {
-    public static function userSessionAlreadyAddedException(): self
+    public static function userSessionAlreadyAddedException($usersAlreadyAdded): self
     {
-        return new self('El usuario ya fue agregado a la sesión.', 400);
+        $list = implode(',', $usersAlreadyAdded);
+        return new self('Operacion denegada, usuario/s: ' . $list .'ya fue/fueron agregado/s a la sesión.', 400);
     }
 
     public static function userHadActionException(): self
