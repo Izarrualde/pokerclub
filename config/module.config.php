@@ -20,6 +20,8 @@ use Solcre\Pokerclub\Service\UserSessionService;
 use Solcre\Pokerclub\Service\Factory\UserSessionServiceFactory;
 use Solcre\Pokerclub\Service\UserGroupService;
 use Solcre\Pokerclub\Service\Factory\UserGroupServiceFactory;
+use Solcre\Pokerclub\Service\MeService;
+use Solcre\Pokerclub\Service\Factory\MeServiceFactory;
 
 return [
     'service_manager' => [
@@ -33,7 +35,8 @@ return [
             SessionService::class           => SessionServiceFactory::class,
             UserSessionService::class       => UserSessionServiceFactory::class,
             AwardService::class             => AwardServiceFactory::class,
-            UserGroupService::class         => UserGroupServiceFactory::class
+            UserGroupService::class         => UserGroupServiceFactory::class,
+            MeService::class                => MeServiceFactory::class
         ]
     ],
     'doctrine'        => [

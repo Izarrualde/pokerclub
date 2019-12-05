@@ -7,7 +7,7 @@ use Solcre\Pokerclub\Exception\UserSessionExceptions;
 
 /**
  * @ORM\Embeddable
- * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\UserSessionRepository")
  * @ORM\Table(name="sessions_users")
  */
 class UserSessionEntity

@@ -206,4 +206,9 @@ class UserSessionService extends BaseService
         $this->entityManager->persist($userSession);
         $this->entityManager->flush();
     }
+
+    public function getHistoricalSessions(UserEntity $user, int $count): array
+    {
+        return $this->repository->getHistoricalSessions($user->getId(), $count);
+    }
 }
