@@ -8,6 +8,7 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Solcre\Pokerclub\Exception\BaseException;
 use Solcre\Pokerclub\Exception\UserExceptions;
 use Solcre\SolcreFramework2\Service\BaseService;
+use Solcre\SolcreFramework2\Utility\Strings;
 use Solcre\SolcreFramework2\Utility\Validators;
 use Exception;
 
@@ -100,7 +101,7 @@ class UserService extends BaseService
         }
 
         $user = new UserEntity();
-        $user->setPassword($data['password']);
+        $user->setPassword(Strings::bcryptPassword($data['password']));
         $user->setName($data['name']);
         $user->setLastname($data['lastname']);
         $user->setEmail($data['email']);
@@ -219,9 +220,9 @@ class UserService extends BaseService
         }
     }
 
-    private function userExists($data, $id): bool
+    private function userExists($data): bool
     {
-        return $this->repository->userExists($data, $id);
+        return $this->repository->userExists($data);
     }
 
     private function checkPasswords($password, $passwordConfirm)
