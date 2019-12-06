@@ -1,6 +1,7 @@
 <?php
 namespace Solcre\Pokerclub\Service;
 
+use Lms\Service\RakebackService;
 use Solcre\Pokerclub\Entity\SessionEntity;
 use Solcre\Pokerclub\Entity\UserSessionEntity;
 use Solcre\Pokerclub\Entity\UserEntity;
@@ -90,11 +91,11 @@ class SessionService extends BaseService
         if (isset($data['real_start_at'])) {
             $session->setStartTimeReal(new \DateTime($data['real_start_at']));
         }
-        
+
         if (isset($data['end_at'])) {
             $session->setEndTime(new \DateTime($data['end_at']));
         }
-        
+
         $session->setRakebackClass($data['rakeback_class']);
         $session->setMinimumUserSessionMinutes($data['minimum_user_session_minutes']);
 
@@ -129,7 +130,7 @@ class SessionService extends BaseService
 
         throw BaseException::classNonExistentException();
     }
-    
+
     public function calculateRakeback($idSession): bool
     {
         $session = $this->fetch($idSession);
@@ -139,7 +140,8 @@ class SessionService extends BaseService
         }
 
         try {
-            $rakebackAlgorithm = $this->createRakebackAlgorithm($session->getRakebackClass());
+            $fqcnRakebackClass = RakebackService::NAME_SPACE . '\\' . $session->getRakebackClass();
+            $rakebackAlgorithm = $this->createRakebackAlgorithm($fqcnRakebackClass);
         } catch (BaseException $e) {
             throw BaseException::classNonExistentException();
         }
@@ -151,7 +153,7 @@ class SessionService extends BaseService
             $sessionPointsOld = (int)$userSession->getAccumulatedPoints();
 
             $sessionPoints = $rakebackAlgorithm->calculate($userSession);
-            
+
             if (! is_numeric($sessionPoints)) {
                 throw SessionExceptions::invalidPointsException();
             }
