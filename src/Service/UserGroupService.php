@@ -9,18 +9,16 @@ class UserGroupService extends BaseService
     public function add($data)
     {
         $data['name'] = strtolower($data['name']);
-        $groupExists = $this->fetchBy(
+        $groupExists  = $this->fetchBy(
             array('name' => $data['name'])
         );
 
         /* Check if group name is already taken. */
         if (count($groupExists) > 0) {
-            throw new \Exception("User group name already taken.", 409);
-        } else {
-            $userGroup = parent::add($data);
+            throw new \RuntimeException('User group name already taken.', 409);
         }
 
-        return $userGroup;
+        return parent::add($data);
     }
 
     public function update($id, $data)
