@@ -16,6 +16,7 @@ use Solcre\Pokerclub\Entity\SessionEntity;
 class UserSessionService extends BaseService
 {
     public const STATUS_CODE_404 = 404;
+    public const ONE_SESSION     = 1;
     public const AVATAR_FILE_KEY = 'avatar_file';
 
     protected $userService;
@@ -67,7 +68,7 @@ class UserSessionService extends BaseService
         $usersAlreadyAdded = array_intersect($data['users_id'], $seatedPlayers);
 
         if (count($usersAlreadyAdded) > 0) {
-                throw UserSessionExceptions::userSessionAlreadyAddedException($usersAlreadyAdded);
+            throw UserSessionExceptions::userSessionAlreadyAddedException($usersAlreadyAdded);
         }
 
         $usersSessionsAdded = [];
@@ -201,6 +202,7 @@ class UserSessionService extends BaseService
 
         /** @var UserEntity $user */
         $user->setHours($user->getHours()+$userSession->getDuration());
+        $user->SetSessions($user->getSessions()+self::ONE_SESSION);
 
         $this->entityManager->persist($user);
         $this->entityManager->persist($userSession);
