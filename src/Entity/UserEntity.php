@@ -408,7 +408,6 @@ class UserEntity
     {
         return [
             'id'         => $this->getId(),
-            'password'   => $this->getPassword(),
             'email'      => $this->getEmail(),
             'name'       => $this->getName(),
             'lastname'   => $this->getLastname(),
