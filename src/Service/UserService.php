@@ -15,20 +15,23 @@ use Exception;
 class UserService extends BaseService
 {
     public const STATUS_CODE_404 = 404;
+    public const ID_GROUP        = 1;
     public const AVATAR_FILE_KEY = 'avatar_file';
 
     private $config;
+    private $userGroupService;
 
-    public function __construct(EntityManager $entityManager, array $config)
+    public function __construct(EntityManager $entityManager, array $config, $userGroupService)
     {
         parent::__construct($entityManager);
-        $this->config = $config;
+        $this->config           = $config;
+        $this->userGroupService = $userGroupService;
     }
 
     public function checkGenericInputData($data): void
     {
         // does not include id
-        if (!isset(
+        if (! isset(
             $data['password'],
             $data['name'],
             $data['lastname'],
@@ -114,7 +117,17 @@ class UserService extends BaseService
         $user->setResults($data['results']);
         $user->setCashin($data['cashin']);
 
+        $group = $this->userGroupService->fetchBy(
+            [
+                'id' => self::ID_GROUP
+            ]
+        );
+
+        $groups[] = $group;
+        $user->addGroups($groups);
+
         $this->entityManager->persist($user);
+
         $this->entityManager->flush($user);
 
         return $user;

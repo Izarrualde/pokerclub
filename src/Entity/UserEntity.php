@@ -314,7 +314,7 @@ class UserEntity
     public function addGroups($groups): void
     {
         foreach ($groups as $group) {
-            if (!$this->groups->contains($group)) {
+            if (! $this->groups->contains($group)) {
                 $this->groups->add($group);
             }
         }
