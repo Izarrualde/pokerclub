@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Solcre\SolcreFramework2\Common\BaseRepository")
+ * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\SessionRepository")
  * @ORM\Table(name="sessions")
  */
 class SessionEntity
