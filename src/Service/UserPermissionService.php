@@ -19,7 +19,6 @@ class UserPermissionService extends BaseService
                 'w'             => $permission->getWrite(),
                 'd'             => $permission->getDelete()
             ];
-
         }
 
         $userPermissions = [
@@ -37,7 +36,8 @@ class UserPermissionService extends BaseService
                 [
                     'permission' => $permission['permission_id'],
                     'user'       => $id
-                ]);
+                ]
+            );
 
             // if is already an user group with the permission update.
             if ($userPermission instanceof UserPermissionEntity) {

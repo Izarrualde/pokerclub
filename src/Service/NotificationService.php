@@ -39,8 +39,7 @@ class NotificationService extends BaseService
         UserService $userService,
         DeviceService $deviceService,
         $config
-    )
-    {
+    ) {
         parent::__construct($entityManager);
         $this->userService   = $userService;
         $this->deviceService = $deviceService;
@@ -98,10 +97,10 @@ class NotificationService extends BaseService
         $user = $this->userService->fetchBy(
             [
                 'cellphone' => $params['userLogged']
-            ]);
+            ]
+        );
 
-        if ($user instanceof UserEntity)
-        {
+        if ($user instanceof UserEntity) {
             $userNotifications = $this->repository->fetchUserNotifications($user->getId());
 
             foreach ($userNotifications as $userNotification) {
@@ -158,8 +157,7 @@ class NotificationService extends BaseService
         $androidData["priority"]          = '1';
         $androidData["content-available"] = '1';
 
-        try
-        {
+        try {
             $serverKey = $this->config['lms']['PUSH_NOTIFICATIONS']['ANDROID']['TOKEN'];
             if (empty($serverKey)) {
                 throw new \RuntimeException('Google push notification key not found', 404);
@@ -206,8 +204,7 @@ class NotificationService extends BaseService
         $message->setAlert($notification->getMessage());
         $message->setContentAvailable(1);
 
-        foreach ($devices as $key => $device)
-        {
+        foreach ($devices as $key => $device) {
             if ($this->checkIosDeviceToken($device['deviceToken'])) {
                 $message->setToken($device['deviceToken']);
 

@@ -81,8 +81,7 @@ class MeService extends BaseService
         $awards         = [];
         $awardsEntities = $this->awardService->fetchAll();
 
-        foreach ($awardsEntities as $awardEntity)
-        {
+        foreach ($awardsEntities as $awardEntity) {
             if ($awardEntity instanceof AwardEntity) {
                 $awards[] = [
                     'id'          => $awardEntity->getId(),
@@ -122,8 +121,7 @@ class MeService extends BaseService
     {
         $normalizedHistoricalSessions = [];
 
-        foreach ($historicalSessions as $historicalSession)
-        {
+        foreach ($historicalSessions as $historicalSession) {
             $normalizedHistoricalSessions[] = [
                 'name'     => $historicalSession['title'],
                 'playedAt' => $historicalSession['startAt']->format('Y/m/d'),

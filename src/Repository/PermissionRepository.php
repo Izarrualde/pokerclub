@@ -43,7 +43,6 @@ class PermissionRepository extends BaseRepository
         $stmt->execute();
         
         return $stmt->fetchAll();
-
     }
 
     public function checkPermissionExists($name, $id = null)

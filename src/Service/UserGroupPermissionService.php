@@ -13,15 +13,13 @@ class UserGroupPermissionService extends BaseService
     {
         $userGroupPermissions = $this->fetchAll(['userGroup' => $userGroup]);
         $arrayPermissions = [];
-        foreach ($userGroupPermissions as $permission)
-        {
+        foreach ($userGroupPermissions as $permission) {
             $arrayPermissions[] = [
                 'permission_id' => $permission->getPermission(),
                 'r'             => $permission->getRead(),
                 'w'             => $permission->getWrite(),
                 'd'             => $permission->getDelete()
             ];
-
         }
 
         $userGroupPermissions = [
@@ -39,7 +37,8 @@ class UserGroupPermissionService extends BaseService
                 [
                     'permission' => $permission['permission_id'],
                     'userGroup'  => $id
-                ]);
+                ]
+            );
 
             // if is already an user group with the permission update.
             if ($userGroupPermission instanceof UserGroupPermissionEntity) {

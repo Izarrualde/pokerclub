@@ -61,13 +61,17 @@ class ScheduledNotificationService extends BaseService
                 foreach ($notifications as $notification) {
                     if ($this->lockScheduledNotificationsTable()) {
                         $this->entityManager->beginTransaction();
-                        // get devices that not sent them this notification 
-                        $androidDevices            = $this->getDevicesWithoutSending($notification['id'],
-                                                                                     self::PLATFORM_ID['android'],
-                                                                                     self::DEVICES_LIMIT_MAX['android']);
-                        $iosDevices                = $this->getDevicesWithoutSending($notification['id'],
-                                                                                     self::PLATFORM_ID['ios'],
-                                                                                     self::DEVICES_LIMIT_MAX['ios']);
+                        // get devices that not sent them this notification
+                        $androidDevices            = $this->getDevicesWithoutSending(
+                            $notification['id'],
+                            self::PLATFORM_ID['android'],
+                            self::DEVICES_LIMIT_MAX['android']
+                        );
+                        $iosDevices                = $this->getDevicesWithoutSending(
+                            $notification['id'],
+                            self::PLATFORM_ID['ios'],
+                            self::DEVICES_LIMIT_MAX['ios']
+                        );
                         $devices                   = array_merge($androidDevices, $iosDevices);
                         $scheduledNotificationsIds = $this->getScheduledNotificationsIds($devices);
                         $this->setAsSending($scheduledNotificationsIds, true);
@@ -99,8 +103,7 @@ class ScheduledNotificationService extends BaseService
             }
 
             return true;
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->UnlockScheduledNotificationsTable();
             if (! empty($scheduledNotificationsIds) && is_array($scheduledNotificationsIds)) {
                 $this->setAsSending($scheduledNotificationsIds, false);

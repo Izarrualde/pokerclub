@@ -28,12 +28,12 @@ class DeviceService extends BaseService
     {
         $user = $this->userService->fetchBy(['cellphone' => $userLogged]);
         if ($user instanceof UserEntity) {
-
             $validator = new ObjectExists(
                 [
                     'object_repository' => $this->repository,
                     'fields'            => ['user', 'deviceToken'],
-                ]);
+                ]
+            );
             $params = [
                 'user'        => $user->getId(),
                 'deviceToken' => $token
@@ -58,7 +58,8 @@ class DeviceService extends BaseService
             [
                 'object_repository' => $this->repository,
                 'fields'            => ['deviceToken'],
-            ]);
+            ]
+        );
 
         $device = null;
 
