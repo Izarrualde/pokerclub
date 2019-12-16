@@ -41,6 +41,51 @@ class SessionService extends BaseService
         }
     }
 
+    public function fetchMySessions($username, $count)
+    {
+        return $this->repository->fetchMySessions($username, $count);
+    }
+
+    public function fetchCommissionsBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchCommissionsBetweenDates($from, $to);
+    }
+
+    public function fetchDealerTipsBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchDealerTipsBetweenDates($from, $to);
+    }
+
+    public function fetchTotalCashinBySession($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchTotalCashinBySession($from, $to);
+    }
+
+    public function fetchServiceTipsBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchServiceTipsBetweenDates($from, $to);
+    }
+
+    public function fetchExpensesBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchExpensesBetweenDates($from, $to);
+    }
+
     public function add($data)
     {
         $this->checkGenericInputData($data);

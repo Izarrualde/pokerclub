@@ -68,7 +68,7 @@ class SessionEntity
     protected $activePlayers;
 
 
-    protected $distincPlayers;
+    protected $distinctPlayers;
 
 
     protected $seatedPlayers;
@@ -327,7 +327,7 @@ class SessionEntity
     {
         return $this->sessionExpenses;
     }
-    
+
     public function setSessionExpenses($sessionExpenses): self
     {
         $this->sessionExpenses=$sessionExpenses;
@@ -339,7 +339,7 @@ class SessionEntity
     {
         return $this->rakebackClass;
     }
-    
+
     public function setRakebackClass($rakebackClass = null): self
     {
         $this->rakebackClass=$rakebackClass;
@@ -422,8 +422,8 @@ class SessionEntity
             $this->getBuyins(),
             static function ($amountTotal, BuyinSessionEntity $buyin) {
                 return $amountTotal +
-                $buyin->getAmountCash() +
-                $buyin->getAmountCredit();
+                    $buyin->getAmountCash() +
+                    $buyin->getAmountCredit();
             },
             0
         );
@@ -492,8 +492,8 @@ class SessionEntity
 
         /** @var UserSessionEntity $userSession */
         foreach ($usersSession as $userSession) {
-               $players += $userSession->getPercentagePlayed($from, $to);
-               $numberUsers++;
+            $players += $userSession->getPercentagePlayed($from, $to);
+            $numberUsers++;
         }
 
         return $players/100;
@@ -514,7 +514,7 @@ class SessionEntity
             'countSeatedPlayers'        => count($this->getSeatedPlayers()),
             'seats'                     => $this->getSeats(),
             'endTime'                   => $this->getEndTime(),
-            'commissionTotal'            => $this->getCommissionTotal(),
+            'commissionTotal'           => $this->getCommissionTotal(),
             'expensesTotal'             => $this->getExpensesTotal(),
             'dealerTipTotal'            => $this->getDealerTipTotal(),
             'serviceTipTotal'           => $this->getServiceTipTotal(),
@@ -524,14 +524,6 @@ class SessionEntity
             'valid'                     => $this->getValid(),
             'minimumUserSessionMinutes' => (int)$this->getMinimumUserSessionMinutes()
         ];
-
-        /*
-        foreach ($this->sessionUsers as $userSession) {
-             if ($userSession instanceof UserSessionEntity) {
-                 $ret['usersSession'][] = $userSession->toArray();
-             }
-         };
-         */
 
         return $ret;
     }
