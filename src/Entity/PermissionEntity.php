@@ -8,7 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Solcre\Pokerclub\Repository\PermissionRepository")
  * @ORM\Table(name="permisos")
  */
-class PermissionEntity {
+class PermissionEntity
+{
 
     /**
      * @ORM\Id
