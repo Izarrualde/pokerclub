@@ -32,12 +32,12 @@ class SessionRepository extends BaseRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
-        $qb->addSelect('s.startTime');
+        $qb->addSelect('s.startTimeReal');
         $qb->addSelect('sum(c.commission) AS total');
         $qb->from('Solcre\Pokerclub\Entity\CommissionSessionEntity', 'c');
         $qb->join('c.session', 's');
         $qb->groupBy('s.id');
-        $qb->where('s.startTime BETWEEN :from AND :to');
+        $qb->where('s.startTimeReal BETWEEN :from AND :to');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -48,12 +48,12 @@ class SessionRepository extends BaseRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
-        $qb->addSelect('s.startTime');
+        $qb->addSelect('s.startTimeReal');
         $qb->addSelect('sum(d.dealerTip) AS total');
         $qb->from('Solcre\Pokerclub\Entity\DealerTipSessionEntity', 'd');
         $qb->join('d.session', 's');
         $qb->groupBy('s.id');
-        $qb->where('s.startTime BETWEEN :from AND :to');
+        $qb->where('s.startTimeReal BETWEEN :from AND :to');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -64,12 +64,12 @@ class SessionRepository extends BaseRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
-        $qb->addSelect('s.startTime');
+        $qb->addSelect('s.startTimeReal');
         $qb->addSelect('sum(st.serviceTip) AS total');
         $qb->from('Solcre\Pokerclub\Entity\ServiceTipSessionEntity', 'st');
         $qb->join('st.session', 's');
         $qb->groupBy('s.id');
-        $qb->where('s.startTime BETWEEN :from AND :to');
+        $qb->where('s.startTimeReal BETWEEN :from AND :to');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -80,12 +80,12 @@ class SessionRepository extends BaseRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
-        $qb->addSelect('s.startTime');
+        $qb->addSelect('s.startTimeReal');
         $qb->addSelect('sum(e.amount) AS total');
         $qb->from('Solcre\Pokerclub\Entity\ExpensesSessionEntity', 'e');
         $qb->join('e.session', 's');
         $qb->groupBy('s.id');
-        $qb->where('s.startTime BETWEEN :from AND :to');
+        $qb->where('s.startTimeReal BETWEEN :from AND :to');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -96,13 +96,31 @@ class SessionRepository extends BaseRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
-        $qb->addSelect('s.startTime');
+        $qb->addSelect('s.startTimeReal');
         $qb->addSelect('sum(b.amountCash)');
         $qb->from('Solcre\Pokerclub\Entity\UserSessionEntity', 'us');
         $qb->join('us.session', 's');
         $qb->join('us.buyins', 'b');
         $qb->groupBy('s.id');
-        $qb->where('s.startTime BETWEEN :from AND :to');
+        $qb->where('s.startTimeReal BETWEEN :from AND :to');
+        $qb->setParameter('from', $from);
+        $qb->setParameter('to', $to);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function fetchHoursPlayedBetweenDates(\DateTime $from, \DateTime $to)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('s.id');
+        $qb->addSelect('s.startTimeReal');
+        $qb->addSelect('s.endTime');
+        // $qb->addSelect('DATE_DIFF(s.startTimeReal, s.endTime)');
+        $qb->from($this->_entityName, 's');
+        $qb->groupBy('s.id');
+        $qb->where('s.startTimeReal BETWEEN :from AND :to');
+        $qb->andWhere('s.startTimeReal IS NOT NULL');
+        $qb->andWhere('s.endTime IS NOT NULL');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
