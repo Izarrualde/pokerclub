@@ -86,6 +86,22 @@ class SessionService extends BaseService
         return $this->repository->fetchExpensesBetweenDates($from, $to);
     }
 
+    public function fetchHoursPlayedBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchHoursPlayedBetweenDates($from, $to);
+    }
+
+    public function fetchPlayersBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchPlayersBetweenDates($from, $to);
+    }
+
     public function add($data)
     {
         $this->checkGenericInputData($data);
