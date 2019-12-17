@@ -102,6 +102,30 @@ class SessionService extends BaseService
         return $this->repository->fetchPlayersBetweenDates($from, $to);
     }
 
+    public function fetchRakeRaceBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchRakeRaceBetweenDates($from, $to);
+    }
+
+    public function fetchTipsPerDealerBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchTipsPerDealerBetweenDates($from, $to);
+    }
+
+    public function fetchTipsPerServiceBetweenDates($data)
+    {
+        $from = new \DateTime($data['from']);
+        $to   = new \DateTime($data['to']);
+
+        return $this->repository->fetchTipsPerServiceBetweenDates($from, $to);
+    }
+
     public function add($data)
     {
         $this->checkGenericInputData($data);

@@ -164,4 +164,9 @@ class SessionRepository extends BaseRepository
     {
         return ['TODO'];
     }
+
+    public function fetchTipsPerServiceBetweenDates(\DateTime $from, \DateTime $to)
+    {
+        return ['TODO'];
+    }
 }
