@@ -31,4 +31,9 @@ class UserSessionExceptions extends BaseException
     {
         return new self('Duration no pudo ser calculada', 400);
     }
+
+    public static function userWithoutActionException(): self
+    {
+        return new self('User without action in this session.', 400);
+    }
 }
