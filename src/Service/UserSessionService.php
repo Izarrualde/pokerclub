@@ -187,18 +187,27 @@ class UserSessionService extends BaseService
             throw UserSessionExceptions::userSessionNotFoundException();
         }
 
+
+        if ($userSession->getStart() === null || $userSession->getBuyins()->isEmpty()) {
+            throw UserSessionExceptions::UserWithoutActionException();
+        }
+
         $startSession      = $userSession->getStart();
-        $attemptEndSession = new \DateTime();
+        $attemptEndSession = new \DateTime($data['end']);
         $requiredTime      =  $userSession->getMinimumMinutes();
 
         if ($userSession->inMinutes($startSession, $attemptEndSession) < $requiredTime) {
             throw UserSessionExceptions::insufficientUserSessionTimeException();
         }
 
-        $userSession->setEnd(new \DateTime($data['end']));
+        $userSession->setEnd($attemptEndSession);
         $userSession->setCashout($data['cashout']);
 
         $user = $this->userService->fetch($data['idUser']);
+
+        if (! $user instanceof UserEntity) {
+            throw UserExceptions::userNotFoundException();
+        }
 
         /** @var UserEntity $user */
         $user->setHours($user->getHours()+$userSession->getDuration());
