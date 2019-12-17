@@ -154,4 +154,14 @@ class SessionRepository extends BaseRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function fetchRakeRaceBetweenDates(\DateTime $from, \DateTime $to)
+    {
+        return ['TODO'];
+    }
+
+    public function fetchTipsPerDealerBetweenDates(\DateTime $from, \DateTime $to)
+    {
+        return ['TODO'];
+    }
 }
