@@ -33,7 +33,7 @@ class SessionRepository extends BaseRepository
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
         $qb->addSelect('s.startTime');
-        $qb->addSelect('sum(c.commission)');
+        $qb->addSelect('sum(c.commission) AS total');
         $qb->from('Solcre\Pokerclub\Entity\CommissionSessionEntity', 'c');
         $qb->join('c.session', 's');
         $qb->groupBy('s.id');
@@ -49,7 +49,7 @@ class SessionRepository extends BaseRepository
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
         $qb->addSelect('s.startTime');
-        $qb->addSelect('sum(d.dealerTip)');
+        $qb->addSelect('sum(d.dealerTip) AS total');
         $qb->from('Solcre\Pokerclub\Entity\DealerTipSessionEntity', 'd');
         $qb->join('d.session', 's');
         $qb->groupBy('s.id');
@@ -65,7 +65,7 @@ class SessionRepository extends BaseRepository
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
         $qb->addSelect('s.startTime');
-        $qb->addSelect('sum(st.serviceTip)');
+        $qb->addSelect('sum(st.serviceTip) AS total');
         $qb->from('Solcre\Pokerclub\Entity\ServiceTipSessionEntity', 'st');
         $qb->join('st.session', 's');
         $qb->groupBy('s.id');
@@ -81,7 +81,7 @@ class SessionRepository extends BaseRepository
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
         $qb->addSelect('s.startTime');
-        $qb->addSelect('sum(e.amount)');
+        $qb->addSelect('sum(e.amount) AS total');
         $qb->from('Solcre\Pokerclub\Entity\ExpensesSessionEntity', 'e');
         $qb->join('e.session', 's');
         $qb->groupBy('s.id');
