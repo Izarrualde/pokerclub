@@ -16,12 +16,12 @@ class SessionRepository extends BaseRepository
         $qb->addSelect('us.cashout');
         $qb->addSelect('us.accumulatedPoints');
         $qb->addSelect('s.id');
-
         $qb->from(UserSessionEntity::class, 'us');
         $qb->join('us.user', 'u');
         $qb->join('us.session', 's');
-
         $qb->where('u.username = :username');
+        $qb->andWhere('s.startTimeReal IS NOT NULL');
+        $qb->andWhere('s.endTime IS NOT NULL');
         $qb->setMaxResults($count);
         $qb->setParameter('username', $username);
 
@@ -38,6 +38,8 @@ class SessionRepository extends BaseRepository
         $qb->join('c.session', 's');
         $qb->groupBy('s.id');
         $qb->where('s.startTimeReal BETWEEN :from AND :to');
+        $qb->andWhere('s.startTimeReal IS NOT NULL');
+        $qb->andWhere('s.endTime IS NOT NULL');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -54,6 +56,8 @@ class SessionRepository extends BaseRepository
         $qb->join('d.session', 's');
         $qb->groupBy('s.id');
         $qb->where('s.startTimeReal BETWEEN :from AND :to');
+        $qb->andWhere('s.startTimeReal IS NOT NULL');
+        $qb->andWhere('s.endTime IS NOT NULL');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -70,6 +74,8 @@ class SessionRepository extends BaseRepository
         $qb->join('st.session', 's');
         $qb->groupBy('s.id');
         $qb->where('s.startTimeReal BETWEEN :from AND :to');
+        $qb->andWhere('s.startTimeReal IS NOT NULL');
+        $qb->andWhere('s.endTime IS NOT NULL');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -86,6 +92,8 @@ class SessionRepository extends BaseRepository
         $qb->join('e.session', 's');
         $qb->groupBy('s.id');
         $qb->where('s.startTimeReal BETWEEN :from AND :to');
+        $qb->andWhere('s.startTimeReal IS NOT NULL');
+        $qb->andWhere('s.endTime IS NOT NULL');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -103,6 +111,8 @@ class SessionRepository extends BaseRepository
         $qb->join('us.buyins', 'b');
         $qb->groupBy('s.id');
         $qb->where('s.startTimeReal BETWEEN :from AND :to');
+        $qb->andWhere('s.startTimeReal IS NOT NULL');
+        $qb->andWhere('s.endTime IS NOT NULL');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
@@ -117,6 +127,24 @@ class SessionRepository extends BaseRepository
         $qb->addSelect('s.endTime');
         // $qb->addSelect('DATE_DIFF(s.startTimeReal, s.endTime)');
         $qb->from($this->_entityName, 's');
+        $qb->groupBy('s.id');
+        $qb->where('s.startTimeReal BETWEEN :from AND :to');
+        $qb->andWhere('s.startTimeReal IS NOT NULL');
+        $qb->andWhere('s.endTime IS NOT NULL');
+        $qb->setParameter('from', $from);
+        $qb->setParameter('to', $to);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function fetchPlayersBetweenDates(\DateTime $from, \DateTime $to)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('s.id');
+        $qb->addSelect('s.startTimeReal');
+        $qb->addSelect('count(us.id) AS players');
+        $qb->from(UserSessionEntity::class, 'us');
+        $qb->join('us.session', 's');
         $qb->groupBy('s.id');
         $qb->where('s.startTimeReal BETWEEN :from AND :to');
         $qb->andWhere('s.startTimeReal IS NOT NULL');
