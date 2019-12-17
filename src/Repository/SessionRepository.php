@@ -94,21 +94,18 @@ class SessionRepository extends BaseRepository
 
     public function fetchTotalCashinBySession(\DateTime $from, \DateTime $to)
     {
-        /*
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
         $qb->addSelect('s.startTime');
-        $qb->addSelect('sum(e.amount)');
-        $qb->from('Solcre\Pokerclub\Entity\ExpensesSessionEntity', 'e');
-        $qb->join('e.session', 's');
+        $qb->addSelect('sum(b.amountCash)');
+        $qb->from('Solcre\Pokerclub\Entity\UserSessionEntity', 'us');
+        $qb->join('us.session', 's');
+        $qb->join('us.buyins', 'b');
         $qb->groupBy('s.id');
         $qb->where('s.startTime BETWEEN :from AND :to');
         $qb->setParameter('from', $from);
         $qb->setParameter('to', $to);
 
         return $qb->getQuery()->getResult();
-        */
-
-        return ['result'];
     }
 }
