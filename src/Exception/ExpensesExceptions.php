@@ -13,6 +13,6 @@ class ExpensesExceptions extends BaseException
 
     public static function expenditureNotFoundException(): self
     {
-        return new self('Resource not found.', 400);
+        return new self('Resource not found.', 404);
     }
 }
