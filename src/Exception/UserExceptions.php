@@ -25,4 +25,9 @@ class UserExceptions extends BaseException
     {
         return new self('El email ingresado no es válido', 400);
     }
+
+    public static function undefinedUserIdException(): self
+    {
+        return new self('Undefined user id', 400);
+    }
 }
