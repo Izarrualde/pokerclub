@@ -35,4 +35,9 @@ class SessionExceptions extends BaseException
     {
         return new self('Type error: calculate method must return a valid number.', 400);
     }
+
+    public static function undefinedSessionIdException(): self
+    {
+        return new self('Undefined session id', 400);
+    }
 }

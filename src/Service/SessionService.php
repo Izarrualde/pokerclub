@@ -191,20 +191,20 @@ class SessionService extends BaseService
 
     public function delete($id, $entityObj = null): bool
     {
-        try {
-            $session = $this->fetch($id);
-
-            $this->entityManager->remove($session);
-            $this->entityManager->flush();
-
-            return true;
-        } catch (\Exception $e) {
-            if ($e->getCode() === self::STATUS_CODE_404) {
-                throw SessionExceptions::sessionNotFoundException();
-            }
-
-            throw $e;
+        if ($id === null) {
+            throw SessionExceptions::undefinedSessionIdException();
         }
+
+        $session = $this->fetch($id);
+
+        if (! $session instanceof SessionEntity) {
+            throw SessionExceptions::sessionNotFoundException();
+        }
+
+        $this->entityManager->remove($session);
+        $this->entityManager->flush();
+
+        return true;
     }
 
     public function createRakebackAlgorithm($classname)
