@@ -217,20 +217,20 @@ class UserService extends BaseService
 
     public function delete($id, $entityObj = null): bool
     {
-        try {
-            $user = $this->fetch($id);
-
-            $this->entityManager->remove($user);
-            $this->entityManager->flush();
-
-            return true;
-        } catch (\Exception $e) {
-            if ($e->getCode() === self::STATUS_CODE_404) {
-                throw UserExceptions::userNotFoundException();
-            }
-
-            throw $e;
+        if ($id === null) {
+            throw UserExceptions::undefinedUserIdException();
         }
+
+        $user = $this->fetch($id);
+
+        if (! $user instanceof UserEntity) {
+            throw UserExceptions::userNotFoundException();
+        }
+
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+
+        return true;
     }
 
     private function userExists($data): bool
