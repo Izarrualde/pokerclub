@@ -23,7 +23,7 @@ class SessionExceptions extends BaseException
 
     public static function sessionNotFoundException(): self
     {
-        return new self('Resource not found.', 400);
+        return new self('Resource not found.', 404);
     }
 
     public static function tableIsFullException(): self

@@ -13,7 +13,7 @@ class UserExceptions extends BaseException
 
     public static function userNotFoundException(): self
     {
-        return new self('Resource not found.', 400);
+        return new self('Resource not found.', 404);
     }
 
     public static function userAlreadyExistException(): self
@@ -29,5 +29,10 @@ class UserExceptions extends BaseException
     public static function undefinedUserIdException(): self
     {
         return new self('Undefined user id', 400);
+    }
+
+    public static function incorrectPasswordConfirmationException(): self
+    {
+        return new self('La confirmación de la contraseña es incorrecta', 400);
     }
 }

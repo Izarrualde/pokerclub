@@ -13,6 +13,6 @@ class CommissionExceptions extends BaseException
 
     public static function commissionNotFoundException(): self
     {
-        return new self('Resource not found.', 400);
+        return new self('Resource not found.', 404);
     }
 }

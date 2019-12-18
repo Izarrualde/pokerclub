@@ -24,7 +24,7 @@ class UserSessionExceptions extends BaseException
 
     public static function userSessionNotFoundException(): self
     {
-        return new self('Resource not found.', 400);
+        return new self('Resource not found.', 404);
     }
 
     public static function invalidDuration(): self
