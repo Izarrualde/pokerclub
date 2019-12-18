@@ -33,6 +33,7 @@ class UserService extends BaseService
         // does not include id
         if (! isset(
             $data['password'],
+            $data['password_confirm'],
             $data['name'],
             $data['lastname'],
             $data['email'],
@@ -92,6 +93,10 @@ class UserService extends BaseService
     public function add($data)
     {
         $this->checkGenericInputData($data);
+
+        if ($data['password'] !== $data['password_confirm']) {
+            throw UserExceptions::incorrectPasswordConfirmationException();
+        }
 
         $this->validateCellphone($data['username']);
 

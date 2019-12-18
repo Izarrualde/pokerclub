@@ -30,4 +30,9 @@ class UserExceptions extends BaseException
     {
         return new self('Undefined user id', 400);
     }
+
+    public static function incorrectPasswordConfirmationException(): self
+    {
+        return new self('La confirmación de la contraseña es incorrecta', 400);
+    }
 }
