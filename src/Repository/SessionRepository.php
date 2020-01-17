@@ -105,7 +105,7 @@ class SessionRepository extends BaseRepository
         $qb = $this->_em->createQueryBuilder();
         $qb->select('s.id');
         $qb->addSelect('s.startTimeReal');
-        $qb->addSelect('sum(b.amountCash)');
+        $qb->addSelect('sum(b.amountCash + b.amountCredit) AS total');
         $qb->from('Solcre\Pokerclub\Entity\UserSessionEntity', 'us');
         $qb->join('us.session', 's');
         $qb->join('us.buyins', 'b');
